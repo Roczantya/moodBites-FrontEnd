@@ -4,7 +4,7 @@ import { Text, View, StyleSheet } from "react-native";
 export default function Index() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Profile screen</Text>\\
+      <Text style={styles.text}>Profile screen</Text>
       <BottomNavBar />
     </View>
   );

@@ -9,8 +9,8 @@ import {
 import { router } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 
-import OnboardingItem from "@/components/ui/onboardingItem";
-import OnboardingPagination from "@/components/ui/onboardpagination";
+import OnboardingItem from "@/components/ui/onboarding/onboardingItem";
+import OnboardingPagination from "@/components/ui/onboarding/onboardpagination";
 import { onboardingData } from "@/constants/onBoarding";
 import { useThemeFonts } from "@/hooks/useThemeFonts";
 

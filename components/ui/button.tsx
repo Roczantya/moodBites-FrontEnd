@@ -1,37 +1,37 @@
 import React from "react";
 import { Pressable, StyleSheet, ViewStyle, TextStyle } from "react-native";
-import { Colors } from "@/constants/colors"; // Sesuaikan path constants kamu
-import { TextBold } from "@/constants/customFont"; // Sesuaikan path custom font kamu
+import { Colors } from "@/constants/colors";
+import { TextBold } from "@/constants/customFont";
+
 type ButtonVariant = "primary" | "accent" | "outline";
 
 type Props = {
   label: string;
   onPress: () => void;
   variant?: ButtonVariant;
-  style?: ViewStyle; // Untuk override style container jika butuh mendadak
-  textStyle?: TextStyle; // Untuk override style teks
+  style?: ViewStyle;
+  textStyle?: TextStyle;
+  disabled?: boolean;
 };
 
 export default function Button({
   label,
   onPress,
-  variant = "accent", // Default-nya pakai style accent kamu yang lama
+  variant = "accent",
   style,
   textStyle,
+  disabled = false,
 }: Props) {
-  // Gabungkan style berdasarkan variant
-  const buttonStyles = [
-    styles.baseButton,
-    variant === "primary" && styles.primaryButton,
-    variant === "accent" && styles.accentButton,
-    style, // Custom style dari luar
-  ];
-
   return (
     <Pressable
+      disabled={disabled}
       style={({ pressed }) => [
-        ...buttonStyles,
-        pressed && { opacity: 0.7 }, // Efek feedback seperti TouchableOpacity
+        styles.baseButton,
+        variant === "primary" && styles.primaryButton,
+        variant === "accent" && styles.accentButton,
+        style, // Custom style dari luar tetep aman di sini
+        pressed && !disabled && { opacity: 0.7 },
+        disabled && styles.disabledButton,
       ]}
       onPress={onPress}
     >
@@ -46,27 +46,30 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  // Style Button lama kamu (Accent)
   accentButton: {
     padding: 14,
     borderRadius: 50,
     backgroundColor: Colors.accent,
   },
-  // Style PrimaryButton (Figma style)
   primaryButton: {
     height: 55,
     borderRadius: 50,
-    backgroundColor: Colors.primary || "#FF949A", // Pastikan Colors.primary ada
+    backgroundColor: Colors.primary || "#FF949A",
     bottom: 10,
-    // Efek Shadow/Elevation
     shadowColor: Colors.primary || "#FF949A",
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.4,
     shadowRadius: 15,
     elevation: 8,
   },
+  disabledButton: {
+    backgroundColor: "#CCCCCC",
+    shadowOpacity: 0,
+    elevation: 0,
+    opacity: 0.7,
+  },
   baseText: {
-    color: "#fff",
+    color: Colors.white,
     fontSize: 16,
     fontFamily: "PlusJakartaSans-Bold",
   },
