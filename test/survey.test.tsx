@@ -22,7 +22,7 @@ const alertSpy = jest
     }
   });
 
-jest.mock("../components/ui/survey/Skalasurvey", () => {
+jest.mock("@/components/survey/Skalasurvey", () => {
   const { TouchableOpacity, Text } = require("react-native");
   return {
     LikertScale: ({ label, onChange, testID }: any) => (
@@ -36,7 +36,7 @@ jest.mock("../components/ui/survey/Skalasurvey", () => {
   };
 });
 
-jest.mock("../components/ui/survey/checkbox", () => {
+jest.mock("@/components/survey/checkbox", () => {
   const { View, Text, TouchableOpacity } = require("react-native");
   return {
     CheckboxGroup: ({ options, onChange }: any) => (

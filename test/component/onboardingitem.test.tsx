@@ -1,6 +1,6 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
-import OnboardingItem from "../../components/Reuse/onboardingItem";
+import OnboardingItem from "@/components/onboarding/onboardingItem";
 import { View } from "react-native";
 
 describe("OnboardingItem", () => {

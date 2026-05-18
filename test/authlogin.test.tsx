@@ -2,6 +2,7 @@ import React, { act } from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
 import AuthScreen from "../app/auth/index";
 import { router } from "expo-router";
+import authService from "@/services/authService";
 
 // 1. Mocking expo-router dengan struktur yang benar
 jest.mock("expo-router", () => ({
@@ -79,6 +80,11 @@ describe("AuthScreen Testing", () => {
   });
 
   it("harus navigasi ke /auth/otp saat register berhasil", async () => {
+    // 1. Mock/Palsukan balikan dari API Register biar gak error
+    const mockRegister = jest.spyOn(authService, "register").mockResolvedValue({
+      loginId: "dummy_id_123",
+    });
+
     const { getByText, getByPlaceholderText } = render(<AuthScreen />);
 
     // Pindah ke mode register
@@ -96,14 +102,21 @@ describe("AuthScreen Testing", () => {
 
     fireEvent.press(registerButton);
 
+    // 2. Gunakan waitFor dengan timeout 3000ms
     await waitFor(
       () => {
         expect(router.push).toHaveBeenCalledWith({
           pathname: "/auth/otp",
-          params: { email: "register@email.com" },
+          params: {
+            email: "register@email.com",
+            loginId: "dummy_id_123", // 👈 INI KUNCINYA! Harus sama persis kayak balikan API di atas
+          },
         });
       },
       { timeout: 3000 },
     );
+
+    // 3. (Opsional) Bersihkan mock setelah test selesai biar gak bocor ke test lain
+    mockRegister.mockRestore();
   });
 });
