@@ -46,7 +46,8 @@
           }
         }
       ],
-      "expo-font"
+      "expo-font",
+      "react-native-nfc-manager"
     ],
     "experiments": {
       "typedRoutes": true,

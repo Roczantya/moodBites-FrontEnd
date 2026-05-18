@@ -1,4 +1,3 @@
-// File: moodBites/app/auth/index.tsx
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -6,48 +5,51 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Text, // Pastikan Text di-import
 } from "react-native";
 import { Colors } from "../../constants/colors";
-import AuthHeader from "../../components/ui/authheader";
-import AuthToggle from "../../components/ui/authtoggle";
-import InputField from "../../components/ui/inputfield";
+import AuthHeader from "@/components/ui/auth/authheader";
+import AuthToggle from "../../components/ui/auth/authtoggle";
 import PrimaryButton from "../../components/ui/button";
 import { TextBold, TextMedium, TextSemiBold } from "@/constants/customFont";
 import { router } from "expo-router";
 
+// IMPORT UI FORM YANG BARU KITA PISAH
+import LoginForm from "@/components/ui/auth/loginform";
+import RegisterForm from "@/components/ui/auth/registerform";
+import authService from "@/services/authService";
+
 export default function AuthScreen() {
   const [isLogin, setIsLogin] = useState(true);
-  const [showToast, setShowToast] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // 👇 1. STATE TOAST DINAMIS BARU
+  const [toast, setToast] = useState({
+    visible: false,
+    message: "",
+    type: "success", // 'success' atau 'error'
+  });
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [errors, setErrors] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+  const [errors, setErrors] = useState({ name: "", email: "", password: "" });
 
-  // --- PEMPERBAIKAN 1: Bungkus logika dalam fungsi validate ---
   const validate = () => {
     let valid = true;
-    let newErrors = { name: "", email: "", password: "" }; // Deklarasikan variabel
+    let newErrors = { name: "", email: "", password: "" };
 
     if (!isLogin && name.trim().length < 2) {
       newErrors.name = "Nama minimal terdiri dari 2 karakter";
       valid = false;
     }
 
-    // Validasi Email (Regex sederhana)
     const emailRegex = /\S+@\S+\.\S+/;
     if (!emailRegex.test(email)) {
       newErrors.email = "Format email tidak valid";
       valid = false;
     }
 
-    // Validasi Password (minimal 6 karakter)
     if (password.length < 6) {
       newErrors.password = "Password minimal harus 6 karakter";
       valid = false;
@@ -57,33 +59,97 @@ export default function AuthScreen() {
     return valid;
   };
 
-  // --- PEMPERBAIKAN 2: Masukkan handleSubmit ke dalam komponen ---
-  const handleSubmit = () => {
-    if (!validate()) return; // Jalankan validator
+  const handleSubmit = async () => {
+    if (!validate()) return;
 
-    if (isLogin) {
-      console.log("Proses Login...");
-      router.push("/dashboard/home");
-    } else {
-      setShowToast(true);
+    setIsLoading(true);
+    // Tutup toast yang mungkin masih nyangkut sebelum mulai request baru
+    setToast({ ...toast, visible: false });
+
+    try {
+      if (isLogin) {
+        // 👇 2. PROSES LOGIN
+        console.log("Proses Login...");
+        // Nanti buka komen ini kalau API login lu udah jadi:
+        // const loginResult = await authService.login({ email, password });
+
+        // Munculin Toast Sukses Login
+        setToast({
+          visible: true,
+          message: "✓ Login Berhasil! Memuat Hearth...",
+          type: "success",
+        });
+
+        // Kasih jeda 1.5 detik biar user bisa baca toast-nya sebelum pindah halaman
+        setTimeout(() => {
+          setToast((prev) => ({ ...prev, visible: false }));
+          setIsLoading(false);
+          router.push("/dashboard/home");
+        }, 1500);
+      } else {
+        // 👇 3. PROSES REGISTER
+        const payload = { name, email, password, fcmToken: "dummy_fcm_123" };
+        const result = await authService.register(payload);
+
+        // Munculin Toast Sukses Register
+        setToast({
+          visible: true,
+          message: "✓ Registrasi Berhasil! Kode OTP sedang dikirim...",
+          type: "success",
+        });
+
+        // Kasih jeda nunggu OTP 2.5 detik
+        setTimeout(() => {
+          setToast((prev) => ({ ...prev, visible: false }));
+          setIsLoading(false);
+          router.push({
+            pathname: "/auth/otp",
+            params: { email: email, loginId: result?.loginId || "" },
+          });
+        }, 2500);
+      }
+    } catch (error: any) {
+      // 👇 4. PROSES ERROR (LOGIN / REGISTER)
+      setIsLoading(false);
+
+      // Munculin Toast Error (Merah)
+      setToast({
+        visible: true,
+        message: `✕ ${error?.message || "Terjadi kesalahan sistem."}`,
+        type: "error",
+      });
+
+      // Otomatis tutup toast error setelah 3 detik
       setTimeout(() => {
-        setShowToast(false);
-        // 👇 UBAH BARIS INI: Tambahkan parameter email
-        router.push({ pathname: "/auth/otp", params: { email: email } });
-      }, 2500);
+        setToast((prev) => ({ ...prev, visible: false }));
+      }, 3000);
     }
   };
 
-  // --- PEMPERBAIKAN 3: Return JSX harus di dalam fungsi AuthScreen ---
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      {showToast && (
-        <View style={styles.toastContainer}>
-          <TextSemiBold style={styles.toastText}>
-            ✓ Registrasi Berhasil! Kode OTP sedang dikirim...
+      {/* 👇 5. UI TOAST DINAMIS */}
+      {toast.visible && (
+        <View
+          style={[
+            styles.toastContainer,
+            {
+              backgroundColor: toast.type === "success" ? "#A0D585" : "#FF9494",
+            },
+          ]}
+        >
+          <TextSemiBold
+            style={[
+              styles.toastText,
+              {
+                color: toast.type === "success" ? Colors.textAccent : "#FFFFFF",
+              },
+            ]}
+          >
+            {toast.message}
           </TextSemiBold>
         </View>
       )}
@@ -100,57 +166,42 @@ export default function AuthScreen() {
             onToggle={(val) => {
               setIsLogin(val);
               setErrors({ name: "", email: "", password: "" });
+              setToast({ ...toast, visible: false }); // Sembunyiin toast kalau user pindah tab
             }}
           />
 
-          <View style={styles.formContainer}>
-            {!isLogin && (
-              <View style={styles.inputWrapper}>
-                <InputField
-                  label="NAMA"
-                  icon="person-outline"
-                  placeholder="Sarah"
-                  value={name}
-                  onChangeText={setName}
-                />
-                {errors.name ? (
-                  <Text style={styles.errorText}>{errors.name}</Text>
-                ) : null}
-              </View>
-            )}
-
-            <View style={styles.inputWrapper}>
-              <InputField
-                label="EMAIL ADDRESS"
-                icon="mail-outline"
-                placeholder="hello@moodbites.com"
-                keyboardType="email-address"
-                value={email}
-                onChangeText={setEmail}
-              />
-              {errors.email ? (
-                <Text style={styles.errorText}>{errors.email}</Text>
-              ) : null}
-            </View>
-
-            <View style={styles.inputWrapper}>
-              <InputField
-                label="PASSWORD"
-                icon="lock-closed-outline"
-                placeholder="••••••••"
-                isPassword={true}
-                value={password}
-                onChangeText={setPassword}
-              />
-              {errors.password ? (
-                <Text style={styles.errorText}>{errors.password}</Text>
-              ) : null}
-            </View>
-          </View>
+          {isLogin ? (
+            <LoginForm
+              email={email}
+              onChangeEmail={setEmail}
+              password={password}
+              onChangePassword={setPassword}
+              errors={errors}
+              isLoading={isLoading}
+            />
+          ) : (
+            <RegisterForm
+              name={name}
+              onChangeName={setName}
+              email={email}
+              onChangeEmail={setEmail}
+              password={password}
+              onChangePassword={setPassword}
+              errors={errors}
+              isLoading={isLoading}
+            />
+          )}
 
           <PrimaryButton
-            label={isLogin ? "Enter the Hearth" : "Join the Hearth"}
+            label={
+              isLoading
+                ? "Loading..."
+                : isLogin
+                  ? "Enter the Hearth"
+                  : "Join the Hearth"
+            }
             onPress={handleSubmit}
+            disabled={isLoading}
           />
 
           <TextMedium style={styles.footerText}>
@@ -184,20 +235,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     elevation: 5,
   },
-  formContainer: {
-    width: "100%",
-    marginBottom: 30,
-  },
-  inputWrapper: {
-    marginBottom: 15,
-  },
-  errorText: {
-    color: "#FF9494", // Warna aksen Moodbites kamu
-    fontSize: 11,
-    marginTop: 5,
-    marginLeft: 15,
-    fontFamily: "PlusJakartaSans-Medium",
-  },
   footerText: {
     fontSize: 12,
     top: 15,
@@ -216,17 +253,12 @@ const styles = StyleSheet.create({
     bottom: 30,
     left: 20,
     right: 20,
-    backgroundColor: "#A0D585",
     padding: 15,
     borderRadius: 5,
     zIndex: 100,
     elevation: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
   },
   toastText: {
-    color: Colors.textAccent + "CC",
     textAlign: "center",
     fontSize: 12,
     fontFamily: "PlusJakartaSans-SemiBold",
