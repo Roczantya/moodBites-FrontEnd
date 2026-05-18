@@ -1,4 +1,4 @@
-import BottomNavBar from "@/components/ui/dashboard/bottomNavbar";
+import BottomNavBar from "@/components/dashboard/bottomNavbar";
 import { Text, View, StyleSheet } from "react-native";
 
 export default function Index() {

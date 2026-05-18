@@ -9,8 +9,8 @@ import {
   FlatList,
   ListRenderItem, // Ganti ScrollView jadi FlatList
 } from "react-native";
-import { Colors } from "../../../constants/colors";
-import { FOOD_DATA, FoodItem } from "../../../constants/food_item";
+import { Colors } from "../../constants/colors";
+import { FOOD_DATA, FoodItem } from "../../constants/food_item";
 export default function RecommendationList() {
   const { width } = useWindowDimensions();
 

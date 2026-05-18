@@ -1,9 +1,9 @@
 import React from "react";
 import { StyleSheet, SafeAreaView, ScrollView, View } from "react-native";
-import Header from "@/components/ui/dashboard/header";
-import MoodSelector from "@/components/ui/dashboard/moodSelector";
-import RecommendationList from "@/components/ui/dashboard/recommendedlist";
-import BottomNavBar from "@/components/ui/dashboard/bottomNavbar";
+import Header from "@/components/dashboard/header";
+import MoodSelector from "@/components/dashboard/moodSelector";
+import RecommendationList from "@/components/dashboard/recommendedlist";
+import BottomNavBar from "@/components/dashboard/bottomNavbar";
 import { Colors } from "../../constants/colors";
 
 export default function HomeScreen() {

@@ -7,8 +7,8 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
-import { LikertScale } from "../../components/ui/survey/Skalasurvey";
-import { CheckboxGroup } from "../../components/ui/survey/checkbox";
+import { LikertScale } from "../../components/survey/Skalasurvey";
+import { CheckboxGroup } from "../../components/survey/checkbox";
 import { MoodKey, DataType, Responses } from "../../constants/surveystate";
 import { MOOD_SECTIONS, FLAVORS, MENU_CATEGORIES } from "../../constants/mood";
 import { Colors } from "../../constants/colors";

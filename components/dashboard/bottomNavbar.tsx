@@ -7,7 +7,7 @@ import {
   Dimensions,
 } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { Colors } from "../../../constants/colors";
+import { Colors } from "../../constants/colors";
 import { router, usePathname } from "expo-router";
 
 export default function BottomNavBar() {

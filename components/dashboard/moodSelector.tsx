@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { Colors } from "../../../constants/colors";
+import { Colors } from "../../constants/colors";
 
 export default function MoodSelector() {
   return (

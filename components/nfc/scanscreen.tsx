@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import NfcManager, { NfcTech } from "react-native-nfc-manager";
-import { Colors } from "../../../constants/colors";
+import { Colors } from "../../constants/colors";
 import BottomNavBar from "../dashboard/bottomNavbar";
 
 interface ScanScreenProps {

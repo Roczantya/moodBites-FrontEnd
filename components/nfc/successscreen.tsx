@@ -10,8 +10,8 @@ import {
   ScrollView,
 } from "react-native";
 import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-import { Colors } from "../../../constants/colors";
-import BottomNavBar from "../dashboard/bottomNavbar";
+import { Colors } from "@/constants/colors";
+import BottomNavBar from "@/components/dashboard/bottomNavbar";
 
 interface SuccessScreenProps {
   onBack: () => void;

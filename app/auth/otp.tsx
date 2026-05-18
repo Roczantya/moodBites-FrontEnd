@@ -9,7 +9,7 @@ import {
   Platform,
 } from "react-native";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
-import Button from "@/components/ui/button"; // Import custom Button kamu
+import Button from "@/components/Reuse/button"; // Import custom Button kamu
 import { Colors } from "@/constants/colors";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";

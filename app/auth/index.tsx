@@ -7,15 +7,15 @@ import {
   ScrollView,
 } from "react-native";
 import { Colors } from "../../constants/colors";
-import AuthHeader from "@/components/ui/auth/authheader";
-import AuthToggle from "../../components/ui/auth/authtoggle";
-import PrimaryButton from "../../components/ui/button";
+import AuthHeader from "@/components/auth/authheader";
+import AuthToggle from "../../components/auth/authtoggle";
+import PrimaryButton from "../../components/Reuse/button";
 import { TextBold, TextMedium, TextSemiBold } from "@/constants/customFont";
 import { router } from "expo-router";
 
 // IMPORT UI FORM YANG BARU KITA PISAH
-import LoginForm from "@/components/ui/auth/loginform";
-import RegisterForm from "@/components/ui/auth/registerform";
+import LoginForm from "@/components/auth/loginform";
+import RegisterForm from "@/components/auth/registerform";
 import authService from "@/services/authService";
 
 export default function AuthScreen() {
