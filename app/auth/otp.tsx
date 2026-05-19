@@ -21,8 +21,10 @@ export default function OTP() {
 
   // 2. State Management
   const [otp, setOtp] = useState(["", "", "", ""]); // Array untuk 6 digit OTP
-  const [isLoading, setIsLoading] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const inputRefs = useRef<Array<TextInput | null>>([]);
+  const [resendCooldown, setResendCooldown] = useState(0);
 
   // Toast State
   const [toast, setToast] = useState({
@@ -68,7 +70,7 @@ export default function OTP() {
   const handleVerify = async () => {
     const otpCode = otp.join("");
     if (otpCode.length < 4) return;
-
+    setIsVerifying(true); // ← pakai isVerifying
     try {
       const activeLoginId = (loginId as string) || (email as string) || "";
       const payloadData = {
@@ -82,34 +84,69 @@ export default function OTP() {
       const response = await authService.verifyOtp(payloadData);
 
       console.log("Berhasil verifikasi:", response);
-      // router.push("/auth/firstsurvey");
+      router.push("/auth/firstsurvey");
     } catch (error: any) {
-      console.error("Gagal verifikasi:", error.response?.data || error.message);
+      showToast(
+        `✕ ${error?.message || "Kode OTP salah atau expired"}`,
+        "error",
+      );
     }
   };
   // DI DALAM OTP.TSX (Fungsi handleResend)
   const handleResend = async () => {
-    setIsLoading(true);
+    if (resendCooldown > 0) return; // Block kalau masih cooldown
+    setIsResending(true); // ← pakai isResending
     try {
       const activeLoginId = (loginId as string) || (email as string) || "";
-      // Cukup kirim string-nya langsung, jangan dikasih {}
       await authService.refreshOtp(activeLoginId);
 
       showToast("✓ Kode OTP baru telah dikirim!", "success");
       setOtp(["", "", "", ""]);
       inputRefs.current[0]?.focus();
+
+      // Mulai cooldown 60 detik
+      setResendCooldown(300);
+      const interval = setInterval(() => {
+        setResendCooldown((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
     } catch (error: any) {
       showToast(`✕ ${error?.message || "Gagal mengirim ulang OTP"}`, "error");
     } finally {
-      setIsLoading(false);
+      setIsResending(false);
     }
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.content}
       >
+        <Text style={styles.title}>Verification</Text>
+        <Text style={styles.subtitle}>
+          Kita akan mengirimkan 6 kode digit{"\n"}
+          ke email yang telah diregistrasikan ({email}). {"\n"} Silahkan
+          masukkan untuk mendapatkan {"\n"} akses ke aplikasi MoodBites.
+        </Text>
+
+        {/* 👇 Panggil Component UI Form di sini 👇 */}
+        <OtpForm
+          otp={otp}
+          inputRefs={inputRefs}
+          handleOtpChange={handleOtpChange}
+          handleKeyPress={handleKeyPress}
+          onVerify={handleVerify}
+          onResend={handleResend}
+          isVerifying={isVerifying}
+          isResending={isResending}
+          resendCooldown={resendCooldown}
+        />
         {/* UI TOAST */}
         {toast.visible && (
           <View
@@ -126,24 +163,6 @@ export default function OTP() {
             </TextSemiBold>
           </View>
         )}
-
-        <Text style={styles.title}>Verification</Text>
-        <Text style={styles.subtitle}>
-          Kita akan mengirimkan 6 kode digit{"\n"}
-          keemail yang telah diregistrasikan ({email}). Silahkan masukkan{"\n"}
-          untuk mendapatkan akses ke aplikasi MoodBites.
-        </Text>
-
-        {/* 👇 Panggil Component UI Form di sini 👇 */}
-        <OtpForm
-          otp={otp}
-          inputRefs={inputRefs}
-          handleOtpChange={handleOtpChange}
-          handleKeyPress={handleKeyPress}
-          onVerify={handleVerify}
-          onResend={handleResend}
-          isLoading={isLoading}
-        />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -156,9 +175,10 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
     justifyContent: "center",
     alignItems: "center",
+    marginTop: -50,
   },
   title: {
     fontSize: 28,

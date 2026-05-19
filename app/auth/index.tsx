@@ -72,6 +72,8 @@ export default function AuthScreen() {
   };
 
   const handleSubmit = async () => {
+    if (isLoading) return; // ← tambah ini
+
     if (!validate()) return;
 
     setIsLoading(true);
@@ -83,13 +85,11 @@ export default function AuthScreen() {
       if (isLogin) {
         // 2. PROSES LOGIN VIA AUTH SERVICE
         console.log("Proses Login...");
-        const loginResult = await authService.login({
+        const result = await authService.login({
           email,
           password,
           fcmToken: "dummy_fcm_123",
         });
-        const result = await authService.login(loginResult);
-
         // Munculin Toast Sukses Login
         setToast({
           visible: true,
@@ -120,9 +120,22 @@ export default function AuthScreen() {
         redirectTimer.current = setTimeout(() => {
           setToast((prev) => ({ ...prev, visible: false }));
           setIsLoading(false);
+
+          // ✅ Ganti loginId → userId
+          const sessionId = result?.userId ?? "";
+
+          if (!sessionId) {
+            setToast({
+              visible: true,
+              message: "✕ Gagal mendapat ID sesi.",
+              type: "error",
+            });
+            return;
+          }
+
           router.push({
             pathname: "/auth/otp",
-            params: { email: email, loginId: result?.loginId || "" },
+            params: { email, loginId: sessionId }, // key tetap "loginId" biar otp.tsx tidak perlu diubah
           });
         }, 2500);
       }
