@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Platform,
 } from "react-native";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
 import Button from "@/components/Reuse/button";
@@ -97,29 +98,43 @@ const styles = StyleSheet.create({
   },
   otpContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-between", // Akan otomatis membagi sisa ruang secara rata
     width: "100%",
     marginBottom: 40,
+    paddingHorizontal: 5, // Tambahkan sedikit padding agar tidak terlalu mepet layar
   },
   otpInput: {
-    width: 60,
-    height: 75,
+    width: 45, // Dikecilkan dari 60 agar muat 6 kolom
+    height: 55, // Dikecilkan dari 75
     backgroundColor: Colors.white,
-    borderRadius: 30,
-    fontSize: 24,
+    borderRadius: 15, // Disesuaikan dengan ukuran kotak yang lebih kecil
+    fontSize: 20, // Font sedikit dikecilkan
     fontWeight: "bold",
     textAlign: "center",
     color: Colors.textPrimary,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+
+    // Konfigurasi shadow
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.textPrimary,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+      web: {
+        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.05)",
+      },
+    }),
   },
   otpInputFilled: {
     borderColor: Colors.accent,
     borderWidth: 1,
   },
+
+  // ... (Style bagian secureBox, resendButton, dll biarkan sama persis seperti kode aslimu)
   secureBox: {
     flexDirection: "row",
     backgroundColor: Colors.third,
@@ -135,9 +150,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginRight: 12,
   },
-  secureTextContainer: {
-    flex: 1,
-  },
+  secureTextContainer: { flex: 1 },
   secureTitle: {
     fontSize: 10,
     fontWeight: "bold",

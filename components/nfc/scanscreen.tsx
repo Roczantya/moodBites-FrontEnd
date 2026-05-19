@@ -15,6 +15,7 @@ import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import NfcManager, { NfcTech } from "react-native-nfc-manager";
 import { Colors } from "../../constants/colors";
 import BottomNavBar from "../dashboard/bottomNavbar";
+import Header from "../dashboard/header";
 
 interface ScanScreenProps {
   onSuccess: () => void;
@@ -75,9 +76,7 @@ export default function ScanScreen({ onSuccess }: ScanScreenProps) {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.header}>
-          <Text style={styles.logoTextLight}>MoodBites</Text>
-        </View>
+        <Header title="NFC" />
 
         <View style={styles.mainContent}>
           <Text style={styles.titleLight}>Ready to Scan?</Text>
@@ -174,16 +173,10 @@ const styles = StyleSheet.create({
   lightContainer: { backgroundColor: Colors.primary },
   scrollView: { flex: 1 },
   scrollContent: { flexGrow: 1, paddingBottom: 100 },
-  header: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 24,
-    paddingVertical: 16,
-  },
+
   logoTextLight: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontFamily: "PlusJakartaSans-Bold",
     color: Colors.textAccent,
     textAlign: "center",
   },
