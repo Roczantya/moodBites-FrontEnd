@@ -20,7 +20,7 @@ export default function OTP() {
   const { email, loginId } = useLocalSearchParams();
 
   // 2. State Management
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", ""]); // Array untuk 6 digit OTP
   const [isLoading, setIsLoading] = useState(false);
   const inputRefs = useRef<Array<TextInput | null>>([]);
 
@@ -64,55 +64,46 @@ export default function OTP() {
     }
   };
 
-  // 4. Logic Fetching API (Verify)
-  // 4. Logic Fetching API (Verify)
+  // DI DALAM OTP.TSX (Fungsi handleVerify)
   const handleVerify = async () => {
     const otpCode = otp.join("");
     if (otpCode.length < 4) return;
 
-    // 🔥 JALUR BYPASS UNTUK TESTING FE 🔥
-    if (otpCode === "4534") {
-      showToast("✓ [TEST] Verifikasi berhasil bypass!", "success");
-      setTimeout(() => {
-        router.push("/auth/firstsurvey");
-      }, 1500);
-      return; // Berhenti di sini, jangan hit API beneran
-    }
-
-    setIsLoading(true);
     try {
-      // Hit API verifyOtp (Hanya jalan kalau kodenya bukan 1234)
-      await authService.verifyOtp({
-        loginId: loginId as string,
-        code: otpCode,
-      });
+      const activeLoginId = (loginId as string) || (email as string) || "";
+      const payloadData = {
+        loginId: activeLoginId,
+        code: otpCode, // Sudah sesuai dengan interface VerifyOtpPayload
+      };
 
-      showToast("✓ Verifikasi berhasil!", "success");
-      setTimeout(() => {
-        setIsLoading(false);
-        router.push("/auth/firstsurvey");
-      }, 1500);
+      console.log("Mengirim payload ke backend:", payloadData);
+
+      // PASTIKAN MEMANGGIL 'verifyOtp', BUKAN 'refreshOtp'
+      const response = await authService.verifyOtp(payloadData);
+
+      console.log("Berhasil verifikasi:", response);
+      // router.push("/auth/firstsurvey");
     } catch (error: any) {
-      setIsLoading(false);
-      showToast(`✕ ${error?.message || "OTP salah atau kedaluwarsa"}`, "error");
+      console.error("Gagal verifikasi:", error.response?.data || error.message);
     }
   };
-
-  // 5. Logic Fetching API (Resend)
+  // DI DALAM OTP.TSX (Fungsi handleResend)
   const handleResend = async () => {
     setIsLoading(true);
     try {
-      await authService.refreshOtp(loginId as string);
+      const activeLoginId = (loginId as string) || (email as string) || "";
+      // Cukup kirim string-nya langsung, jangan dikasih {}
+      await authService.refreshOtp(activeLoginId);
+
       showToast("✓ Kode OTP baru telah dikirim!", "success");
-      setOtp(["", "", "", ""]); // Reset kotak OTP
-      inputRefs.current[0]?.focus(); // Fokus ke kotak pertama lagi
+      setOtp(["", "", "", ""]);
+      inputRefs.current[0]?.focus();
     } catch (error: any) {
       showToast(`✕ ${error?.message || "Gagal mengirim ulang OTP"}`, "error");
     } finally {
       setIsLoading(false);
     }
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
@@ -138,9 +129,9 @@ export default function OTP() {
 
         <Text style={styles.title}>Verification</Text>
         <Text style={styles.subtitle}>
-          We've sent a 4-digit code to your{"\n"}
-          registered email ({email}). Please enter it{"\n"}
-          below to keep your culinary journey secure.
+          Kita akan mengirimkan 6 kode digit{"\n"}
+          keemail yang telah diregistrasikan ({email}). Silahkan masukkan{"\n"}
+          untuk mendapatkan akses ke aplikasi MoodBites.
         </Text>
 
         {/* 👇 Panggil Component UI Form di sini 👇 */}

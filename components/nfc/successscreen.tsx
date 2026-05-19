@@ -5,13 +5,12 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
-  Platform,
-  StatusBar,
   ScrollView,
 } from "react-native";
-import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/colors";
 import BottomNavBar from "@/components/dashboard/bottomNavbar";
+import Header from "@/components/dashboard/header"; // Import komponen Header global kamu
 
 interface SuccessScreenProps {
   onBack: () => void;
@@ -19,26 +18,15 @@ interface SuccessScreenProps {
 
 export default function SuccessScreen({ onBack }: SuccessScreenProps) {
   return (
-    <SafeAreaView style={[styles.container, styles.lightContainer]}>
-      <StatusBar barStyle="dark-content" backgroundColor={Colors.primary} />
-
-      {/* Tambahkan style={styles.scrollView} di sini */}
+    // Menghapus barStyle inline agar mengikuti kesatuan global layout
+    <SafeAreaView style={styles.container}>
+      {/* Gunakan komponen Header yang sama agar tinggi halaman seragam */}
+      <Header title="NFC" />
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.header}>
-          <View style={styles.logoRow}>
-            <MaterialCommunityIcons
-              name="lightning-bolt"
-              size={20}
-              color={Colors.accent}
-            />
-            <Text style={styles.logoTextLight}>MoodBites</Text>
-          </View>
-        </View>
-
         <View style={styles.mainContent}>
           <TouchableOpacity onPress={onBack}>
             <View style={styles.glowCircleOuter}>
@@ -87,7 +75,6 @@ export default function SuccessScreen({ onBack }: SuccessScreenProps) {
         </View>
       </ScrollView>
 
-      {/* Navbar tetap di bawah */}
       <BottomNavBar />
     </SafeAreaView>
   );
@@ -96,38 +83,20 @@ export default function SuccessScreen({ onBack }: SuccessScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    backgroundColor: Colors.primary, // Memberikan warna dasar yang rata
   },
-  lightContainer: { backgroundColor: Colors.primary },
-
-  // 1. Tambahkan ini agar ScrollView tahu batas ukurannya
   scrollView: {
     flex: 1,
   },
-
-  // 2. Beri padding bawah ekstra agar konten tidak tertutup BottomNavBar
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: 100, // Besarkan angka ini supaya bisa di-scroll sampai bawah
+    paddingBottom: 100,
   },
-
-  header: {
-    flexDirection: "row",
-    justifyContent: "center",
+  mainContent: {
     alignItems: "center",
-    paddingHorizontal: 24,
-    paddingVertical: 16,
+    marginTop: 20, // Mengurangi margin top agar presisinya pas pasca-header global
+    marginBottom: 20,
   },
-  logoRow: { flexDirection: "row", alignItems: "center" },
-  logoTextLight: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: Colors.textAccent,
-    marginLeft: 4,
-  },
-
-  mainContent: { alignItems: "center", marginTop: 40, marginBottom: 20 },
-
   glowCircleOuter: {
     width: 260,
     height: 260,
@@ -149,7 +118,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
   successText: {
     color: Colors.textPrimary,
     fontWeight: "bold",
@@ -158,7 +126,6 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   cardsContainer: { width: "100%", paddingHorizontal: 24 },
-
   dataCard: {
     flexDirection: "row",
     alignItems: "center",
@@ -181,7 +148,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginRight: 16,
   },
-
   cardLabel: {
     color: Colors.textSecondary,
     fontSize: 12,
