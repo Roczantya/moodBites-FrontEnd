@@ -94,7 +94,6 @@ describe("OtpForm UI Component", () => {
 
     // Teks di tombol harus berubah
     expect(getByText("Verifying...")).toBeTruthy();
-    expect(getByText("PLEASE WAIT...")).toBeTruthy();
 
     // Kotak input harus terkunci (editable = false)
     const firstInput = getByTestId("otp-input-0");

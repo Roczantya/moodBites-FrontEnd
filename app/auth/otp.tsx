@@ -50,19 +50,28 @@ export default function OTP() {
 
   // 3. Logic Ketik OTP
   const handleOtpChange = (text: string, index: number) => {
-    const numericText = text.replace(/[^0-9]/g, "");
+    const numericText = text.replace(/[^0-9]/g, "").slice(0, 1); // ✅ Tambah slice(0,1)
     const newOtp = [...otp];
     newOtp[index] = numericText;
     setOtp(newOtp);
 
+    // ✅ Hanya urus maju — HAPUS logika mundur dari sini
     if (numericText && index < 3) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
   const handleKeyPress = (e: any, index: number) => {
-    if (e.nativeEvent.key === "Backspace" && !otp[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
+    if (e.nativeEvent.key === "Backspace") {
+      if (otp[index]) {
+        // ✅ Kotak berisi → hapus isinya
+        const newOtp = [...otp];
+        newOtp[index] = "";
+        setOtp(newOtp);
+      } else if (index > 0) {
+        // ✅ Kotak sudah kosong → mundur ke kotak sebelumnya
+        inputRefs.current[index - 1]?.focus();
+      }
     }
   };
 
@@ -77,7 +86,9 @@ export default function OTP() {
         loginId: activeLoginId,
         code: otpCode, // Sudah sesuai dengan interface VerifyOtpPayload
       };
-
+      console.log("PARAMS →", { loginId, email });
+      console.log("activeLoginId →", activeLoginId);
+      console.log("otpCode →", otpCode);
       console.log("Mengirim payload ke backend:", payloadData);
 
       // PASTIKAN MEMANGGIL 'verifyOtp', BUKAN 'refreshOtp'
@@ -195,7 +206,7 @@ const styles = StyleSheet.create({
   },
   toastContainer: {
     position: "absolute",
-    top: 20, // Muncul dari atas untuk OTP biar ga nutupin keyboard
+    bottom: 40, // Muncul dari atas untuk OTP biar ga nutupin keyboard
     left: 20,
     right: 20,
     padding: 15,

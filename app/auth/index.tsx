@@ -122,7 +122,7 @@ export default function AuthScreen() {
           setIsLoading(false);
 
           // ✅ Ganti loginId → userId
-          const sessionId = result?.userId ?? "";
+          const sessionId = result?.userId ?? result?.loginId ?? "";
 
           if (!sessionId) {
             setToast({
