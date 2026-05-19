@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
   View,
@@ -22,7 +22,7 @@ export default function AuthScreen() {
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 👇 1. STATE TOAST DINAMIS BARU
+  // 1. STATE TOAST DINAMIS BARU
   const [toast, setToast] = useState({
     visible: false,
     message: "",
@@ -34,6 +34,18 @@ export default function AuthScreen() {
   const [password, setPassword] = useState("");
 
   const [errors, setErrors] = useState({ name: "", email: "", password: "" });
+
+  // Pake useRef untuk nge-track timer setTimeout biar aman dari memory leak
+  //  PAKAI INI (Aman & Bebas Error)
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const redirectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Bersihkan semua timer kalau komponen unmount (pindah halaman)
+  useEffect(() => {
+    return () => {
+      if (toastTimer.current) clearTimeout(toastTimer.current);
+      if (redirectTimer.current) clearTimeout(redirectTimer.current);
+    };
+  }, []);
 
   const validate = () => {
     let valid = true;
@@ -65,13 +77,13 @@ export default function AuthScreen() {
     setIsLoading(true);
     // Tutup toast yang mungkin masih nyangkut sebelum mulai request baru
     setToast({ ...toast, visible: false });
+    if (toastTimer.current) clearTimeout(toastTimer.current);
 
     try {
       if (isLogin) {
-        // 👇 2. PROSES LOGIN
+        // 2. PROSES LOGIN VIA AUTH SERVICE
         console.log("Proses Login...");
-        // Nanti buka komen ini kalau API login lu udah jadi:
-        // const loginResult = await authService.login({ email, password });
+        const loginResult = await authService.login({ email, password });
 
         // Munculin Toast Sukses Login
         setToast({
@@ -81,14 +93,15 @@ export default function AuthScreen() {
         });
 
         // Kasih jeda 1.5 detik biar user bisa baca toast-nya sebelum pindah halaman
-        setTimeout(() => {
+        redirectTimer.current = setTimeout(() => {
           setToast((prev) => ({ ...prev, visible: false }));
           setIsLoading(false);
           router.push("/dashboard/home");
         }, 1500);
       } else {
-        // 👇 3. PROSES REGISTER
+        // 3. PROSES REGISTER VIA AUTH SERVICE
         const payload = { name, email, password, fcmToken: "dummy_fcm_123" };
+        console.log("DATA DARI FORM FE:", JSON.stringify(payload, null, 2));
         const result = await authService.register(payload);
 
         // Munculin Toast Sukses Register
@@ -99,7 +112,7 @@ export default function AuthScreen() {
         });
 
         // Kasih jeda nunggu OTP 2.5 detik
-        setTimeout(() => {
+        redirectTimer.current = setTimeout(() => {
           setToast((prev) => ({ ...prev, visible: false }));
           setIsLoading(false);
           router.push({
@@ -109,10 +122,10 @@ export default function AuthScreen() {
         }, 2500);
       }
     } catch (error: any) {
-      // 👇 4. PROSES ERROR (LOGIN / REGISTER)
+      // 4. PROSES ERROR (LOGIN / REGISTER) YANG SUDAH DISARING INTERCEPTOR AXIOS
       setIsLoading(false);
 
-      // Munculin Toast Error (Merah)
+      // Munculin Toast Error (Merah) dengan pesan kustom dari interceptor
       setToast({
         visible: true,
         message: `✕ ${error?.message || "Terjadi kesalahan sistem."}`,
@@ -120,7 +133,7 @@ export default function AuthScreen() {
       });
 
       // Otomatis tutup toast error setelah 3 detik
-      setTimeout(() => {
+      toastTimer.current = setTimeout(() => {
         setToast((prev) => ({ ...prev, visible: false }));
       }, 3000);
     }
@@ -131,7 +144,7 @@ export default function AuthScreen() {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      {/* 👇 5. UI TOAST DINAMIS */}
+      {/* 5. UI TOAST DINAMIS */}
       {toast.visible && (
         <View
           style={[
@@ -167,6 +180,7 @@ export default function AuthScreen() {
               setIsLogin(val);
               setErrors({ name: "", email: "", password: "" });
               setToast({ ...toast, visible: false }); // Sembunyiin toast kalau user pindah tab
+              if (toastTimer.current) clearTimeout(toastTimer.current);
             }}
           />
 
