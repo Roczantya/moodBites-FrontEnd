@@ -83,7 +83,12 @@ export default function AuthScreen() {
       if (isLogin) {
         // 2. PROSES LOGIN VIA AUTH SERVICE
         console.log("Proses Login...");
-        const loginResult = await authService.login({ email, password });
+        const loginResult = await authService.login({
+          email,
+          password,
+          fcmToken: "dummy_fcm_123",
+        });
+        const result = await authService.login(loginResult);
 
         // Munculin Toast Sukses Login
         setToast({
