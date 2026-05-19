@@ -13,6 +13,12 @@ export interface VerifyOtpPayload {
   code: string;
 }
 
+export interface LoginPayload {
+  email: string;
+  password: string;
+  fcmToken?: string; // Opsional, tergantung apakah backend minta FCM token saat login
+}
+
 // --- 2. LOGIC SERVICE LAYER ---
 const authService = {
   /**
@@ -24,8 +30,21 @@ const authService = {
       const response = await apiClient.post("/auth/register", data);
       return response.data; // Ekspektasi balikin data termasuk loginId
     } catch (error: any) {
-      // Lempar error message dari backend, kalau gak ada pake error default
-      throw error.response?.data || { message: "Gagal terhubung ke server" };
+      // Interceptor di apiClient sudah membungkus error menjadi { message: "..." }
+      throw error;
+    }
+  },
+
+  /**
+   * Hit endpoint Login User
+   * POST /api/v1/auth/login
+   */
+  login: async (data: LoginPayload) => {
+    try {
+      const response = await apiClient.post("/auth/login", data);
+      return response.data; // Biasanya mengembalikan token (JWT) & data user
+    } catch (error: any) {
+      throw error;
     }
   },
 
@@ -38,7 +57,7 @@ const authService = {
       const response = await apiClient.post("/auth/register/verify", data);
       return response.data;
     } catch (error: any) {
-      throw error.response?.data || { message: "Gagal memverifikasi OTP" };
+      throw error;
     }
   },
 
@@ -51,7 +70,7 @@ const authService = {
       const response = await apiClient.post(`/auth/refreshOtp/${loginId}`);
       return response.data;
     } catch (error: any) {
-      throw error.response?.data || { message: "Gagal mengirim ulang OTP" };
+      throw error;
     }
   },
 };

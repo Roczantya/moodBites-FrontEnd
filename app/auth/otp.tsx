@@ -1,25 +1,54 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
-  View,
   Text,
   TextInput,
-  TouchableOpacity,
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  View,
 } from "react-native";
-import { MaterialIcons, Feather } from "@expo/vector-icons";
-import Button from "@/components/Reuse/button"; // Import custom Button kamu
 import { Colors } from "@/constants/colors";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { TextSemiBold } from "@/constants/customFont";
+
+import authService from "@/services/authService";
+import OtpForm from "@/components/auth/otpform"; // Import UI yang baru dibuat
+
 export default function OTP() {
+  // 1. Ambil params dari halaman register sebelumnya (email & loginId)
+  const { email, loginId } = useLocalSearchParams();
+
+  // 2. State Management
   const [otp, setOtp] = useState(["", "", "", ""]);
+  const [isLoading, setIsLoading] = useState(false);
   const inputRefs = useRef<Array<TextInput | null>>([]);
 
+  // Toast State
+  const [toast, setToast] = useState({
+    visible: false,
+    message: "",
+    type: "success",
+  });
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (toastTimer.current) clearTimeout(toastTimer.current);
+    };
+  }, []);
+
+  const showToast = (message: string, type: "success" | "error") => {
+    setToast({ visible: true, message, type });
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => {
+      setToast((prev) => ({ ...prev, visible: false }));
+    }, 3000);
+  };
+
+  // 3. Logic Ketik OTP
   const handleOtpChange = (text: string, index: number) => {
     const numericText = text.replace(/[^0-9]/g, "");
-
     const newOtp = [...otp];
     newOtp[index] = numericText;
     setOtp(newOtp);
@@ -35,11 +64,53 @@ export default function OTP() {
     }
   };
 
-  const handleVerify = () => {
+  // 4. Logic Fetching API (Verify)
+  // 4. Logic Fetching API (Verify)
+  const handleVerify = async () => {
     const otpCode = otp.join("");
-    console.log("Verifying OTP for Moodbites:", otpCode);
-    router.push("/auth/firstsurvey");
-    // Tambahkan logika verifikasi ke API di sini
+    if (otpCode.length < 4) return;
+
+    // 🔥 JALUR BYPASS UNTUK TESTING FE 🔥
+    if (otpCode === "4534") {
+      showToast("✓ [TEST] Verifikasi berhasil bypass!", "success");
+      setTimeout(() => {
+        router.push("/auth/firstsurvey");
+      }, 1500);
+      return; // Berhenti di sini, jangan hit API beneran
+    }
+
+    setIsLoading(true);
+    try {
+      // Hit API verifyOtp (Hanya jalan kalau kodenya bukan 1234)
+      await authService.verifyOtp({
+        loginId: loginId as string,
+        code: otpCode,
+      });
+
+      showToast("✓ Verifikasi berhasil!", "success");
+      setTimeout(() => {
+        setIsLoading(false);
+        router.push("/auth/firstsurvey");
+      }, 1500);
+    } catch (error: any) {
+      setIsLoading(false);
+      showToast(`✕ ${error?.message || "OTP salah atau kedaluwarsa"}`, "error");
+    }
+  };
+
+  // 5. Logic Fetching API (Resend)
+  const handleResend = async () => {
+    setIsLoading(true);
+    try {
+      await authService.refreshOtp(loginId as string);
+      showToast("✓ Kode OTP baru telah dikirim!", "success");
+      setOtp(["", "", "", ""]); // Reset kotak OTP
+      inputRefs.current[0]?.focus(); // Fokus ke kotak pertama lagi
+    } catch (error: any) {
+      showToast(`✕ ${error?.message || "Gagal mengirim ulang OTP"}`, "error");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -48,58 +119,39 @@ export default function OTP() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.content}
       >
+        {/* UI TOAST */}
+        {toast.visible && (
+          <View
+            style={[
+              styles.toastContainer,
+              {
+                backgroundColor:
+                  toast.type === "success" ? "#A0D585" : "#FF9494",
+              },
+            ]}
+          >
+            <TextSemiBold style={styles.toastText}>
+              {toast.message}
+            </TextSemiBold>
+          </View>
+        )}
+
         <Text style={styles.title}>Verification</Text>
         <Text style={styles.subtitle}>
           We've sent a 4-digit code to your{"\n"}
-          registered mobile number. Please enter it{"\n"}
+          registered email ({email}). Please enter it{"\n"}
           below to keep your culinary journey secure.
         </Text>
 
-        {/* Kolom Input OTP */}
-        <View style={styles.otpContainer}>
-          {otp.map((digit, index) => (
-            <TextInput
-              key={index}
-              ref={(ref) => {
-                inputRefs.current[index] = ref;
-              }}
-              style={[styles.otpInput, digit ? styles.otpInputFilled : null]}
-              keyboardType="number-pad"
-              maxLength={1}
-              value={digit}
-              onChangeText={(text) => handleOtpChange(text, index)}
-              onKeyPress={(e) => handleKeyPress(e, index)}
-              testID={`otp-input-${index}`}
-            />
-          ))}
-        </View>
-
-        {/* Kotak Info Keamanan */}
-        <View style={styles.secureBox}>
-          <View style={styles.secureIconContainer}>
-            <MaterialIcons name="security" size={16} color={Colors.accent} />
-          </View>
-          <View style={styles.secureTextContainer}>
-            <Text style={styles.secureTitle}>SECURED BY MOODBITES</Text>
-            <Text style={styles.secureSubtitle}>
-              Your data is encrypted. We only use this to{"\n"}ensure it's
-              really you.
-            </Text>
-          </View>
-        </View>
-
-        {/* Tombol Resend */}
-        <TouchableOpacity style={styles.resendButton} testID="resend-button">
-          <Feather name="refresh-cw" size={14} color={Colors.accent} />
-          <Text style={styles.resendText}>RESEND CODE</Text>
-        </TouchableOpacity>
-
-        {/* Menggunakan Komponen Custom Button Milikmu */}
-        <Button
-          label="Verify & Continue"
-          onPress={handleVerify}
-          variant="primary" // Menggunakan style Figma dari button.tsx kamu
-          style={{ backgroundColor: Colors.accent, shadowColor: Colors.accent }} // Override agar warnanya sama dengan desain (pink)
+        {/* 👇 Panggil Component UI Form di sini 👇 */}
+        <OtpForm
+          otp={otp}
+          inputRefs={inputRefs}
+          handleOtpChange={handleOtpChange}
+          handleKeyPress={handleKeyPress}
+          onVerify={handleVerify}
+          onResend={handleResend}
+          isLoading={isLoading}
         />
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -109,7 +161,7 @@ export default function OTP() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary, // #FFF5E4 dari constants/colors
+    backgroundColor: Colors.primary,
   },
   content: {
     flex: 1,
@@ -119,7 +171,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontFamily: "PlusJakartaSans-Bold", // Asumsi kamu punya font ini berdasar customFont.tsx
+    fontFamily: "PlusJakartaSans-Bold",
     color: Colors.textPrimary,
     marginBottom: 16,
   },
@@ -130,72 +182,19 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     marginBottom: 40,
   },
-  otpContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    paddingHorizontal: 16,
-    marginBottom: 40,
+  toastContainer: {
+    position: "absolute",
+    top: 20, // Muncul dari atas untuk OTP biar ga nutupin keyboard
+    left: 20,
+    right: 20,
+    padding: 15,
+    borderRadius: 5,
+    zIndex: 100,
+    elevation: 10,
   },
-  otpInput: {
-    width: 60,
-    height: 75,
-    backgroundColor: Colors.white,
-    borderRadius: 30,
-    fontSize: 24,
-    fontWeight: "bold",
+  toastText: {
     textAlign: "center",
-    color: Colors.textPrimary,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  otpInputFilled: {
-    borderColor: Colors.accent,
-    borderWidth: 1,
-  },
-  secureBox: {
-    flexDirection: "row",
-    backgroundColor: Colors.third, // #FFD1D1
-    padding: 16,
-    borderRadius: 20,
-    width: "100%",
-    alignItems: "center",
-    marginBottom: 40,
-  },
-  secureIconContainer: {
-    backgroundColor: Colors.secondary, // #FFE3E1
-    padding: 8,
-    borderRadius: 12,
-    marginRight: 12,
-  },
-  secureTextContainer: {
-    flex: 1,
-  },
-  secureTitle: {
-    fontSize: 10,
-    fontWeight: "bold",
-    color: Colors.textAccent,
-    letterSpacing: 1,
-    marginBottom: 4,
-  },
-  secureSubtitle: {
-    fontSize: 10,
-    color: Colors.textSecondary,
-    lineHeight: 14,
-  },
-  resendButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 24,
-  },
-  resendText: {
-    marginLeft: 8,
-    color: Colors.accent,
-    fontWeight: "bold",
     fontSize: 12,
-    letterSpacing: 1,
+    color: "#FFFFFF",
   },
 });

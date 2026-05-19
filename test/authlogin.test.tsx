@@ -1,10 +1,10 @@
-import React, { act } from "react";
-import { render, fireEvent, waitFor } from "@testing-library/react-native";
-import AuthScreen from "../app/auth/index";
+import React from "react";
+import { render, fireEvent, act } from "@testing-library/react-native";
+import AuthScreen from "../app/auth/index"; // Sesuaikan rute dengan struktur proyekmu
 import { router } from "expo-router";
 import authService from "@/services/authService";
 
-// 1. Mocking expo-router dengan struktur yang benar
+// 1. Mocking expo-router
 jest.mock("expo-router", () => ({
   router: {
     push: jest.fn(),
@@ -23,64 +23,91 @@ jest.mock("@expo/vector-icons", () => ({
 describe("AuthScreen Testing", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // Gunakan fake timers dari awal untuk seluruh test case yang butuh manipulasi waktu
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   it("harus menampilkan form login secara default", () => {
     const { getByText, queryByPlaceholderText } = render(<AuthScreen />);
-
-    // Cek apakah tombol bertuliskan Enter the Hearth (Mode Login)
     expect(getByText("Enter the Hearth")).toBeTruthy();
-
-    // Pastikan input NAMA tidak muncul saat login
     expect(queryByPlaceholderText("Sarah")).toBeNull();
   });
 
   it("harus menampilkan kolom NAMA saat pindah ke mode Register", () => {
     const { getByText, getByPlaceholderText } = render(<AuthScreen />);
 
-    // Cari toggle register dan klik
-    const registerToggle = getByText("Register");
-    fireEvent.press(registerToggle);
+    fireEvent.press(getByText("Register"));
 
-    // Sekarang kolom NAMA harusnya muncul
     expect(getByPlaceholderText("Sarah")).toBeTruthy();
-    // Tombol harusnya berubah
     expect(getByText("Join the Hearth")).toBeTruthy();
   });
 
   it("harus menampilkan pesan error jika format email salah", () => {
     const { getByText, getByPlaceholderText } = render(<AuthScreen />);
 
-    const emailInput = getByPlaceholderText("hello@moodbites.com");
-    const loginButton = getByText("Enter the Hearth");
+    fireEvent.changeText(
+      getByPlaceholderText("hello@moodbites.com"),
+      "emailngasal",
+    );
+    fireEvent.press(getByText("Enter the Hearth"));
 
-    // Masukkan email yang salah format
-    fireEvent.changeText(emailInput, "emailngasal");
-    fireEvent.press(loginButton);
-
-    // Cek apakah pesan error muncul
     expect(getByText("Format email tidak valid")).toBeTruthy();
-    // Pastikan router.push tidak dipanggil
     expect(router.push).not.toHaveBeenCalled();
   });
 
   it("harus menampilkan pesan error jika password kurang dari 6 karakter", () => {
     const { getByText, getByPlaceholderText } = render(<AuthScreen />);
 
-    const passwordInput = getByPlaceholderText("••••••••");
-    const loginButton = getByText("Enter the Hearth");
+    fireEvent.changeText(getByPlaceholderText("••••••••"), "123");
+    fireEvent.press(getByText("Enter the Hearth"));
 
-    // Masukkan password pendek
-    fireEvent.changeText(passwordInput, "123");
-    fireEvent.press(loginButton);
-
-    // Cek pesan error SETELAH tombol ditekan (Teks sudah diperbaiki)
     expect(getByText("Password minimal harus 6 karakter")).toBeTruthy();
     expect(router.push).not.toHaveBeenCalled();
   });
 
-  it("harus navigasi ke /auth/otp saat register berhasil", async () => {
-    // 1. Mock/Palsukan balikan dari API Register biar gak error
+  // --- 👇 FIX TEST CASE: LOGIN BERHASIL ---
+  it("harus menampilkan toast sukses dan navigasi ke home saat login berhasil", async () => {
+    const mockLogin = jest.spyOn(authService, "login").mockResolvedValue({
+      token: "dummy_jwt_token",
+    });
+
+    const { getByText, getByPlaceholderText } = render(<AuthScreen />);
+
+    // Isi form login
+    fireEvent.changeText(
+      getByPlaceholderText("hello@moodbites.com"),
+      "user@moodbites.com",
+    );
+    fireEvent.changeText(getByPlaceholderText("••••••••"), "password123");
+
+    // Trigger tombol login
+    fireEvent.press(getByText("Enter the Hearth"));
+
+    // KUNCI UTAMA: Menguras antrean Promise (Microtask) agar blok .then() / kode pasca-await tereksekusi
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    // Sekarang Toast dijamin sudah merender teks sukses ke layar
+    expect(getByText("✓ Login Berhasil! Memuat Hearth...")).toBeTruthy();
+
+    // Jalankan waktu virtual maju 1500ms untuk mengeksekusi fungsi di dalam setTimeout
+    act(() => {
+      jest.advanceTimersByTime(1500);
+    });
+
+    // Navigasi kini berhasil dideteksi
+    expect(router.push).toHaveBeenCalledWith("/dashboard/home");
+
+    mockLogin.mockRestore();
+  });
+
+  // --- 👇 FIX TEST CASE: REGISTER BERHASIL ---
+  it("harus menampilkan toast sukses dan navigasi ke /auth/otp saat register berhasil", async () => {
     const mockRegister = jest.spyOn(authService, "register").mockResolvedValue({
       loginId: "dummy_id_123",
     });
@@ -94,29 +121,61 @@ describe("AuthScreen Testing", () => {
     fireEvent.changeText(getByPlaceholderText("Sarah"), "Sarah");
     fireEvent.changeText(
       getByPlaceholderText("hello@moodbites.com"),
-      "register@email.com",
+      "register@moodbites.com",
     );
     fireEvent.changeText(getByPlaceholderText("••••••••"), "password123");
 
-    const registerButton = getByText("Join the Hearth");
+    fireEvent.press(getByText("Join the Hearth"));
 
-    fireEvent.press(registerButton);
+    // Kurasi antrean data register kembali
+    await act(async () => {
+      await Promise.resolve();
+    });
 
-    // 2. Gunakan waitFor dengan timeout 3000ms
-    await waitFor(
-      () => {
-        expect(router.push).toHaveBeenCalledWith({
-          pathname: "/auth/otp",
-          params: {
-            email: "register@email.com",
-            loginId: "dummy_id_123", // 👈 INI KUNCINYA! Harus sama persis kayak balikan API di atas
-          },
-        });
+    expect(
+      getByText("✓ Registrasi Berhasil! Kode OTP sedang dikirim..."),
+    ).toBeTruthy();
+
+    // Majukan waktu virtual sejauh 2500ms untuk menembus batas penantian OTP
+    act(() => {
+      jest.advanceTimersByTime(2500);
+    });
+
+    expect(router.push).toHaveBeenCalledWith({
+      pathname: "/auth/otp",
+      params: {
+        email: "register@moodbites.com",
+        loginId: "dummy_id_123",
       },
-      { timeout: 3000 },
-    );
+    });
 
-    // 3. (Opsional) Bersihkan mock setelah test selesai biar gak bocor ke test lain
     mockRegister.mockRestore();
+  });
+
+  // --- 👇 FIX TEST CASE: HANDLER API ERROR ---
+  it("harus menampilkan toast error jika API mengembalikan kesalahan", async () => {
+    const mockLogin = jest.spyOn(authService, "login").mockRejectedValue({
+      message: "Email atau password salah.",
+    });
+
+    const { getByText, getByPlaceholderText } = render(<AuthScreen />);
+
+    fireEvent.changeText(
+      getByPlaceholderText("hello@moodbites.com"),
+      "user@moodbites.com",
+    );
+    fireEvent.changeText(getByPlaceholderText("••••••••"), "salahpass");
+
+    fireEvent.press(getByText("Enter the Hearth"));
+
+    // Selesaikan proses penolakan dari server (Catch block)
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(getByText("✕ Email atau password salah.")).toBeTruthy();
+    expect(router.push).not.toHaveBeenCalled();
+
+    mockLogin.mockRestore();
   });
 });
