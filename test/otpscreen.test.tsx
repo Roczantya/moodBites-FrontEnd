@@ -24,7 +24,9 @@ describe("OtpForm UI Component", () => {
     handleKeyPress: jest.fn(),
     onVerify: jest.fn(),
     onResend: jest.fn(),
-    isLoading: false,
+    isVerifying: false,
+    isResending: false,
+    resendCooldown: 0,
   };
 
   beforeEach(() => {
@@ -59,7 +61,7 @@ describe("OtpForm UI Component", () => {
   it("3. Tombol Verify harus ter-disable jika OTP belum lengkap (4 digit)", () => {
     // Render dengan kondisi OTP baru diisi 2 kotak
     const { getByText } = render(
-      <OtpForm {...mockProps} otp={["1", "2", "", "", "", ""]} />,
+      <OtpForm {...mockProps} otp={["1", "2", "", ""]} />,
     );
 
     const verifyButton = getByText("Verify & Continue");
@@ -74,7 +76,7 @@ describe("OtpForm UI Component", () => {
   it("4. Harus memanggil onVerify jika OTP lengkap 4 digit dan tombol diklik", () => {
     // Render dengan kondisi OTP 4 digit penuh
     const { getByText } = render(
-      <OtpForm {...mockProps} otp={["1", "2", "3", "4", "5", "6"]} />,
+      <OtpForm {...mockProps} otp={["1", "2", "3", "4"]} />,
     );
 
     const verifyButton = getByText("Verify & Continue");
@@ -87,7 +89,7 @@ describe("OtpForm UI Component", () => {
   it("5. Menampilkan status loading dan mengunci input saat proses API berjalan", () => {
     // Render dengan status isLoading = true
     const { getByText, getByTestId } = render(
-      <OtpForm {...mockProps} isLoading={true} otp={["1", "2", "3", "4"]} />,
+      <OtpForm {...mockProps} isVerifying={true} otp={["1", "2", "3", "4"]} />,
     );
 
     // Teks di tombol harus berubah

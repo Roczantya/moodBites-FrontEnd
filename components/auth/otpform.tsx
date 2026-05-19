@@ -19,7 +19,9 @@ interface OtpFormProps {
   handleKeyPress: (e: any, index: number) => void;
   onVerify: () => void;
   onResend: () => void;
-  isLoading: boolean;
+  isVerifying: boolean; // ← ganti isLoading
+  isResending: boolean;
+  resendCooldown: number;
 }
 
 export default function OtpForm({
@@ -29,7 +31,9 @@ export default function OtpForm({
   handleKeyPress,
   onVerify,
   onResend,
-  isLoading,
+  isVerifying, // ← bukan isLoading
+  isResending,
+  resendCooldown,
 }: OtpFormProps) {
   return (
     <View style={styles.formContainer}>
@@ -47,7 +51,7 @@ export default function OtpForm({
             value={digit}
             onChangeText={(text) => handleOtpChange(text, index)}
             onKeyPress={(e) => handleKeyPress(e, index)}
-            editable={!isLoading}
+            editable={!isVerifying && !isResending} // Disable input saat sedang verifying atau resending
             testID={`otp-input-${index}`}
           />
         ))}
@@ -69,22 +73,29 @@ export default function OtpForm({
 
       {/* Tombol Resend */}
       <TouchableOpacity
-        style={styles.resendButton}
+        style={[
+          styles.resendButton,
+          resendCooldown > 0 && { opacity: 0.5 }, // ← redup kalau cooldown aktif
+        ]}
         onPress={onResend}
-        disabled={isLoading}
+        disabled={resendCooldown > 0 || isResending}
       >
         <Feather name="refresh-cw" size={14} color={Colors.accent} />
         <Text style={styles.resendText}>
-          {isLoading ? "PLEASE WAIT..." : "RESEND CODE"}
+          {isResending
+            ? "PLEASE WAIT..."
+            : resendCooldown > 0
+              ? `Kirim ulang dalam ${resendCooldown}s` // ← tampil hitungan mundur
+              : "Kirim ulang kode OTP"}
         </Text>
       </TouchableOpacity>
 
       {/* Tombol Verify */}
       <Button
-        label={isLoading ? "Verifying..." : "Verify & Continue"}
+        label={isVerifying ? "Verifying..." : "Verify & Continue"}
         onPress={onVerify}
         variant="primary"
-        disabled={isLoading || otp.join("").length < 4} // Disable kalau belum 4 digit
+        disabled={isVerifying || isResending || otp.join("").length < 4} // Disable kalau belum 4 digit
         style={{ backgroundColor: Colors.accent, shadowColor: Colors.accent }}
       />
     </View>
@@ -104,8 +115,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5, // Tambahkan sedikit padding agar tidak terlalu mepet layar
   },
   otpInput: {
-    width: 45, // Dikecilkan dari 60 agar muat 6 kolom
-    height: 55, // Dikecilkan dari 75
+    width: 60, // Dikecilkan dari 60 agar muat 6 kolom
+    height: 75, // Dikecilkan dari 75
     backgroundColor: Colors.white,
     borderRadius: 15, // Disesuaikan dengan ukuran kotak yang lebih kecil
     fontSize: 20, // Font sedikit dikecilkan
@@ -138,7 +149,7 @@ const styles = StyleSheet.create({
   secureBox: {
     flexDirection: "row",
     backgroundColor: Colors.third,
-    padding: 16,
+    padding: 10,
     borderRadius: 20,
     width: "100%",
     alignItems: "center",
@@ -169,9 +180,9 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   resendText: {
-    marginLeft: 8,
+    marginLeft: 10,
     color: Colors.accent,
-    fontWeight: "bold",
+    fontFamily: "PlusJakartaSans-SemiBold",
     fontSize: 12,
     letterSpacing: 1,
   },
