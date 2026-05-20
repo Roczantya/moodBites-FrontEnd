@@ -141,7 +141,7 @@ export default function OTP() {
       >
         <Text style={styles.title}>Verification</Text>
         <Text style={styles.subtitle}>
-          Kita akan mengirimkan 6 kode digit{"\n"}
+          Kita akan mengirimkan 4 kode digit{"\n"}
           ke email yang telah diregistrasikan ({email}). {"\n"} Silahkan
           masukkan untuk mendapatkan {"\n"} akses ke aplikasi MoodBites.
         </Text>
