@@ -28,9 +28,6 @@ export default function RecommendationList() {
     <View>
       <View style={styles.header}>
         <Text style={styles.title}>Recommendations for{"\n"}your Mood</Text>
-        <TouchableOpacity>
-          <Text style={styles.viewAll}>View{"\n"}All</Text>
-        </TouchableOpacity>
       </View>
       <Text style={styles.subtitle}>
         Fuel your energy with vibrant{"\n"}nutrients
@@ -80,15 +77,9 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   title: {
-    fontSize: 22,
+    fontSize: 18,
     fontFamily: "PlusJakartaSans-ExtraBold",
     color: Colors.optionalAccent,
-  },
-  viewAll: {
-    color: Colors.accent,
-    fontSize: 14,
-    fontFamily: "PlusJakartaSans-Bold",
-    textAlign: "center",
   },
   subtitle: {
     fontSize: 14,

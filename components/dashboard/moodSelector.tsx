@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     fontFamily: "PlusJakartaSans-Bold",
     color: Colors.optionalAccent,
     letterSpacing: 1,
+    marginTop: 10,
     marginBottom: 8,
   },
   title: {

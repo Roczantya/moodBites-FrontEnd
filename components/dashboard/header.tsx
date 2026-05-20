@@ -35,9 +35,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingTop:
-      Platform.OS === "android" ? (StatusBar.currentHeight || 0) + 16 : 16,
-    paddingBottom: 16,
+    paddingTop: 16,
+    paddingBottom: 10,
     backgroundColor: Colors.primary,
 
     ...Platform.select({
