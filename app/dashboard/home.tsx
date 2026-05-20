@@ -8,15 +8,9 @@ import { Colors } from "../../constants/colors";
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <Header />
-          <MoodSelector />
-          <RecommendationList />
-        </ScrollView>
-        <BottomNavBar />
-      </View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.primary }}>
+      <RecommendationList />
+      <BottomNavBar />
     </SafeAreaView>
   );
 }

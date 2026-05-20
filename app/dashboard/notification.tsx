@@ -1,10 +1,13 @@
 import BottomNavBar from "@/components/dashboard/bottomNavbar";
+import Header from "@/components/dashboard/header";
 import { Text, View, StyleSheet } from "react-native";
 
-export default function Index() {
+export default function NotificationScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Profile screen</Text>
+      <Header title="Notifikasi" showBack={true} showBell={false} />
+
+      <Text style={styles.text}>Notifikasi screen</Text>
       <BottomNavBar />
     </View>
   );
@@ -14,10 +17,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#25292e",
-    alignItems: "center",
-    justifyContent: "center",
   },
+
   text: {
     color: "#fff",
+    textAlign: "center",
   },
 });

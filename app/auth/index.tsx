@@ -90,6 +90,8 @@ export default function AuthScreen() {
           password,
           fcmToken: "dummy_fcm_123",
         });
+        setIsLoading(false);
+
         // Munculin Toast Sukses Login
         setToast({
           visible: true,
@@ -100,14 +102,14 @@ export default function AuthScreen() {
         // Kasih jeda 1.5 detik biar user bisa baca toast-nya sebelum pindah halaman
         redirectTimer.current = setTimeout(() => {
           setToast((prev) => ({ ...prev, visible: false }));
-          setIsLoading(false);
-          router.push("/dashboard/home");
+          router.replace("/dashboard/home");
         }, 1500);
       } else {
         // 3. PROSES REGISTER VIA AUTH SERVICE
         const payload = { name, email, password, fcmToken: "dummy_fcm_123" };
         console.log("DATA DARI FORM FE:", JSON.stringify(payload, null, 2));
         const result = await authService.register(payload);
+        setIsLoading(false);
 
         // Munculin Toast Sukses Register
         setToast({
@@ -119,7 +121,6 @@ export default function AuthScreen() {
         // Kasih jeda nunggu OTP 2.5 detik
         redirectTimer.current = setTimeout(() => {
           setToast((prev) => ({ ...prev, visible: false }));
-          setIsLoading(false);
 
           // ✅ Ganti loginId → userId
           const sessionId = result?.userId ?? result?.loginId ?? "";
@@ -137,7 +138,7 @@ export default function AuthScreen() {
             pathname: "/auth/otp",
             params: { email, loginId: sessionId }, // key tetap "loginId" biar otp.tsx tidak perlu diubah
           });
-        }, 2500);
+        }, 2000);
       }
     } catch (error: any) {
       // 4. PROSES ERROR (LOGIN / REGISTER) YANG SUDAH DISARING INTERCEPTOR AXIOS
@@ -237,8 +238,9 @@ export default function AuthScreen() {
           />
 
           <TextMedium style={styles.footerText}>
-            By signing in, you agree to our{" "}
-            <TextBold style={styles.linkText}>Terms</TextBold> and{" "}
+            {"By signing in, you agree to our "}
+            <TextBold style={styles.linkText}>Terms</TextBold>
+            {" and "}
             <TextBold style={styles.linkText}>Privacy Policy</TextBold>
           </TextMedium>
         </View>

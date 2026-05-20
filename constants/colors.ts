@@ -9,6 +9,9 @@ export const Colors = {
   textPrimary: "#3D1A1B",
   textSecondary: "#555",
   textAccent: "#994345",
+  darkBg: "#222222",
+  creamBg: "#FEF6ED",
+  logoutText: "#AA371C",
 
   white: "#fff",
 };

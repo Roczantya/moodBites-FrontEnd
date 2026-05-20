@@ -6,12 +6,19 @@ export default function Homelayout() {
       screenOptions={{
         // Ini kunci untuk menghilangkan bar putih di atas
         headerShown: false,
-        contentStyle: {}, // Agar background krem merata
       }}
     >
-      <Stack.Screen name="home" />
-      <Stack.Screen name="nfc" />
-      <Stack.Screen name="profil" />
+      <Stack.Screen name="home" options={{ animation: "fade" }} />
+      <Stack.Screen name="nfc" options={{ animation: "fade" }} />
+      <Stack.Screen name="profil" options={{ animation: "fade" }} />
+      <Stack.Screen
+        name="notification"
+        options={{ animation: "slide_from_bottom" }}
+      />
+      {/* <Stack.Screen
+        name="history"
+        options={{ animation: "slide_from_bottom" }}
+      /> */}
     </Stack>
   );
 }
