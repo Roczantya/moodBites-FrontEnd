@@ -59,7 +59,7 @@ export default function InputField({
 
 const styles = StyleSheet.create({
   inputContainer: {
-    marginBottom: 10,
+    marginBottom: 5,
   },
   label: {
     fontSize: 11,
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: "PlusJakartaSans-Regular",
     color: Colors.white,
-    marginBottom: 8,
+    marginBottom: 3,
     marginLeft: 5,
     letterSpacing: 0.5,
   },
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.secondary + "80",
     borderRadius: 20,
     height: 55,
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
   },
   inputIcon: {
     marginRight: 10,

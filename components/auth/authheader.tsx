@@ -18,7 +18,7 @@ export default function AuthHeader() {
 const styles = StyleSheet.create({
   headerContainer: {
     alignItems: "center",
-    marginBottom: 30,
+    marginBottom: 25,
   },
   logoCircle: {
     width: 70,

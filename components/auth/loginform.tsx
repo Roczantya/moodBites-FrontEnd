@@ -57,10 +57,10 @@ export default function LoginForm({
 const styles = StyleSheet.create({
   formContainer: {
     width: "100%",
-    marginBottom: 30,
+    marginBottom: 20,
   },
   inputWrapper: {
-    marginBottom: 15,
+    marginBottom: 5,
   },
   errorText: {
     color: "#FF9494",
