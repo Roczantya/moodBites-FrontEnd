@@ -69,15 +69,12 @@ export default function ScanScreen({ onSuccess }: ScanScreenProps) {
 
   return (
     <SafeAreaView style={[styles.container, styles.lightContainer]}>
-      <StatusBar barStyle="dark-content" backgroundColor={Colors.primary} />
-
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         <Header title="NFC" showBell={false} />
-
         <View style={styles.mainContent}>
           <Text style={styles.titleLight}>Ready to Scan?</Text>
           <Text style={styles.subtitleLight}>
@@ -179,7 +176,7 @@ const styles = StyleSheet.create({
     color: Colors.textAccent,
     textAlign: "center",
   },
-  mainContent: { alignItems: "center", marginTop: 40, marginBottom: 20 },
+  mainContent: { alignItems: "center", marginTop: 30, marginBottom: 20 },
   titleLight: { fontSize: 22, fontWeight: "bold", color: Colors.textPrimary },
   subtitleLight: { fontSize: 14, color: Colors.textSecondary, marginTop: 8 },
   scanButtonOuter: {

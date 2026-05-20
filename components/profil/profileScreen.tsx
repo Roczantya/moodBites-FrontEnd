@@ -10,8 +10,9 @@ import {
 } from "react-native";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/colors";
+import BottomNavBar from "../dashboard/bottomNavbar";
+import Header from "../dashboard/header";
 
-// Tipe data untuk Props yang akan diterima oleh UI
 export interface UserProfileData {
   name: string;
   bio: string;
@@ -39,11 +40,9 @@ export default function ProfileUI({
         style={styles.container}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* BAGIAN ATAS: Background Cream */}
-        <View style={styles.topSection}>
-          <Text style={styles.headerTitle}>Profil</Text>
+        <Header title="Profil" showBell={false} />
 
-          {/* Avatar & Info */}
+        <View style={styles.page}>
           <View style={styles.profileCenter}>
             <View style={styles.avatarContainer}>
               <View style={styles.avatarBlob}>
@@ -62,15 +61,12 @@ export default function ProfileUI({
                 <Feather name="edit-2" size={12} color={Colors.white} />
               </TouchableOpacity>
             </View>
-
             <Text style={styles.userName}>{userData.name}</Text>
             <Text style={styles.userBio}>{userData.bio}</Text>
           </View>
 
           {/* Health & Safety Card */}
-          <View
-            style={[styles.infoCard, { backgroundColor: Colors.secondary }]}
-          >
+          <View style={[styles.infoCard, { backgroundColor: Colors.optional }]}>
             <View style={styles.cardHeaderTitle}>
               <MaterialCommunityIcons
                 name="bandage"
@@ -124,13 +120,13 @@ export default function ProfileUI({
             <Text style={styles.harmonyTitle}>Account Harmony</Text>
           </View>
 
-          {/* Menu 1 (Inside Cream Section) */}
+          {/* Menu 1: Personal Profile */}
           <TouchableOpacity
-            style={styles.menuItemTop}
+            style={[styles.menuItem, { backgroundColor: Colors.white }]}
             onPress={() => onMenuPress("Personal Profile")}
             activeOpacity={0.8}
           >
-            <View style={styles.menuIconContainerTop}>
+            <View style={styles.menuIcon}>
               <Feather name="user" size={20} color="#C87A7A" />
             </View>
             <View style={styles.menuTextContainer}>
@@ -145,17 +141,14 @@ export default function ProfileUI({
               color={Colors.optionalAccent}
             />
           </TouchableOpacity>
-        </View>
 
-        {/* BAGIAN BAWAH: Background Gelap */}
-        <View style={styles.bottomSection}>
-          {/* Menu 2 */}
+          {/* Menu 2: Survey */}
           <TouchableOpacity
-            style={[styles.menuItemBottom, { backgroundColor: Colors.third }]}
+            style={[styles.menuItem, { backgroundColor: Colors.secondary }]}
             onPress={() => onMenuPress("Survey")}
             activeOpacity={0.8}
           >
-            <View style={styles.menuIconContainerBottom}>
+            <View style={styles.menuIcon}>
               <MaterialCommunityIcons
                 name="silverware-variant"
                 size={20}
@@ -171,13 +164,13 @@ export default function ProfileUI({
             <Feather name="chevron-right" size={20} color="#C87A7A" />
           </TouchableOpacity>
 
-          {/* Menu 3 */}
+          {/* Menu 3: History Preferences */}
           <TouchableOpacity
-            style={[styles.menuItemBottom, { backgroundColor: "FFFFFE" }]}
+            style={[styles.menuItem, { backgroundColor: "#FFFFFE" + "80" }]}
             onPress={() => onMenuPress("History Preferences")}
             activeOpacity={0.8}
           >
-            <View style={styles.menuIconContainerBottomDark}>
+            <View style={styles.menuIcon}>
               <MaterialCommunityIcons
                 name="silverware-variant"
                 size={20}
@@ -185,17 +178,19 @@ export default function ProfileUI({
               />
             </View>
             <View style={styles.menuTextContainer}>
-              <Text style={[styles.menuItemTitle, { color: Colors.darkBg }]}>
-                History Preferences
-              </Text>
-              <Text style={[styles.menuItemSub, { color: Colors.darkBg }]}>
+              <Text style={styles.menuItemTitle}>History Preferences</Text>
+              <Text style={styles.menuItemSub}>
                 REFINE YOUR ARTISANAL TASTE PALATE
               </Text>
             </View>
-            <Feather name="chevron-right" size={20} color={Colors.darkBg} />
+            <Feather
+              name="chevron-right"
+              size={20}
+              color={Colors.optionalAccent}
+            />
           </TouchableOpacity>
 
-          {/* Sign Out Button */}
+          {/* Sign Out */}
           <TouchableOpacity
             style={styles.signOutBtn}
             onPress={onSignOut}
@@ -206,6 +201,7 @@ export default function ProfileUI({
           </TouchableOpacity>
         </View>
       </ScrollView>
+      <BottomNavBar />
     </SafeAreaView>
   );
 }
@@ -213,23 +209,21 @@ export default function ProfileUI({
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.primary, // Supaya warna notch selaras dengan background terbawah
+    backgroundColor: Colors.primary,
   },
   container: {
     flex: 1,
   },
   scrollContent: {
     flexGrow: 1,
-    backgroundColor: Colors.darkBg,
   },
-  topSection: {
-    backgroundColor: Colors.creamBg,
+
+  /* ── SINGLE PAGE ── */
+  page: {
+    backgroundColor: Colors.primary,
     paddingHorizontal: 24,
     paddingTop: 20,
-    paddingBottom: 24,
-    // Efek lengkungan di bawah cream section jika diinginkan:
-    // borderBottomLeftRadius: 24,
-    // borderBottomRightRadius: 24,
+    paddingBottom: 140,
   },
   headerTitle: {
     fontSize: 20,
@@ -237,6 +231,8 @@ const styles = StyleSheet.create({
     color: Colors.optionalAccent,
     marginBottom: 30,
   },
+
+  /* ── AVATAR ── */
   profileCenter: {
     alignItems: "center",
     marginBottom: 32,
@@ -248,8 +244,8 @@ const styles = StyleSheet.create({
   avatarBlob: {
     width: 100,
     height: 100,
-    backgroundColor: "#2A3A40", // Warna gelap di belakang avatar
-    borderRadius: 35, // Membuat bentuknya agak melengkung unik
+    backgroundColor: "#2A3A40",
+    borderRadius: 35,
     alignItems: "center",
     justifyContent: "flex-end",
     overflow: "hidden",
@@ -283,10 +279,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingHorizontal: 20,
   },
+
+  /* ── INFO CARDS ── */
   infoCard: {
     borderRadius: 24,
     padding: 20,
-    marginBottom: 20,
+    marginBottom: 16,
   },
   cardHeaderTitle: {
     flexDirection: "row",
@@ -303,10 +301,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     marginBottom: 12,
-    gap: 8, // Mengatur jarak antar tag otomatis
+    gap: 8,
   },
   pill: {
-    backgroundColor: "#FCE4E4",
+    backgroundColor: Colors.secondary,
     paddingVertical: 6,
     paddingHorizontal: 16,
     borderRadius: 20,
@@ -321,8 +319,10 @@ const styles = StyleSheet.create({
     color: Colors.optionalAccent,
     lineHeight: 16,
   },
+
+  /* ── ACCOUNT HARMONY ── */
   harmonyHeader: {
-    marginTop: 10,
+    marginTop: 8,
     marginBottom: 16,
   },
   harmonyTitle: {
@@ -330,46 +330,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#351213",
   },
-  menuItemTop: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: Colors.white,
-    padding: 16,
-    borderRadius: 24,
-    marginBottom: 10, // Memberi jarak dengan section gelap di bawahnya
-  },
-  menuIconContainerTop: {
-    width: 44,
-    height: 44,
-    backgroundColor: "#FCE4E4",
-    borderRadius: 22,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 16,
-  },
-  bottomSection: {
-    backgroundColor: Colors.darkBg,
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 40,
-  },
-  menuItemBottom: {
+
+  /* ── MENU ITEMS ── */
+  menuItem: {
     flexDirection: "row",
     alignItems: "center",
     padding: 16,
     borderRadius: 24,
-    marginBottom: 16,
+    marginBottom: 12,
   },
-  menuIconContainerBottom: {
-    width: 44,
-    height: 44,
-    backgroundColor: "#F4C7C7",
-    borderRadius: 22,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 16,
-  },
-  menuIconContainerBottomDark: {
+  menuIcon: {
     width: 44,
     height: 44,
     backgroundColor: "#FCE4E4",
@@ -392,11 +362,13 @@ const styles = StyleSheet.create({
     color: Colors.optionalAccent,
     fontWeight: "600",
   },
+
+  /* ── SIGN OUT ── */
   signOutBtn: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 20,
+    marginTop: 12,
     paddingVertical: 12,
   },
   signOutText: {
