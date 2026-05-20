@@ -9,22 +9,51 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../../constants/colors"; // Sesuaikan kembali path ini
+import { router } from "expo-router";
 
 interface HeaderProps {
   title?: string; // Tanda tanya (?) artinya props ini opsional
+  showBell?: boolean; // ← tambah
+  showBack?: boolean; // ← tambah ini
 }
-export default function Header({ title = "MoodBites" }: HeaderProps) {
+export default function Header({
+  title = "MoodBites",
+  showBell = true,
+  showBack = false, // ← default false
+}: HeaderProps) {
   return (
     <View style={styles.container}>
-      {/* Teks logo sekarang dinamis mengikuti props title */}
-      <Text style={styles.logo}>{title}</Text>
-      <TouchableOpacity style={styles.bellContainer}>
-        <Ionicons
-          name="notifications-outline"
-          size={20}
-          color={Colors.optionalAccent}
-        />
-      </TouchableOpacity>
+      <View style={styles.leftSection}>
+        {/* Back button kalau showBack = true */}
+        {showBack && (
+          <TouchableOpacity
+            style={styles.bellContainer}
+            onPress={() => router.back()}
+          >
+            <Ionicons
+              name="arrow-back"
+              size={20}
+              color={Colors.optionalAccent}
+            />
+          </TouchableOpacity>
+        )}
+        {/* Title selalu tampil */}
+        <Text style={showBack ? styles.title : styles.logo}>{title}</Text>
+      </View>
+
+      {/* Bell */}
+      {showBell && (
+        <TouchableOpacity
+          style={styles.bellContainer}
+          onPress={() => router.push("/dashboard/notification")}
+        >
+          <Ionicons
+            name="notifications-outline"
+            size={20}
+            color={Colors.optionalAccent}
+          />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -57,6 +86,16 @@ const styles = StyleSheet.create({
   logo: {
     fontSize: 24,
     fontFamily: "PlusJakartaSans-ExtraBoldItalic",
+    color: Colors.optionalAccent,
+  },
+  leftSection: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10, // jarak back button dan title
+  },
+  title: {
+    fontSize: 18,
+    fontFamily: "PlusJakartaSans-Bold",
     color: Colors.optionalAccent,
   },
   bellContainer: {

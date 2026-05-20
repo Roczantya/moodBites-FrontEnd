@@ -9,8 +9,11 @@ import {
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Colors } from "../../constants/colors";
 import { router, usePathname } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function BottomNavBar() {
+  const insets = useSafeAreaInsets(); // ← tambah ini
+
   const pathname = usePathname(); // Ambil rute aktif saat ini
 
   // Cek apakah rute tertentu sedang aktif
@@ -19,7 +22,7 @@ export default function BottomNavBar() {
   const isProfilActive = pathname === "/dashboard/profil";
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { bottom: 10 + insets.bottom }]}>
       {/* Tombol NFC Floating */}
       <TouchableOpacity
         style={[
@@ -28,7 +31,7 @@ export default function BottomNavBar() {
           { backgroundColor: isNfcActive ? Colors.accent : Colors.third },
           { opacity: isNfcActive ? 1 : 0.9 },
         ]}
-        onPress={() => router.push("/dashboard/nfc")}
+        onPress={() => router.replace("/dashboard/nfc")}
         activeOpacity={0.8}
       >
         <MaterialCommunityIcons
@@ -45,12 +48,11 @@ export default function BottomNavBar() {
           NFC
         </Text>
       </TouchableOpacity>
-
       <View style={styles.navBar}>
         {/* Beranda Tab */}
         <TouchableOpacity
           style={styles.tab}
-          onPress={() => router.push("/dashboard/home")}
+          onPress={() => router.replace("/dashboard/home")}
         >
           <Ionicons
             name={isHomeActive ? "home" : "home-outline"} // Berubah ikon jika aktif
@@ -76,7 +78,7 @@ export default function BottomNavBar() {
         {/* Profil Tab */}
         <TouchableOpacity
           style={styles.tab}
-          onPress={() => router.push("/dashboard/profil")}
+          onPress={() => router.replace("/dashboard/profil")}
         >
           <Ionicons
             name={isProfilActive ? "person" : "person-outline"}
@@ -106,7 +108,7 @@ export default function BottomNavBar() {
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    bottom: 30,
+    bottom: 16,
     left: 0,
     right: 0,
     alignItems: "center", // Ini otomatis menengahkan semua anak (navBar & centerButton)

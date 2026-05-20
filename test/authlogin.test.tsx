@@ -101,7 +101,7 @@ describe("AuthScreen Testing", () => {
     });
 
     // Navigasi kini berhasil dideteksi
-    expect(router.push).toHaveBeenCalledWith("/dashboard/home");
+    expect(router.replace).toHaveBeenCalledWith("/dashboard/home");
 
     mockLogin.mockRestore();
   });

@@ -76,7 +76,7 @@ export default function ScanScreen({ onSuccess }: ScanScreenProps) {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <Header title="NFC" />
+        <Header title="NFC" showBell={false} />
 
         <View style={styles.mainContent}>
           <Text style={styles.titleLight}>Ready to Scan?</Text>
@@ -168,7 +168,6 @@ export default function ScanScreen({ onSuccess }: ScanScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   lightContainer: { backgroundColor: Colors.primary },
   scrollView: { flex: 1 },

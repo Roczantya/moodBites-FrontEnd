@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import { Colors } from "../../constants/colors";
 import { FOOD_DATA, FoodItem } from "../../constants/food_item";
+import Header from "./header";
+import MoodSelector from "./moodSelector";
 export default function RecommendationList() {
   const { width } = useWindowDimensions();
 
@@ -26,12 +28,14 @@ export default function RecommendationList() {
   // Komponen Header (Judul & Subtitle)
   const renderHeader = () => (
     <View>
-      <View style={styles.header}>
+      <Header />
+      <MoodSelector />
+      <View style={styles.sectionTitleWrapper}>
         <Text style={styles.title}>Recommendations for{"\n"}your Mood</Text>
+        <Text style={styles.subtitle}>
+          Fuel your energy with vibrant{"\n"}nutrients
+        </Text>
       </View>
-      <Text style={styles.subtitle}>
-        Fuel your energy with vibrant{"\n"}nutrients
-      </Text>
     </View>
   );
 
@@ -59,15 +63,13 @@ export default function RecommendationList() {
       key={numColumns}
       ListHeaderComponent={renderHeader}
       contentContainerStyle={styles.listContent}
-      columnWrapperStyle={numColumns > 1 ? { gap: gap } : null}
+      columnWrapperStyle={{ gap, justifyContent: "center" }}
     />
   );
 }
 
 const styles = StyleSheet.create({
   listContent: {
-    paddingHorizontal: 24,
-    paddingTop: 20,
     paddingBottom: 100, // Ruang untuk bottom nav
   },
   header: {
@@ -75,6 +77,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 8,
+  },
+  sectionTitleWrapper: {
+    paddingHorizontal: 24, // ✅ Judul & subtitle dapat padding sendiri
+    marginBottom: 16,
   },
   title: {
     fontSize: 18,
