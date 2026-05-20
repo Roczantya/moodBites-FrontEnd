@@ -29,7 +29,13 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm clean install'
+               sh '''
+                if [ -d node_modules ]; then
+                    npm install  
+                else
+                    npm ci     
+                fi
+            '''
             }
         }
 
