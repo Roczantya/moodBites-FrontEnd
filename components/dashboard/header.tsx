@@ -64,9 +64,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingTop: 16,
+    paddingTop: 12,
     paddingBottom: 10,
     backgroundColor: Colors.primary,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(61, 26, 27, 0.08)", // warna sangat transparan
 
     ...Platform.select({
       ios: {
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
       },
       android: {
-        elevation: 3,
+        elevation: 1,
       },
       web: {
         boxShadow: "0px 2px 4px rgba(61, 26, 27, 0.06)",
