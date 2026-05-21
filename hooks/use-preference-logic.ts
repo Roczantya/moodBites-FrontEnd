@@ -14,9 +14,9 @@ export interface FoodItem {
 }
 
 export const usePreferensiLogic = () => {
-  const [currentMood, setCurrentMood] = useState<MoodKey>("happy");
+  const [currentMood, setCurrentMood] = useState<MoodKey>("Happy");
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
-  const [tempMood, setTempMood] = useState<MoodKey>("happy");
+  const [tempMood, setTempMood] = useState<MoodKey>("Happy");
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
   // Data dummy makanan

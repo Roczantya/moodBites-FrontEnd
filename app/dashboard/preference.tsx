@@ -15,6 +15,7 @@ import { Feather } from "@expo/vector-icons";
 // Import Custom Hook dan Component beserta typenya
 import { usePreferensiLogic, FoodItem } from "@/hooks/use-preference-logic";
 import { MoodBottomSheet } from "@/components/preference/Moodmodalsheet";
+import BottomNavBar from "@/components/dashboard/bottomNavbar";
 
 export default function PreferensiScreen() {
   const {
@@ -103,24 +104,7 @@ export default function PreferensiScreen() {
         }
         renderItem={renderFoodCard}
       />
-
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
-          <Feather name="home" size={20} color="#D9534F" />
-          <Text style={styles.navText}>BERANDA</Text>
-        </TouchableOpacity>
-        <View style={styles.navNfcContainer}>
-          <TouchableOpacity style={styles.navNfcBtn}>
-            <Feather name="wifi" size={24} color="#FFF" />
-          </TouchableOpacity>
-          <Text style={styles.navText}>NFC</Text>
-        </View>
-        <TouchableOpacity style={styles.navItem}>
-          <Feather name="user" size={20} color="#D9534F" />
-          <Text style={styles.navText}>PROFIL</Text>
-        </TouchableOpacity>
-      </View>
+      <BottomNavBar />
 
       {/* Bottom Sheet */}
       <MoodBottomSheet

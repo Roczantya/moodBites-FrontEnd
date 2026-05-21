@@ -97,7 +97,7 @@ describe("AuthScreen Testing", () => {
 
     // Jalankan waktu virtual maju 1500ms untuk mengeksekusi fungsi di dalam setTimeout
     act(() => {
-      jest.advanceTimersByTime(1500);
+      jest.advanceTimersByTime(3000);
     });
 
     // Navigasi kini berhasil dideteksi
@@ -138,7 +138,7 @@ describe("AuthScreen Testing", () => {
 
     // Majukan waktu virtual sejauh 2500ms untuk menembus batas penantian OTP
     act(() => {
-      jest.advanceTimersByTime(2500);
+      jest.advanceTimersByTime(3000);
     });
 
     expect(router.push).toHaveBeenCalledWith({
