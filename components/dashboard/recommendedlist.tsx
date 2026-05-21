@@ -31,9 +31,11 @@ export default function RecommendationList() {
       <Header />
       <MoodSelector />
       <View style={styles.sectionTitleWrapper}>
-        <Text style={styles.title}>Recommendations for{"\n"}your Mood</Text>
+        <Text style={styles.title}>
+          Rekomendasi makanan berdasarkan{"\n"}moodmu saat ini
+        </Text>
         <Text style={styles.subtitle}>
-          Fuel your energy with vibrant{"\n"}nutrients
+          Isi tenagamu dengan berbagai nutrisi{"\n"}dari makanan kantin
         </Text>
       </View>
     </View>

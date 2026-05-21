@@ -103,11 +103,11 @@ export default function AuthScreen() {
         redirectTimer.current = setTimeout(() => {
           setToast((prev) => ({ ...prev, visible: false }));
           router.replace("/dashboard/home");
-        }, 1500);
+        }, 1000);
       } else {
         // 3. PROSES REGISTER VIA AUTH SERVICE
         const payload = { name, email, password, fcmToken: "dummy_fcm_123" };
-        console.log("DATA DARI FORM FE:", JSON.stringify(payload, null, 2));
+        // console.log("DATA DARI FORM FE:", JSON.stringify(payload, null, 2));
         const result = await authService.register(payload);
         setIsLoading(false);
 
@@ -138,7 +138,7 @@ export default function AuthScreen() {
             pathname: "/auth/otp",
             params: { email, loginId: sessionId }, // key tetap "loginId" biar otp.tsx tidak perlu diubah
           });
-        }, 2000);
+        }, 1000);
       }
     } catch (error: any) {
       // 4. PROSES ERROR (LOGIN / REGISTER) YANG SUDAH DISARING INTERCEPTOR AXIOS
@@ -189,6 +189,7 @@ export default function AuthScreen() {
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
       >
         <View style={styles.card}>
           <AuthHeader />

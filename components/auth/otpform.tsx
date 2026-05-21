@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderRadius: 15, // Disesuaikan dengan ukuran kotak yang lebih kecil
     fontSize: 20, // Font sedikit dikecilkan
-    fontWeight: "bold",
+    fontFamily: "PlusJakartaSans-Bold",
     textAlign: "center",
     color: Colors.textPrimary,
 
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   secureTextContainer: { flex: 1 },
   secureTitle: {
     fontSize: 10,
-    fontWeight: "bold",
+    fontFamily: "PlusJakartaSans-Bold",
     color: Colors.textAccent,
     letterSpacing: 1,
     marginBottom: 4,

@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   },
   successText: {
     color: Colors.textPrimary,
-    fontWeight: "bold",
+    fontFamily: "PlusJakartaSans-Bold",
     fontSize: 18,
     marginTop: 40,
     marginBottom: 30,
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
   cardLabel: {
     color: Colors.textSecondary,
     fontSize: 12,
-    fontWeight: "bold",
+    fontFamily: "PlusJakartaSans-Bold",
     marginBottom: 4,
   },
   cardValue: { color: Colors.textPrimary, fontSize: 16, fontWeight: "bold" },

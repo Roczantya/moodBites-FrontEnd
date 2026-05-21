@@ -1,91 +1,36 @@
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import {
   ScrollView,
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
-  Alert,
 } from "react-native";
-import { LikertScale } from "../../components/survey/Skalasurvey";
-import { CheckboxGroup } from "../../components/survey/checkbox";
-import { MoodKey, DataType, Responses } from "../../constants/surveystate";
-import { MOOD_SECTIONS, FLAVORS, MENU_CATEGORIES } from "../../constants/mood";
-import { Colors } from "../../constants/colors";
-import { router } from "expo-router";
+
+import { LikertScale } from "@/components/survey/Skalasurvey";
+import { CheckboxGroup } from "@/components/survey/checkbox";
+import { Colors } from "@/constants/colors";
+import { FLAVORS, MENU_CATEGORIES } from "@/constants/mood";
+
+import { useMoodSurvey } from "@/hooks/use-mood-survey";
 
 export default function MoodSurveyScreen() {
-  const [currentStep, setCurrentStep] = useState<number>(0);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-  // Ref untuk ScrollView & Timer
-  const scrollViewRef = useRef<ScrollView>(null);
-  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Panggil hook logika di sini dan ekstrak data yang diperlukan
+  const {
+    currentStep,
+    setCurrentStep,
+    toastMessage,
+    scrollViewRef,
+    moodInfo,
+    moodData,
+    totalSteps,
+    progressPercentage,
+    handleMoodChange,
+    validateAndProceed,
+  } = useMoodSurvey();
 
-  const [responses, setResponses] = useState<Responses>({
-    moods: {
-      sad: { desire: {}, intensity: {}, categories: [] },
-      angry: { desire: {}, intensity: {}, categories: [] },
-      fearful: { desire: {}, intensity: {}, categories: [] },
-      happy: { desire: {}, intensity: {}, categories: [] },
-      neutral: { desire: {}, intensity: {}, categories: [] },
-      surprised: { desire: {}, intensity: {}, categories: [] },
-      disgusted: { desire: {}, intensity: {}, categories: [] }, // FIX TYPO: Hapus huruf 'i'
-    },
-  });
-
-  // Auto-scroll ke atas setiap ganti step
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-    }, 100);
-    return () => clearTimeout(timer);
-  }, [currentStep]);
-
-  // Cleanup Toast Timer saat unmount
-  useEffect(() => {
-    return () => {
-      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
-    };
-  }, []);
-
-  const showToast = (message: string) => {
-    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
-    setToastMessage(message);
-    toastTimerRef.current = setTimeout(() => {
-      setToastMessage(null);
-    }, 3000);
-  };
-
-  const handleMoodChange = (
-    moodKey: MoodKey,
-    type: DataType,
-    flavorOrCat: string | null,
-    value: number | string[],
-  ) => {
-    setResponses((prev) => {
-      const updatedMood = { ...prev.moods[moodKey] };
-
-      if (type === "categories") {
-        updatedMood.categories = value as string[];
-      } else {
-        updatedMood[type] = {
-          ...updatedMood[type],
-          [flavorOrCat as string]: value as number,
-        };
-      }
-
-      return {
-        ...prev,
-        moods: { ...prev.moods, [moodKey]: updatedMood },
-      };
-    });
-  };
-  const moodInfo = MOOD_SECTIONS[currentStep];
-  const moodData = responses.moods[moodInfo.key];
+  // Handle jika data mood hilang / error state
   if (!moodData) {
-    console.error(
-      `Data untuk mood "${moodInfo.key}" tidak ditemukan di state!`,
-    );
     return (
       <View
         style={[
@@ -99,36 +44,6 @@ export default function MoodSurveyScreen() {
       </View>
     );
   }
-  const validateAndProceed = (isSubmit: boolean = false) => {
-    // Validasi: Semua flavor harus dipilih (tidak boleh 0)
-    const isDesireFilled = FLAVORS.every(
-      (f) => moodData.desire[f] !== undefined && moodData.desire[f] > 0,
-    );
-    const isIntensityFilled = FLAVORS.every(
-      (f) => moodData.intensity[f] !== undefined && moodData.intensity[f] > 0,
-    );
-    const isCategoryFilled = moodData.categories.length > 0;
-
-    if (!isDesireFilled || !isIntensityFilled || !isCategoryFilled) {
-      showToast(
-        "Harap isi semua skala (1-5) dan minimal 1 kategori menu ya! 😅",
-      );
-      return;
-    }
-
-    if (isSubmit) {
-      console.log("Final Payload:", JSON.stringify(responses, null, 2));
-      Alert.alert("Sukses!", "Data survey berhasil disubmit!", [
-        { text: "OK", onPress: () => router.replace("/auth") },
-      ]);
-    } else {
-      setCurrentStep((prev) => prev + 1);
-    }
-  };
-
-  const totalSteps = MOOD_SECTIONS.length;
-  const progressPercentage =
-    (((currentStep + 1) / totalSteps) * 100).toFixed(0) + "%";
 
   return (
     <View style={styles.mainContainer}>
@@ -151,6 +66,7 @@ export default function MoodSurveyScreen() {
         ref={scrollViewRef}
         style={styles.scrollContainer}
         contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
       >
         <Text style={styles.header}>{moodInfo.title}</Text>
         <Text style={styles.desc}>{moodInfo.desc}</Text>
@@ -229,24 +145,30 @@ export default function MoodSurveyScreen() {
         <View style={{ height: 40 }} />
       </ScrollView>
 
-      {/* Floating Toast - Berada di luar ScrollView agar tidak tertutup saat scroll */}
-      {toastMessage && (
-        <View style={styles.toastContainer}>
-          <Text style={styles.toastText}>{toastMessage}</Text>
+      {toastMessage.visible && (
+        <View
+          style={[
+            styles.toastContainer,
+            {
+              backgroundColor:
+                toastMessage.type === "success" ? "#A0D585" : "#FF9494",
+            },
+          ]}
+        >
+          <Text style={styles.toastText}>{toastMessage.message}</Text>
         </View>
       )}
     </View>
   );
 }
 
+// ... Sisipkan styles.create kamu di bawah sini (tidak ada yang perlu diubah di bagian styles)
 const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-    backgroundColor: Colors.primary,
-  },
+  // ... [Salin semua kode styles milikmu dari sebelumnya ke sini] ...
+  mainContainer: { flex: 1, backgroundColor: Colors.primary },
   progressContainer: {
     paddingHorizontal: 20,
-    paddingTop: 30, // Sesuaikan dengan safe area
+    paddingTop: 30,
     paddingBottom: 20,
     backgroundColor: Colors.primary,
     zIndex: 10,
@@ -268,12 +190,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.accent,
     borderRadius: 4,
   },
-  scrollContainer: {
-    flex: 1,
-  },
-  scrollContent: {
-    padding: 20,
-  },
+  scrollContainer: { flex: 1 },
+  scrollContent: { padding: 20 },
   header: {
     fontSize: 26,
     marginTop: 10,
@@ -284,7 +202,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 25,
     fontFamily: "PlusJakartaSans-Regular",
-    color: Colors.textPrimary + "CC", // Warna sedikit lebih terang untuk deskripsi
+    color: Colors.textPrimary + "CC",
   },
   subHeader: {
     fontSize: 18,
@@ -336,7 +254,6 @@ const styles = StyleSheet.create({
     bottom: 50,
     left: 20,
     right: 20,
-    backgroundColor: "#E74C3C", // Warna Error (bisa diganti Colors.optionalAccent)
     paddingVertical: 14,
     paddingHorizontal: 20,
     borderRadius: 12,
