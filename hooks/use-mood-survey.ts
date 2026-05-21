@@ -18,10 +18,10 @@ export const useMoodSurvey = () => {
 
   const [responses, setResponses] = useState<Responses>({
     moods: {
-      sad: { desire: {}, intensity: {}, categories: [] },
-      angry: { desire: {}, intensity: {}, categories: [] },
-      happy: { desire: {}, intensity: {}, categories: [] },
-      neutral: { desire: {}, intensity: {}, categories: [] },
+      Sad: { desire: {}, intensity: {}, categories: [] },
+      Angry: { desire: {}, intensity: {}, categories: [] },
+      Happy: { desire: {}, intensity: {}, categories: [] },
+      Neutral: { desire: {}, intensity: {}, categories: [] },
     },
   });
 

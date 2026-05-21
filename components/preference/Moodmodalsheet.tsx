@@ -28,11 +28,11 @@ interface MoodBottomSheetProps {
 }
 
 const MOODS: MoodConfig[] = [
-  { id: "happy", icon: "smile" },
-  { id: "sad", icon: "frown" },
-  { id: "neutral", icon: "meh" },
+  { id: "Happy", icon: "smile" },
+  { id: "Sad", icon: "frown" },
+  { id: "Neutral", icon: "meh" },
   // Gunakan icon angry bawaan Material Community Icons karena di Feather tidak ada
-  { id: "angry", icon: "emoticon-angry-outline" },
+  { id: "Angry", icon: "emoticon-angry-outline" },
 ];
 
 export const MoodBottomSheet: React.FC<MoodBottomSheetProps> = ({
@@ -70,7 +70,7 @@ export const MoodBottomSheet: React.FC<MoodBottomSheetProps> = ({
                   onPress={() => setTempMood(mood.id)}
                 >
                   {/* Kondisional rendering: Jika id-nya angry, gunakan MaterialCommunityIcons */}
-                  {mood.id === "angry" ? (
+                  {mood.id === "Angry" ? (
                     <MaterialCommunityIcons
                       name={
                         mood.icon as keyof typeof MaterialCommunityIcons.glyphMap
