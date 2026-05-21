@@ -5,30 +5,32 @@ import {
   StyleSheet,
   TouchableOpacity,
   Platform,
-  StatusBar,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../../constants/colors"; // Sesuaikan kembali path ini
 import { router } from "expo-router";
 
 interface HeaderProps {
-  title?: string; // Tanda tanya (?) artinya props ini opsional
-  showBell?: boolean; // ← tambah
-  showBack?: boolean; // ← tambah ini
+  title?: string;
+  showBell?: boolean;
+  showBack?: boolean;
+  alignTitle?: "left" | "center"; // ← Prop baru untuk ngatur posisi
 }
+
 export default function Header({
   title = "MoodBites",
   showBell = true,
-  showBack = false, // ← default false
+  showBack = false,
+  alignTitle = "left", // ← Default-nya bisa kamu set "left" atau "center"
 }: HeaderProps) {
   return (
     <View style={styles.container}>
-      <View style={styles.leftSection}>
-        {/* Back button kalau showBack = true */}
+      {/* --- KIRI: Area Tombol Back --- */}
+      <View style={styles.sideSection}>
         {showBack && (
           <TouchableOpacity
-            style={styles.bellContainer}
-            onPress={() => router.back()}
+            style={styles.iconButton}
+            onPress={() => router.push("/dashboard/home")}
           >
             <Ionicons
               name="arrow-back"
@@ -37,23 +39,38 @@ export default function Header({
             />
           </TouchableOpacity>
         )}
-        {/* Title selalu tampil */}
+      </View>
+
+      {/* --- TENGAH: Area Title --- */}
+      <View
+        style={[
+          styles.titleSection,
+          {
+            // Logika untuk ngatur posisi teks dari prop alignTitle
+            alignItems: alignTitle === "center" ? "center" : "flex-start",
+            // Kalau rata kiri dan nggak ada tombol back, geser sedikit biar nggak terlalu nempel ke kiri
+            marginLeft: alignTitle === "left" && !showBack ? -30 : 0,
+          },
+        ]}
+      >
         <Text style={showBack ? styles.title : styles.logo}>{title}</Text>
       </View>
 
-      {/* Bell */}
-      {showBell && (
-        <TouchableOpacity
-          style={styles.bellContainer}
-          onPress={() => router.push("/dashboard/notification")}
-        >
-          <Ionicons
-            name="notifications-outline"
-            size={20}
-            color={Colors.optionalAccent}
-          />
-        </TouchableOpacity>
-      )}
+      {/* --- KANAN: Area Tombol Bell --- */}
+      <View style={[styles.sideSection, { alignItems: "flex-end" }]}>
+        {showBell && (
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => router.push("/dashboard/notification")}
+          >
+            <Ionicons
+              name="notifications-outline"
+              size={20}
+              color={Colors.optionalAccent}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   );
 }
@@ -61,14 +78,13 @@ export default function Header({
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 20,
     paddingTop: 12,
     paddingBottom: 10,
     backgroundColor: Colors.primary,
     borderBottomWidth: 1,
-    borderBottomColor: "rgba(61, 26, 27, 0.08)", // warna sangat transparan
+    borderBottomColor: "rgba(61, 26, 27, 0.08)",
 
     ...Platform.select({
       ios: {
@@ -85,22 +101,32 @@ const styles = StyleSheet.create({
       },
     }),
   },
+
+  /* --- Area Layout Flexbox --- */
+  sideSection: {
+    width: 44, // Lebar tetap (sesuai lebar iconButton + sedikit margin)
+    height: 44,
+    justifyContent: "center",
+  },
+  titleSection: {
+    flex: 1, // Mengambil sisa ruang di tengah
+    justifyContent: "center",
+  },
+
+  /* --- Text Styles --- */
   logo: {
     fontSize: 24,
     fontFamily: "PlusJakartaSans-ExtraBoldItalic",
     color: Colors.optionalAccent,
-  },
-  leftSection: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10, // jarak back button dan title
   },
   title: {
     fontSize: 18,
     fontFamily: "PlusJakartaSans-Bold",
     color: Colors.optionalAccent,
   },
-  bellContainer: {
+
+  /* --- Button Styles --- */
+  iconButton: {
     backgroundColor: Colors.secondary,
     padding: 10,
     borderRadius: 20,
