@@ -41,11 +41,11 @@ const authService = {
     try {
       const response = await apiClient.post("/auth/register", data);
 
-      console.log(
-        "FULL REGISTER RESPONSE:",
-
-        JSON.stringify(response.data, null, 2),
-      ); // ← tambah ini
+      const logSafeData = {
+        ...data,
+        password: "********", // Password disensor di console log
+      };
+      console.log("Mencoba login dengan data:", logSafeData);
 
       return response.data;
     } catch (error: any) {

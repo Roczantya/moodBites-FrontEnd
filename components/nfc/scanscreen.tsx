@@ -1,71 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
-  Platform,
-  StatusBar,
   ScrollView,
-  Modal,
-  ActivityIndicator,
 } from "react-native";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
-import NfcManager, { NfcTech } from "react-native-nfc-manager";
 import { Colors } from "../../constants/colors";
+
+// Komponen
 import BottomNavBar from "../dashboard/bottomNavbar";
 import Header from "../dashboard/header";
+import NfcScanModal from "@/components/nfc/nfcscanmodal"; // Import UI Modal
+
+// Hook Logika
+import { useNfcScanner } from "@/hooks/use-nfc-hooks"; // Import Hook NFC
 
 interface ScanScreenProps {
   onSuccess: () => void;
 }
 
 export default function ScanScreen({ onSuccess }: ScanScreenProps) {
-  const [isScanning, setIsScanning] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (Platform.OS !== "web") {
-      NfcManager.start().catch((err) => console.warn("NFC Init Error:", err));
-    }
-  }, []);
-
-  const startNfcScan = async (): Promise<void> => {
-    if (Platform.OS === "web") {
-      console.log("Simulasi NFC di Web berjalan...");
-      setIsScanning(true);
-      setTimeout(() => {
-        setIsScanning(false);
-        onSuccess();
-      }, 2000);
-      return;
-    }
-
-    try {
-      if (Platform.OS === "android") {
-        setIsScanning(true);
-      }
-
-      if (Platform.OS === "ios") {
-        await NfcManager.setAlertMessageIOS(
-          "Dekatkan HP Anda ke stiker NFC di meja restoran.",
-        );
-      }
-
-      await NfcManager.requestTechnology(NfcTech.Ndef);
-      const tag = await NfcManager.getTag();
-
-      if (tag) {
-        setIsScanning(false);
-        onSuccess();
-      }
-    } catch (ex) {
-      console.warn("Scan dibatalkan atau gagal", ex);
-      setIsScanning(false);
-    } finally {
-      NfcManager.cancelTechnologyRequest();
-    }
-  };
+  // Panggil semua logika NFC dari Hook
+  const { isScanning, startNfcScan, cancelNfcScan } = useNfcScanner(onSuccess);
 
   return (
     <SafeAreaView style={[styles.container, styles.lightContainer]}>
@@ -75,10 +34,11 @@ export default function ScanScreen({ onSuccess }: ScanScreenProps) {
         showsVerticalScrollIndicator={false}
       >
         <Header title="NFC" showBell={false} />
+
         <View style={styles.mainContent}>
           <Text style={styles.titleLight}>Ready to Scan?</Text>
           <Text style={styles.subtitleLight}>
-            Tap here to scan restaurant table NFC
+            Tekan disini dengan scan Orderhere NFC
           </Text>
 
           <TouchableOpacity
@@ -115,69 +75,26 @@ export default function ScanScreen({ onSuccess }: ScanScreenProps) {
         </View>
       </ScrollView>
 
-      {/* UI MODAL KUSTOM (Android & Web) */}
-      <Modal
-        visible={isScanning}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setIsScanning(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.iconGlowOuter}>
-              <MaterialCommunityIcons
-                name="nfc"
-                size={50}
-                color={Colors.accent}
-              />
-            </View>
+      {/* Gunakan komponen Modal yang sudah dipisah */}
+      <NfcScanModal visible={isScanning} onCancel={cancelNfcScan} />
 
-            <ActivityIndicator
-              size="large"
-              color={Colors.accent}
-              style={{ marginTop: 20 }}
-            />
-
-            <Text style={styles.modalTitle}>Ready to Scan</Text>
-            <Text style={styles.modalSubtitle}>
-              Dekatkan bagian belakang HP Anda ke stiker NFC yang ada di meja.
-            </Text>
-
-            <TouchableOpacity
-              style={styles.cancelButton}
-              onPress={() => {
-                NfcManager.cancelTechnologyRequest();
-                setIsScanning(false);
-              }}
-            >
-              <Text style={styles.cancelButtonText}>Batal</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Sekarang ditutup dengan benar dan Navbar sudah muncul kembali */}
       <BottomNavBar />
     </SafeAreaView>
   );
 }
 
+// Hanya tersisa styles untuk layout utama saja
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  container: { flex: 1 },
   lightContainer: { backgroundColor: Colors.primary },
   scrollView: { flex: 1 },
   scrollContent: { flexGrow: 1, paddingBottom: 100 },
-
-  logoTextLight: {
-    fontSize: 24,
-    fontFamily: "PlusJakartaSans-Bold",
-    color: Colors.textAccent,
-    textAlign: "center",
-  },
   mainContent: { alignItems: "center", marginTop: 30, marginBottom: 20 },
-  titleLight: { fontSize: 22, fontWeight: "bold", color: Colors.textPrimary },
+  titleLight: {
+    fontSize: 22,
+    fontFamily: "PlusJakartaSans-Bold",
+    color: Colors.textPrimary,
+  },
   subtitleLight: { fontSize: 14, color: Colors.textSecondary, marginTop: 8 },
   scanButtonOuter: {
     marginTop: 40,
@@ -195,16 +112,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: Colors.textPrimary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
     elevation: 5,
   },
   scanButtonText: {
     marginTop: 12,
     color: Colors.accent,
-    fontWeight: "bold",
+    fontFamily: "PlusJakartaSans-Bold",
     fontSize: 14,
   },
   infoCard: {
@@ -212,10 +125,6 @@ const styles = StyleSheet.create({
     margin: 24,
     padding: 20,
     borderRadius: 16,
-    shadowColor: Colors.textPrimary,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
     elevation: 3,
   },
   infoHeader: { flexDirection: "row", alignItems: "center", marginBottom: 8 },
@@ -232,59 +141,5 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: Colors.textSecondary,
     marginBottom: 10,
-  },
-
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "flex-end",
-  },
-  modalContent: {
-    backgroundColor: Colors.white,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    padding: 30,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 10,
-  },
-  iconGlowOuter: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    backgroundColor: Colors.primary,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: Colors.textPrimary,
-    marginTop: 20,
-  },
-  modalSubtitle: {
-    fontSize: 14,
-    color: Colors.textSecondary,
-    textAlign: "center",
-    marginTop: 10,
-    paddingHorizontal: 20,
-    lineHeight: 20,
-  },
-  cancelButton: {
-    marginTop: 25,
-    backgroundColor: Colors.secondary,
-    paddingVertical: 12,
-    paddingHorizontal: 60,
-    borderRadius: 20,
-    width: "100%",
-    alignItems: "center",
-  },
-  cancelButtonText: {
-    color: Colors.textAccent,
-    fontWeight: "bold",
-    fontSize: 16,
   },
 });

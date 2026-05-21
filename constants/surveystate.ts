@@ -1,11 +1,5 @@
-export type MoodKey =
-  | "sad"
-  | "angry"
-  | "fearful"
-  | "happy"
-  | "neutral"
-  | "surprised"
-  | "disgusted";
+export type MoodKey = "sad" | "angry" | "happy" | "neutral";
+
 export type DataType = "desire" | "intensity" | "categories";
 
 export interface MoodData {

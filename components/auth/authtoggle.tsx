@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   },
   toggleText: {
     fontSize: 14,
-    fontWeight: "600",
+    fontFamily: "PlusJakartaSans-Bold",
     color: Colors.textAccent,
   },
   toggleTextActive: {

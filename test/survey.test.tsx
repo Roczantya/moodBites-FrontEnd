@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native"; // ❌ Alert dihapus dari import
 import {
   render,
   fireEvent,
@@ -14,13 +14,7 @@ jest.mock("expo-router", () => ({
   router: { replace: jest.fn() },
 }));
 
-const alertSpy = jest
-  .spyOn(Alert, "alert")
-  .mockImplementation((title, message, buttons: any) => {
-    if (buttons && buttons[0] && buttons[0].onPress) {
-      buttons[0].onPress();
-    }
-  });
+// ❌ alertSpy sudah dihapus karena kita pakai Toast sekarang
 
 jest.mock("@/components/survey/Skalasurvey", () => {
   const { TouchableOpacity, Text } = require("react-native");
@@ -56,9 +50,16 @@ jest.mock("@/components/survey/checkbox", () => {
 });
 
 describe("MoodSurveyScreen Integration Tests", () => {
+  beforeEach(() => {
+    // Timer bohongan sudah dinyalakan dari sini untuk semua test
+    jest.useFakeTimers();
+  });
+
   afterEach(() => {
     cleanup();
     jest.clearAllMocks();
+    // jest.runOnlyPendingTimers(); // Selesaikan semua timer yang nyangkut
+    jest.useRealTimers(); // Kembalikan waktu ke normal
   });
 
   const fillStepData = (getByTestId: any) => {
@@ -95,10 +96,13 @@ describe("MoodSurveyScreen Integration Tests", () => {
     const { getByTestId, getByText } = render(<MoodSurveyScreen />);
     const totalSteps = MOOD_SECTIONS.length;
 
-    // Loop otomatis dari Step 1 sampai Step 6
+    // Loop otomatis dari Step 1 sampai sebelum terakhir
     for (let i = 1; i < totalSteps; i++) {
       fillStepData(getByTestId);
       fireEvent.press(getByText("Next"));
+
+      // Karena kita pakai FakeTimers, kadang kita butuh mempercepat animasi scroll
+      jest.advanceTimersByTime(200);
 
       await waitFor(() => {
         expect(
@@ -109,16 +113,22 @@ describe("MoodSurveyScreen Integration Tests", () => {
 
     // --- STEP TERAKHIR ---
     fillStepData(getByTestId);
+
+    // ✅ Cukup tekan Submit satu kali saja
     fireEvent.press(getByText("Submit"));
 
+    // 1. Pastikan Toast Muncul
     await waitFor(() => {
-      expect(alertSpy).toHaveBeenCalledWith(
-        "Sukses!",
-        "Data survey berhasil disubmit!",
-        expect.any(Array),
-      );
-      expect(router.replace).toHaveBeenCalledWith("/auth");
+      expect(
+        getByText("✓ Survei selesai! Mengalihkan ke Login..."),
+      ).toBeTruthy();
     });
+
+    // 2. Percepat waktu agar setTimeout(router.replace) tereksekusi
+    jest.advanceTimersByTime(2000);
+
+    // 3. Pastikan router.replace dipanggil ke halaman Auth
+    expect(router.replace).toHaveBeenCalledWith("/auth");
   });
 
   it("membersihkan timer toast saat component unmount", () => {
