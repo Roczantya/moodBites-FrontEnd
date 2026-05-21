@@ -13,6 +13,7 @@ import { Colors } from "@/constants/colors";
 import { FLAVORS, MENU_CATEGORIES } from "@/constants/mood";
 
 import { useMoodSurvey } from "@/hooks/use-mood-survey";
+import Header from "@/components/dashboard/header";
 
 export default function MoodSurveyScreen() {
   // Panggil hook logika di sini dan ekstrak data yang diperlukan
@@ -47,6 +48,8 @@ export default function MoodSurveyScreen() {
 
   return (
     <View style={styles.mainContainer}>
+      <Header title="Mood Survey" showBell={false} />
+
       {/* Progress Header */}
       <View style={styles.progressContainer}>
         <Text style={styles.progressText}>
@@ -168,10 +171,10 @@ const styles = StyleSheet.create({
   mainContainer: { flex: 1, backgroundColor: Colors.primary },
   progressContainer: {
     paddingHorizontal: 20,
-    paddingTop: 30,
+    paddingTop: 10,
     paddingBottom: 20,
     backgroundColor: Colors.primary,
-    zIndex: 10,
+    zIndex: 5,
   },
   progressText: {
     fontSize: 14,
@@ -191,10 +194,9 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   scrollContainer: { flex: 1 },
-  scrollContent: { padding: 20 },
+  scrollContent: { paddingHorizontal: 20 },
   header: {
-    fontSize: 26,
-    marginTop: 10,
+    fontSize: 24,
     fontFamily: "PlusJakartaSans-ExtraBold",
     color: Colors.textPrimary,
   },

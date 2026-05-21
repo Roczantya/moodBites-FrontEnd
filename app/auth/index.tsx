@@ -103,7 +103,7 @@ export default function AuthScreen() {
         redirectTimer.current = setTimeout(() => {
           setToast((prev) => ({ ...prev, visible: false }));
           router.replace("/dashboard/home");
-        }, 1000);
+        }, 3000);
       } else {
         // 3. PROSES REGISTER VIA AUTH SERVICE
         const payload = { name, email, password, fcmToken: "dummy_fcm_123" };
@@ -138,7 +138,7 @@ export default function AuthScreen() {
             pathname: "/auth/otp",
             params: { email, loginId: sessionId }, // key tetap "loginId" biar otp.tsx tidak perlu diubah
           });
-        }, 1000);
+        }, 3000);
       }
     } catch (error: any) {
       // 4. PROSES ERROR (LOGIN / REGISTER) YANG SUDAH DISARING INTERCEPTOR AXIOS
@@ -257,8 +257,9 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
+    paddingTop: 50, // 2. TAMBAH INI biar card-nya agak turun dari ujung layar atas
     paddingVertical: 20,
     paddingHorizontal: 20,
   },

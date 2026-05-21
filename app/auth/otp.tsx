@@ -79,28 +79,23 @@ export default function OTP() {
   const handleVerify = async () => {
     const otpCode = otp.join("");
     if (otpCode.length < 4) return;
-    setIsVerifying(true); // ← pakai isVerifying
+    setIsVerifying(true);
     try {
       const activeLoginId = (loginId as string) || (email as string) || "";
-      const payloadData = {
+      const response = await authService.verifyOtp({
         loginId: activeLoginId,
-        code: otpCode, // Sudah sesuai dengan interface VerifyOtpPayload
-      };
-      console.log("PARAMS →", { loginId, email });
-      console.log("activeLoginId →", activeLoginId);
-      console.log("otpCode →", otpCode);
-      console.log("Mengirim payload ke backend:", payloadData);
-
-      // PASTIKAN MEMANGGIL 'verifyOtp', BUKAN 'refreshOtp'
-      const response = await authService.verifyOtp(payloadData);
-
-      console.log("Berhasil verifikasi:", response);
+        code: otpCode,
+      });
       router.push("/auth/firstsurvey");
     } catch (error: any) {
       showToast(
         `✕ ${error?.message || "Kode OTP salah atau expired"}`,
         "error",
       );
+      setOtp(["", "", "", ""]); // Reset OTP biar user bisa input ulang
+      inputRefs.current[0]?.focus();
+    } finally {
+      setIsVerifying(false); // ← Ini yang kurang!
     }
   };
   // DI DALAM OTP.TSX (Fungsi handleResend)

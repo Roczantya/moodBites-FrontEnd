@@ -53,7 +53,8 @@ const styles = StyleSheet.create({
   checkboxContainer: { marginTop: 10 },
   checkboxRow: {
     flexDirection: "row",
-    alignItems: "center",
+    // Ubah ke flex-start biar kalau teksnya 2 baris, kotak checkbox tetap di atas
+    alignItems: "flex-start",
     marginBottom: 10,
     padding: 15,
     borderRadius: 12,
@@ -77,6 +78,8 @@ const styles = StyleSheet.create({
     marginRight: 12,
     justifyContent: "center",
     alignItems: "center",
+    // Tambah marginTop sedikit biar sejajar sama baris pertama teks kalau teksnya panjang
+    marginTop: 2,
   },
   boxSelected: { borderColor: Colors.textAccent },
   innerDot: {
@@ -86,7 +89,10 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   checkboxText: {
-    fontSize: 16,
+    flex: 1,
+    flexShrink: 1, // ← pastiin teks menyusut, bukan overflow
+    fontSize: 14,
+    lineHeight: 22, // ← 22 - 16 = 6px spacing antar baris (bisa tuning ke 20 atau 21)
     color: Colors.textPrimary,
     fontFamily: "PlusJakartaSans-SemiBold",
   },
