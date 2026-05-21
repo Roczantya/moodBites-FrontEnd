@@ -11,73 +11,97 @@ const apiClient = axios.create({
   },
 });
 
-// 1. Interceptor untuk Request (Pasang Token)
 apiClient.interceptors.request.use(
-  async (config) => {
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  },
+  async (config) => config,
+  (error) => Promise.reject(error),
 );
 
-// 2. 🔥 DI SINI TEMPAT PASANG SWITCH ERROR-NYA (Response Interceptor)
 apiClient.interceptors.response.use(
-  (response) => {
-    // Jika request sukses (status 200-299), langsung teruskan datanya
-    return response;
-  },
+  (response) => response,
   (error) => {
-    // Jika request gagal, kita saring kodenya di sini
     let customErrorMessage =
-      "Terjadi kesalahan sistem. Mohon coba beberapa saat lagi.";
+      "Terjadi kesalahan. Mohon coba beberapa saat lagi.";
+    let statusCode = 0;
 
     if (error.response) {
-      const status = error.response.status;
-      const backendMessage = error.response.data?.message;
+      statusCode = error.response.status;
+      // Hanya ambil pesan backend untuk error yang relevan ke user (400, 409, 422)
+      // Error server (5xx) jangan tampilkan pesan teknis dari backend
+      const backendMessage = [400, 409, 422].includes(statusCode)
+        ? error.response.data?.message
+        : null;
 
-      switch (status) {
+      switch (statusCode) {
+        // ─── 4xx: Kesalahan dari sisi user/client ───────────────────────────
         case 400:
           customErrorMessage =
             backendMessage ||
-            "Permintaan tidak valid. Periksa kembali data kamu.";
+            "Data yang dikirim tidak sesuai. Coba periksa kembali.";
           break;
+
         case 401:
-          customErrorMessage = "Sesi kamu telah berakhir. Yuk, login ulang.";
-          // TENTATIVE: Kamu bisa panggil fungsi logout global di sini jika perlu
+          // Jangan expose detail auth — cukup minta login ulang
+          customErrorMessage =
+            "Sesi kamu telah berakhir. Silakan login kembali.";
           break;
+
         case 403:
-          customErrorMessage =
-            "Kamu tidak memiliki akses untuk menu atau tindakan ini.";
+          customErrorMessage = "Kamu tidak memiliki akses untuk melakukan ini.";
           break;
+
         case 404:
-          customErrorMessage =
-            "Wah, data atau halaman yang kamu cari tidak ditemukan.";
+          customErrorMessage = "Data yang kamu cari tidak ditemukan.";
           break;
+
+        case 405:
+          // User tidak perlu tahu soal HTTP method — tampilkan generik
+          customErrorMessage =
+            "Terjadi kesalahan pada aplikasi. Coba lagi atau hubungi kami.";
+          break;
+
+        case 409:
+          // Conflict — biasanya email/username sudah terdaftar, pesan BE lebih spesifik
+          customErrorMessage =
+            backendMessage ||
+            "Data sudah terdaftar atau sedang konflik. Coba dengan data lain.";
+          break;
+
         case 422:
           customErrorMessage =
-            backendMessage || "Format data yang kamu masukkan salah.";
+            backendMessage || "Format data yang kamu masukkan tidak valid.";
           break;
+
+        // ─── 5xx: Kesalahan server — user tidak perlu tahu detail teknisnya ─
         case 500:
+        case 501:
           customErrorMessage =
-            "Server kami sedang mengalami kendala internal. Tunggu sebentar ya.";
+            "Terjadi gangguan pada server kami. Tim kami sedang menanganinya, coba lagi nanti.";
           break;
+
         case 502:
         case 503:
         case 504:
           customErrorMessage =
-            "Koneksi ke server gagal atau drop. Server kami mungkin sedang ramai, coba lagi yuk!";
+            "Server sedang tidak dapat dihubungi. Periksa koneksimu dan coba beberapa saat lagi.";
           break;
+
+        default:
+          customErrorMessage =
+            "Terjadi kesalahan yang tidak diketahui. Coba lagi.";
       }
     } else if (error.request) {
-      // Request sudah dikirim dari HP tapi tidak ada respons sama sekali (Masalah jaringan/RTO)
+      // Request terkirim tapi tidak ada respons sama sekali (no internet / RTO)
       customErrorMessage =
-        "Gagal terhubung ke server. Periksa kembali koneksi internetmu.";
+        "Gagal terhubung ke server. Periksa koneksi internetmu.";
+    } else if (error.code === "ECONNABORTED") {
+      // Timeout dari axios
+      customErrorMessage =
+        "Koneksi terlalu lama. Periksa koneksimu dan coba lagi.";
     }
 
-    // Bungkus pesan custom ini ke dalam object baru agar seragam saat di-catch di Screen UI
     return Promise.reject({
       message: customErrorMessage,
+      statusCode,
       originalError: error,
     });
   },

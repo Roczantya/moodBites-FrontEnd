@@ -42,3 +42,11 @@ export const MENU_CATEGORIES = [
   "Minuman Vitamin C / Asam Segar",
   "Minuman Isotonik",
 ];
+
+const MOODS = [
+  { id: "Happy", icon: "smile" },
+  { id: "Sad", icon: "frown" },
+  { id: "Neutral", icon: "meh" },
+  { id: "Fearful", icon: "alert-circle" },
+  { id: "Disgust", icon: "x-circle" },
+];
