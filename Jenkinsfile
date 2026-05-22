@@ -23,10 +23,6 @@ pipeline {
                         echo "PATH: $PATH"
                         free -h
 
-                        echo "=== Cek lokasi SDK ==="
-                        find / -name "adb" 2>/dev/null
-                        find / -name "sdkmanager" 2>/dev/null
-                        ls /opt/
                     '''
                 }
             }
