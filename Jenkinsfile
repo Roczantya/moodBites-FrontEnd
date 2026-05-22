@@ -66,6 +66,8 @@ pipeline {
                 sh '''
                     cd android
 
+                    echo "sdk.dir=/opt/android-sdk" > local.properties
+
                     grep -v "org.gradle.jvmargs\\|org.gradle.daemon\\|org.gradle.parallel\\|REACT_NATIVE_ARCHITECTURES\\|org.gradle.workers" gradle.properties > gradle.properties.tmp
                     mv gradle.properties.tmp gradle.properties
 
