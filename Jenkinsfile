@@ -101,19 +101,31 @@ pipeline {
 
         stage('Deploy ke Server') {
             steps {
-                sshagent(credentials: ['moodbites-host-ssh']) {
+                withCredentials([
+                    sshUserPrivateKey(
+                        credentialsId: 'moodbites-host-ssh',
+                        keyFileVariable: 'SSH_KEY',
+                        usernameVariable: 'SSH_USER'
+                    )
+                ]) {
                     sh '''
                         APK_PATH=$(find . -type f -name "*.apk" | head -n 1)
-
+        
                         if [ -z "$APK_PATH" ]; then
                             echo "ERROR: APK tidak ditemukan!"
                             exit 1
                         fi
-
+        
                         echo "APK ditemukan: $APK_PATH"
-                        ssh -o StrictHostKeyChecking=no moodbites@103.185.52.161 "mkdir -p /var/www/landingPage"
-                        scp -o StrictHostKeyChecking=no "$APK_PATH" moodbites@103.185.52.161:/var/www/landingPage/moodbites.apk
-                        echo "=== Deploy Selesai! ==="
+        
+                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no \
+                            $SSH_USER@103.185.52.161 \
+                            "mkdir -p /home/moodbites/apk"
+        
+                        scp -i $SSH_KEY -o StrictHostKeyChecking=no \
+                            "$APK_PATH" $SSH_USER@103.185.52.161:/home/moodbites/apk/moodbites.apk
+        
+                        echo "=== Deploy APK Selesai! ==="
                     '''
                 }
             }
