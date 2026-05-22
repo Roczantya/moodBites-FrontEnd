@@ -22,6 +22,11 @@ pipeline {
                         echo "ANDROID_HOME: $ANDROID_HOME"
                         echo "PATH: $PATH"
                         free -h
+
+                        echo "=== Cek lokasi SDK ==="
+                        find / -name "adb" 2>/dev/null
+                        find / -name "sdkmanager" 2>/dev/null
+                        ls /opt/
                     '''
                 }
             }
@@ -65,8 +70,6 @@ pipeline {
             steps {
                 sh '''
                     cd android
-
-                    echo "sdk.dir=/opt/android-sdk" > local.properties
 
                     grep -v "org.gradle.jvmargs\\|org.gradle.daemon\\|org.gradle.parallel\\|REACT_NATIVE_ARCHITECTURES\\|org.gradle.workers" gradle.properties > gradle.properties.tmp
                     mv gradle.properties.tmp gradle.properties
