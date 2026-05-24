@@ -13,6 +13,10 @@ import PrimaryButton from "../../components/Reuse/button";
 import { TextBold, TextMedium, TextSemiBold } from "@/constants/customFont";
 import { router } from "expo-router";
 
+// Services
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import storageService from "@/services/storageService";
+
 // IMPORT UI FORM YANG BARU KITA PISAH
 import LoginForm from "@/components/auth/loginform";
 import RegisterForm from "@/components/auth/registerform";
@@ -90,7 +94,12 @@ export default function AuthScreen() {
           password,
           fcmToken: "dummy_fcm_123",
         });
+        console.log("LOGIN RESULT:", result);
         setIsLoading(false);
+        
+        await storageService.saveUserId(
+          result.userId
+        );
 
         // Munculin Toast Sukses Login
         setToast({

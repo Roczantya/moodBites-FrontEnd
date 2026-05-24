@@ -1,255 +1,252 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
-  Image,
-  ActivityIndicator,
+  Animated,
+  Easing,
 } from "react-native";
-import { MaterialCommunityIcons, Ionicons, Feather } from "@expo/vector-icons";
-import { Colors } from "@/constants/colors";
-import BottomNavBar from "@/components/dashboard/bottomNavbar";
-import Header from "@/components/dashboard/header";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
-// ✅ Import dari preferensi
-import { usePreferensiLogic } from "@/hooks/use-preference-logic";
-import { MoodBottomSheet } from "@/components/preference/Moodmodalsheet";
+const COLORS = {
+  bg: "#FDF0E8",
+  cardBg: "#FFFFFF",
+  infoBg: "#FAE0DC",
+  primary: "#C0616A",
+  primaryLight: "#E8A0A7",
+  primaryPale: "#F5C5C9",
+  success: "#6BAE8A",
+  successLight: "#C8E6D5",
+  textDark: "#7A2D35",
+  textMedium: "#9C5A62",
+  textLight: "#B08890",
+  iconBg: "#F5C5C9",
+};
 
 interface SuccessScreenProps {
-  onBack: () => void;
+  profileName?: string;
+  onDone?: () => void;
+  onScanAgain?: () => void;
 }
 
-export default function SuccessScreen({ onBack }: SuccessScreenProps) {
-  // ✅ Pakai hook preferensi
-  const {
-    currentMood,
-    tempMood,
-    isModalVisible,
-    isUpdating,
-    foods,
-    setTempMood,
-    handleOpenMoodSelector,
-    handleCloseMoodSelector,
-    handleApplyMood,
-  } = usePreferensiLogic();
+export default function SuccessScreen({
+  profileName = "MoodBits User",
+  onDone,
+  onScanAgain,
+}: SuccessScreenProps) {
+  const checkAnim = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+
+  useEffect(() => {
+    Animated.sequence([
+      Animated.timing(checkAnim, {
+        toValue: 1,
+        duration: 500,
+        easing: Easing.out(Easing.back(1.5)),
+        useNativeDriver: true,
+      }),
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+        }),
+        Animated.timing(slideAnim, {
+          toValue: 0,
+          duration: 400,
+          easing: Easing.out(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]),
+    ]).start();
+  }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Header title="NFC" />
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
+    <View style={styles.container}>
+      {/* Success Card */}
+      <View style={styles.successCard}>
+        <Animated.View
+          style={[
+            styles.checkCircle,
+            { transform: [{ scale: checkAnim }] },
+          ]}
+        >
+          <Ionicons name="checkmark" size={38} color="#FFFFFF" />
+        </Animated.View>
+
+        <Animated.View
+          style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
+        >
+          <Text style={styles.title}>Connected!</Text>
+          <Text style={styles.subtitle}>
+            Profile shared successfully with{"\n"}
+            <Text style={styles.profileName}>{profileName}</Text>
+          </Text>
+        </Animated.View>
+      </View>
+
+      {/* Profile Shared Info */}
+      <Animated.View
+        style={[
+          styles.infoCard,
+          { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
+        ]}
       >
-        {/* ── Scan Success Content ── */}
-        <View style={styles.mainContent}>
-          <TouchableOpacity onPress={onBack}>
-            <View style={styles.glowCircleOuter}>
-              <View style={styles.glowCircleInner}>
-                <MaterialCommunityIcons
-                  name="nfc-variant"
-                  size={40}
-                  color={Colors.accent}
-                />
-              </View>
-            </View>
-          </TouchableOpacity>
-
-          <Text style={styles.successText}>Connection Successful</Text>
-        </View>
-
-        {/* ── Konten Preferensi ── */}
-        <View style={styles.prefSection}>
-          {/* Hero */}
-          <View style={styles.heroSection}>
-            <Text style={styles.heroTitleBlack}>Pilihan</Text>
-            <Text style={styles.heroTitlePink}>Terbaik</Text>
-            <Text style={styles.heroSubtitle}>Sesuai dengan Mood Kamu</Text>
-
-            <View style={styles.moodDisplay}>
-              <Feather name="smile" size={20} color="#D9534F" />
-              <View style={{ marginLeft: 10 }}>
-                <Text style={styles.moodDisplayLabel}>Mood Saat Ini</Text>
-                <Text style={styles.moodDisplayValue}>{currentMood}</Text>
-              </View>
-            </View>
-
-            <TouchableOpacity
-              style={styles.updateButton}
-              onPress={handleOpenMoodSelector}
-            >
-              {isUpdating ? (
-                <ActivityIndicator color="#FFF" size="small" />
-              ) : (
-                <>
-                  <Feather
-                    name="refresh-cw"
-                    size={16}
-                    color="#FFF"
-                    style={{ marginRight: 8 }}
-                  />
-                  <Text style={styles.updateButtonText}>Memperbarui...</Text>
-                </>
-              )}
-            </TouchableOpacity>
+        <View style={styles.infoRow}>
+          <View style={styles.infoIconWrap}>
+            <MaterialCommunityIcons
+              name="account-check-outline"
+              size={20}
+              color={COLORS.primary}
+            />
           </View>
-
-          {/* Food Cards */}
-          {foods.map((item) => (
-            <View key={item.id} style={styles.card}>
-              <Image source={{ uri: item.image }} style={styles.cardImage} />
-              <Text style={styles.cardTitle}>{item.title}</Text>
-              <Text style={styles.cardDesc}>{item.desc}</Text>
-              <View style={styles.cardMetaInfo}>
-                <View style={styles.metaRow}>
-                  <Feather name="clock" size={14} color="#666" />
-                  <Text style={styles.metaText}>{item.time}</Text>
-                </View>
-                <View style={styles.metaRow}>
-                  <Feather name="zap" size={14} color="#666" />
-                  <Text style={styles.metaText}>{item.cal}</Text>
-                </View>
-              </View>
-            </View>
-          ))}
+          <Text style={styles.infoTitle}>Profile Shared</Text>
         </View>
-      </ScrollView>
+        <Text style={styles.infoText}>
+          Your MoodBits profile has been shared. You can view it in your connection history.
+        </Text>
+      </Animated.View>
 
-      <BottomNavBar />
+      {/* Action Buttons */}
+      <Animated.View
+        style={[
+          styles.actions,
+          { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
+        ]}
+      >
+        <TouchableOpacity style={styles.scanAgainBtn} onPress={onScanAgain} activeOpacity={0.8}>
+          <MaterialCommunityIcons name="nfc-variant" size={18} color={COLORS.primary} />
+          <Text style={styles.scanAgainText}>Scan Again</Text>
+        </TouchableOpacity>
 
-      {/* Bottom Sheet Mood */}
-      <MoodBottomSheet
-        visible={isModalVisible}
-        onClose={handleCloseMoodSelector}
-        tempMood={tempMood}
-        setTempMood={setTempMood}
-        onApply={handleApplyMood}
-      />
-    </SafeAreaView>
+        <TouchableOpacity style={styles.doneBtn} onPress={onDone} activeOpacity={0.85}>
+          <Text style={styles.doneText}>Done</Text>
+        </TouchableOpacity>
+      </Animated.View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  // ... styles lama tetap sama ...
-  container: { flex: 1, backgroundColor: Colors.primary },
-  scrollView: { flex: 1 },
-  scrollContent: { flexGrow: 1, paddingBottom: 100 },
-  mainContent: { alignItems: "center", marginTop: 20, marginBottom: 20 },
-  glowCircleOuter: {
-    width: 260,
-    height: 260,
-    borderRadius: 130,
-    backgroundColor: Colors.secondary,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: Colors.textPrimary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 20,
-    elevation: 5,
+  container: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    gap: 16,
   },
-  glowCircleInner: {
+  successCard: {
+    backgroundColor: COLORS.cardBg,
+    borderRadius: 28,
+    paddingVertical: 44,
+    paddingHorizontal: 24,
+    alignItems: "center",
+    shadowColor: COLORS.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 4,
+  },
+  checkCircle: {
     width: 80,
     height: 80,
-    borderRadius: 20,
-    backgroundColor: Colors.white,
+    borderRadius: 40,
+    backgroundColor: COLORS.success,
+    alignItems: "center",
     justifyContent: "center",
-    alignItems: "center",
+    marginBottom: 24,
+    shadowColor: COLORS.success,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 6,
   },
-  successText: {
-    color: Colors.textPrimary,
-    fontFamily: "PlusJakartaSans-Bold",
-    fontSize: 18,
-    marginTop: 40,
-    marginBottom: 30,
+  title: {
+    fontSize: 24,
+    fontWeight: "800",
+    color: COLORS.textDark,
+    textAlign: "center",
+    marginBottom: 10,
+    letterSpacing: -0.3,
   },
-  cardsContainer: { width: "100%", paddingHorizontal: 24 },
-  dataCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: Colors.white,
-    padding: 16,
-    borderRadius: 16,
-    marginBottom: 12,
-    shadowColor: Colors.textPrimary,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: Colors.optional,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 16,
-  },
-  cardLabel: {
-    color: Colors.textSecondary,
-    fontSize: 12,
-    fontFamily: "PlusJakartaSans-Bold",
-    marginBottom: 4,
-  },
-  cardValue: { color: Colors.textPrimary, fontSize: 16, fontWeight: "bold" },
-
-  // ✅ Styles preferensi
-  prefSection: { paddingHorizontal: 20 },
-  heroSection: { marginTop: 10, marginBottom: 20 },
-  heroTitleBlack: { fontSize: 32, fontWeight: "900", color: "#000" },
-  heroTitlePink: { fontSize: 32, fontWeight: "900", color: "#FF8A8A" },
-  heroSubtitle: { fontSize: 12, color: "#666", marginTop: 5, marginBottom: 20 },
-  moodDisplayContainer: {
-    backgroundColor: "#F5EBE1",
-    borderRadius: 25,
-    padding: 15,
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 30,
-  },
-  moodDisplay: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#FCF2E2",
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 20,
-  },
-  moodDisplayLabel: { fontSize: 10, color: "#666" },
-  moodDisplayValue: {
+  subtitle: {
     fontSize: 14,
-    fontWeight: "bold",
-    color: Colors.optionalAccent,
-    paddingVertical: 5,
+    color: COLORS.textMedium,
+    textAlign: "center",
+    lineHeight: 21,
   },
-  updateButton: {
-    backgroundColor: "#FF8A8A",
-    borderRadius: 25,
-    paddingVertical: 12,
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 15,
-    alignItems: "center",
+  profileName: {
+    fontWeight: "700",
+    color: COLORS.primary,
   },
-  updateButtonText: { color: "#FFF", fontWeight: "bold" },
-  card: {
-    backgroundColor: "#FFF",
+  infoCard: {
+    backgroundColor: COLORS.infoBg,
     borderRadius: 20,
-    padding: 15,
-    marginBottom: 20,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 2,
+    paddingVertical: 18,
+    paddingHorizontal: 20,
   },
-  cardImage: { width: "100%", height: 150, borderRadius: 15, marginBottom: 15 },
-  cardTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 5 },
-  cardDesc: { fontSize: 12, color: "#666", lineHeight: 18, marginBottom: 15 },
-  cardMetaInfo: { flexDirection: "row", gap: 15 },
-  metaRow: { flexDirection: "row", alignItems: "center", gap: 5 },
-  metaText: { fontSize: 12, color: "#666" },
+  infoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 8,
+  },
+  infoIconWrap: {
+    width: 30,
+    height: 30,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  infoTitle: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: COLORS.textDark,
+  },
+  infoText: {
+    fontSize: 13,
+    color: COLORS.textMedium,
+    lineHeight: 20,
+  },
+  actions: {
+    flexDirection: "row",
+    gap: 12,
+    marginTop: 4,
+  },
+  scanAgainBtn: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    backgroundColor: COLORS.infoBg,
+    paddingVertical: 15,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: COLORS.primaryPale,
+  },
+  scanAgainText: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: COLORS.primary,
+  },
+  doneBtn: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: COLORS.primary,
+    paddingVertical: 15,
+    borderRadius: 16,
+    shadowColor: COLORS.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  doneText: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    letterSpacing: 0.2,
+  },
 });

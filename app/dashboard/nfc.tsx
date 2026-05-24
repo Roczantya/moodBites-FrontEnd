@@ -1,14 +1,119 @@
 import React, { useState } from "react";
-// Sesuaikan path import ini dengan lokasi komponenmu nanti
+import { View, StyleSheet, StatusBar } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+// Sevices
+import storageService from "@/services/storageService";
+import hceService from "@/services/hceService";
+
+// Existing shared components
+import Header from "@/components/dashboard/header";
+import BottomNavbar from "@/components/dashboard/bottomNavbar";
+
+// NFC-specific components
 import ScanScreen from "@/components/nfc/scanscreen";
 import SuccessScreen from "@/components/nfc/successscreen";
+import NfcScanModal from "@/components/nfc/nfcscanmodal";
 
-export default function NFCScreen() {
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+const COLORS = {
+  bg: "#FDF0E8",
+};
 
-  return isSuccess ? (
-    <SuccessScreen onBack={() => setIsSuccess(false)} />
-  ) : (
-    <ScanScreen onSuccess={() => setIsSuccess(true)} />
+type NfcView = "scan" | "success";
+
+export default function NfcScreen() {
+  const [currentView, setCurrentView] = useState<NfcView>("scan");
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleScanStart = async () => {
+
+  try {
+
+    const userId = await storageService.getUserId();
+
+    if (!userId) {
+      alert("User ID tidak ditemukan");
+      return;
+    }
+
+    await hceService.startHCE(userId);
+
+    console.log("HCE ACTIVE USER ID:", userId);
+
+    setModalVisible(true);
+
+  } catch (error) {
+
+    console.log("HCE ERROR:", error);
+
+    alert("Gagal mengaktifkan NFC");
+  }
+};
+
+  const handleModalClose = async () => {
+
+  await hceService.stopHCE();
+
+  setModalVisible(false);
+};
+
+  const handleSuccess = () => {
+    setModalVisible(false);
+    setCurrentView("success");
+  };
+
+  const handleScanAgain = () => {
+    setCurrentView("scan");
+  };
+
+  const handleDone = async () => {
+
+  await hceService.stopHCE();
+
+  setCurrentView("scan");
+};
+
+  return (
+    <SafeAreaView style={styles.safeArea} edges={["top"]}>
+      <StatusBar barStyle="dark-content" backgroundColor={COLORS.bg} />
+
+      {/* Shared Header Component */}
+      <Header title="NFC" />
+
+      {/* Main Content */}
+      <View style={styles.content}>
+        {currentView === "scan" ? (
+          <ScanScreen
+            onStartScan={handleScanStart}
+          />
+        ) : (
+          <SuccessScreen
+            profileName="MoodBits User"
+            onDone={handleDone}
+            onScanAgain={handleScanAgain}
+          />
+        )}
+      </View>
+
+      {/* NFC Scan Modal */}
+      <NfcScanModal
+        visible={modalVisible}
+        onClose={handleModalClose}
+        onSuccess={handleSuccess}
+      />
+
+      {/* Shared Bottom Navigation Component */}
+      <BottomNavbar activeTab="nfc" />
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: COLORS.bg,
+  },
+  content: {
+    flex: 1,
+  },
+});
