@@ -113,12 +113,8 @@ pipeline {
         
                         echo "APK ditemukan: $APK_PATH"
         
-                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no \
-                            $SSH_USER@103.185.52.161 \
-                            "mkdir -p /home/moodbites/apk"
-        
                         scp -i $SSH_KEY -o StrictHostKeyChecking=no \
-                            "$APK_PATH" $SSH_USER@103.185.52.161:/home/moodbites/apk/moodbites.apk
+                            "$APK_PATH" $SSH_USER@103.185.52.161:/var/www/landingPage/moodbites.apk
         
                         echo "=== Deploy APK Selesai! ==="
                     '''
