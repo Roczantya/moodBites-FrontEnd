@@ -1,145 +1,241 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   View,
   Text,
   StyleSheet,
+  Animated,
+  Easing,
   TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
 } from "react-native";
-import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
-import { Colors } from "../../constants/colors";
+import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 
-// Komponen
-import BottomNavBar from "../dashboard/bottomNavbar";
-import Header from "../dashboard/header";
-import NfcScanModal from "@/components/nfc/nfcscanmodal"; // Import UI Modal
+const COLORS = {
+  bg: "#FDF0E8",
+  cardBg: "#FFFFFF",
+  infoBg: "#FAE0DC",
+  primary: "#C0616A",
+  primaryLight: "#E8A0A7",
+  primaryPale: "#F5C5C9",
+  textDark: "#7A2D35",
+  textMedium: "#9C5A62",
+  textLight: "#B08890",
+  iconBg: "#F5C5C9",
+};
 
-// Hook Logika
-import { useNfcScanner } from "@/hooks/use-nfc-hooks"; // Import Hook NFC
+type Props = {
+  onStartScan: () => void;
+};
 
-interface ScanScreenProps {
-  onSuccess: () => void;
-}
+export default function ScanScreen({
+  onStartScan,
+}: Props) {
+  const pulseAnim1 = useRef(new Animated.Value(1)).current;
+  const pulseAnim2 = useRef(new Animated.Value(1)).current;
+  const pulseOpacity1 = useRef(new Animated.Value(0.6)).current;
+  const pulseOpacity2 = useRef(new Animated.Value(0.3)).current;
 
-export default function ScanScreen({ onSuccess }: ScanScreenProps) {
-  // Panggil semua logika NFC dari Hook
-  const { isScanning, startNfcScan, cancelNfcScan } = useNfcScanner(onSuccess);
+  useEffect(() => {
+    const pulse = (anim: Animated.Value, opacity: Animated.Value, delay: number) => {
+      Animated.loop(
+        Animated.sequence([
+          Animated.delay(delay),
+          Animated.parallel([
+            Animated.timing(anim, {
+              toValue: 1.35,
+              duration: 1400,
+              easing: Easing.out(Easing.ease),
+              useNativeDriver: true,
+            }),
+            Animated.timing(opacity, {
+              toValue: 0,
+              duration: 1400,
+              useNativeDriver: true,
+            }),
+          ]),
+          Animated.parallel([
+            Animated.timing(anim, {
+              toValue: 1,
+              duration: 0,
+              useNativeDriver: true,
+            }),
+            Animated.timing(opacity, {
+              toValue: delay === 0 ? 0.6 : 0.3,
+              duration: 0,
+              useNativeDriver: true,
+            }),
+          ]),
+        ])
+      ).start();
+    };
+
+    pulse(pulseAnim1, pulseOpacity1, 0);
+    pulse(pulseAnim2, pulseOpacity2, 700);
+  }, []);
 
   return (
-    <SafeAreaView style={[styles.container, styles.lightContainer]}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
+    <View style={styles.container}>
+      {/* Ready Card */}
+      <View style={styles.readyCard}>
+        {/* NFC Icon with pulse rings */}
+        <View style={styles.iconWrapper}>
+          <Animated.View
+            style={[
+              styles.pulseRing,
+              { transform: [{ scale: pulseAnim2 }], opacity: pulseOpacity2 },
+            ]}
+          />
+          <Animated.View
+            style={[
+              styles.pulseRing,
+              styles.pulseRingInner,
+              { transform: [{ scale: pulseAnim1 }], opacity: pulseOpacity1 },
+            ]}
+          />
+          <View style={styles.iconCircle}>
+            <MaterialCommunityIcons
+              name="nfc-variant"
+              size={38}
+              color={COLORS.primary}
+            />
+          </View>
+        </View>
+
+        <Text style={styles.cardTitle}>Ready to Connect</Text>
+        <Text style={styles.cardSubtitle}>
+          Hold your phone near another{"\n"}device to share your profile.
+        </Text>
+      </View>
+
+      <TouchableOpacity
+        style={styles.scanButton}
+        onPress={onStartScan}
       >
-        <Header title="NFC" showBell={false} />
+        <Text style={styles.scanButtonText}>
+          Activate NFC
+        </Text>
+      </TouchableOpacity>
 
-        <View style={styles.mainContent}>
-          <Text style={styles.titleLight}>Ready to Scan?</Text>
-          <Text style={styles.subtitleLight}>
-            Tekan disini dengan scan Orderhere NFC
-          </Text>
-
-          <TouchableOpacity
-            style={styles.scanButtonOuter}
-            onPress={startNfcScan}
-          >
-            <View style={styles.scanButtonInner}>
-              <MaterialCommunityIcons
-                name="nfc-tap"
-                size={48}
-                color={Colors.accent}
-              />
-              <Text style={styles.scanButtonText}>TAP TO SCAN</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.infoCard}>
-          <View style={styles.infoHeader}>
-            <Feather name="info" size={16} color={Colors.accent} />
-            <Text style={styles.infoTitle}>How it works</Text>
+      {/* Enable NFC Info Card */}
+      <View style={styles.infoCard}>
+        <View style={styles.infoRow}>
+          <View style={styles.infoIconWrap}>
+            <Ionicons name="radio-outline" size={22} color={COLORS.primary} />
           </View>
-          <Text style={styles.infoDesc}>
-            Hold your phone near the NFC sticker on your table. We'll instantly
-            load the menu, reviews, and pair it with your current mood to give
-            personalized recommendations.
-          </Text>
-          <View style={styles.infoFooter}>
-            <Feather name="lock" size={12} color={Colors.textSecondary} />
-            <Text style={styles.infoFooterText}>
-              Ensure your screen is unlocked
-            </Text>
-          </View>
+          <Text style={styles.infoTitle}>Enable NFC</Text>
         </View>
-      </ScrollView>
-
-      {/* Gunakan komponen Modal yang sudah dipisah */}
-      <NfcScanModal visible={isScanning} onCancel={cancelNfcScan} />
-
-      <BottomNavBar />
-    </SafeAreaView>
+        <Text style={styles.infoText}>
+          Ensure NFC is toggled on in your device system settings for proximity sharing.
+        </Text>
+      </View>
+    </View>
   );
 }
 
-// Hanya tersisa styles untuk layout utama saja
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  lightContainer: { backgroundColor: Colors.primary },
-  scrollView: { flex: 1 },
-  scrollContent: { flexGrow: 1, paddingBottom: 100 },
-  mainContent: { alignItems: "center", marginTop: 30, marginBottom: 20 },
-  titleLight: {
+  container: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    gap: 16,
+  },
+  readyCard: {
+    backgroundColor: COLORS.cardBg,
+    borderRadius: 28,
+    paddingVertical: 40,
+    paddingHorizontal: 24,
+    alignItems: "center",
+    shadowColor: COLORS.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 4,
+  },
+  iconWrapper: {
+    width: 100,
+    height: 100,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 24,
+  },
+  pulseRing: {
+    position: "absolute",
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: COLORS.primaryPale,
+  },
+  pulseRingInner: {
+    width: 82,
+    height: 82,
+    borderRadius: 41,
+    backgroundColor: COLORS.primaryLight,
+  },
+  iconCircle: {
+    width: 66,
+    height: 66,
+    borderRadius: 20,
+    backgroundColor: COLORS.iconBg,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
+  },
+  cardTitle: {
     fontSize: 22,
-    fontFamily: "PlusJakartaSans-Bold",
-    color: Colors.textPrimary,
+    fontWeight: "800",
+    color: COLORS.textDark,
+    marginBottom: 10,
+    textAlign: "center",
+    letterSpacing: -0.3,
   },
-  subtitleLight: { fontSize: 14, color: Colors.textSecondary, marginTop: 8 },
-  scanButtonOuter: {
-    marginTop: 40,
-    width: 240,
-    height: 240,
-    borderRadius: 120,
-    backgroundColor: Colors.secondary,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  scanButtonInner: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    backgroundColor: Colors.white,
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 5,
-  },
-  scanButtonText: {
-    marginTop: 12,
-    color: Colors.accent,
-    fontFamily: "PlusJakartaSans-Bold",
+  cardSubtitle: {
     fontSize: 14,
+    color: COLORS.textMedium,
+    textAlign: "center",
+    lineHeight: 21,
+    fontWeight: "400",
   },
   infoCard: {
-    backgroundColor: Colors.white,
-    margin: 24,
-    padding: 20,
-    borderRadius: 16,
-    elevation: 3,
+    backgroundColor: COLORS.infoBg,
+    borderRadius: 20,
+    paddingVertical: 18,
+    paddingHorizontal: 20,
   },
-  infoHeader: { flexDirection: "row", alignItems: "center", marginBottom: 8 },
-  infoTitle: { marginLeft: 8, fontWeight: "bold", color: Colors.textPrimary },
-  infoDesc: { fontSize: 13, color: Colors.textSecondary, lineHeight: 20 },
-  infoFooter: {
+  infoRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 16,
+    gap: 8,
+    marginBottom: 8,
+  },
+  infoIconWrap: {
+    width: 30,
+    height: 30,
+    borderRadius: 8,
+    alignItems: "center",
     justifyContent: "center",
   },
-  infoFooterText: {
-    marginLeft: 6,
-    fontSize: 11,
-    color: Colors.textSecondary,
-    marginBottom: 10,
+  infoTitle: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: COLORS.textDark,
   },
+  infoText: {
+    fontSize: 13,
+    color: COLORS.textMedium,
+    lineHeight: 20,
+    fontWeight: "400",
+  },
+
+  scanButton: {
+  backgroundColor: COLORS.primary,
+  paddingVertical: 16,
+  borderRadius: 18,
+  alignItems: "center",
+  justifyContent: "center",
+},
+
+scanButtonText: {
+  color: "#FFFFFF",
+  fontSize: 16,
+  fontWeight: "700",
+},
 });
