@@ -52,11 +52,19 @@ const authService = {
 
   login: async (data: LoginPayload) => {
     try {
+      console.log(
+        "LOGIN REQUEST BODY:",
+        JSON.stringify(data, null, 2)
+      );
       const response = await apiClient.post("/auth/login", data);
       console.log("LOGIN RESPONSE:", JSON.stringify(response.data, null, 2));
       return response.data; // Biasanya mengembalikan token (JWT) & data user
     } catch (error: any) {
       throw error;
+      console.log(
+        "LOGIN FULL ERROR:",
+        JSON.stringify(error, null, 2)
+      );
     }
   },
 

@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, {
+  useState,
+  useEffect
+} from "react";
 import { View, StyleSheet, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -24,6 +27,17 @@ type NfcView = "scan" | "success";
 export default function NfcScreen() {
   const [currentView, setCurrentView] = useState<NfcView>("scan");
   const [modalVisible, setModalVisible] = useState(false);
+  const [isHceStarted, setIsHceStarted] =
+  useState(false);
+  
+  useEffect(() => {
+
+  if (!isHceStarted) {
+
+    handleScanStart();
+  }
+
+}, [isHceStarted]);
 
   const handleScanStart = async () => {
 
@@ -41,6 +55,7 @@ export default function NfcScreen() {
     console.log("HCE ACTIVE USER ID:", userId);
 
     setModalVisible(true);
+    setIsHceStarted(true);
 
   } catch (error) {
 
@@ -55,6 +70,8 @@ export default function NfcScreen() {
   await hceService.stopHCE();
 
   setModalVisible(false);
+  setIsHceStarted(true);
+
 };
 
   const handleSuccess = () => {
@@ -64,6 +81,7 @@ export default function NfcScreen() {
 
   const handleScanAgain = () => {
     setCurrentView("scan");
+    setIsHceStarted(false);
   };
 
   const handleDone = async () => {
@@ -83,9 +101,7 @@ export default function NfcScreen() {
       {/* Main Content */}
       <View style={styles.content}>
         {currentView === "scan" ? (
-          <ScanScreen
-            onStartScan={handleScanStart}
-          />
+          <ScanScreen/>
         ) : (
           <SuccessScreen
             profileName="MoodBits User"
