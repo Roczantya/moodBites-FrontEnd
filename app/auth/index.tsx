@@ -261,23 +261,20 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    // 1. Menggunakan persentase agar selalu terlihat proporsional
     paddingTop: "12%",
     paddingVertical: "5%",
     paddingHorizontal: "5%",
   },
   card: {
     backgroundColor: Colors.white,
-    width: "100%", // Membiarkan card mengambil lebar layar
+    width: "100%",
     borderRadius: 50,
-    // 2. Menggunakan persentase untuk padding internal card
     padding: "5%",
     alignItems: "center",
     elevation: 5,
   },
   footerText: {
     fontSize: 12,
-    // 3. Mengganti 'top: 15' menjadi marginTop agar layout lebih stabil
     marginTop: 15,
     color: Colors.optionalAccent + "99",
     textAlign: "center",
