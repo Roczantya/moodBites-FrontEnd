@@ -25,7 +25,12 @@
         "monochromeImage": "./assets/images/logo-moodBites.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.NFC",
+        "android.permission.NFC"
+      ],
+      "package": "com.anonymous.moodBites"
     },
     "web": {
       "output": "static",
