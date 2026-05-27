@@ -1,17 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
+import AuthHeader from "@/components/auth/authheader";
+import { TextBold, TextMedium, TextSemiBold } from "@/constants/customFont";
+import { router } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
 import {
-  StyleSheet,
-  View,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  StatusBar,
+  StyleSheet,
+  View,
 } from "react-native";
-import { Colors } from "../../constants/colors";
-import AuthHeader from "@/components/auth/authheader";
 import AuthToggle from "../../components/auth/authtoggle";
 import PrimaryButton from "../../components/Reuse/button";
-import { TextBold, TextMedium, TextSemiBold } from "@/constants/customFont";
-import { router } from "expo-router";
+import { Colors } from "../../constants/colors";
 
 // IMPORT UI FORM YANG BARU KITA PISAH
 import LoginForm from "@/components/auth/loginform";
@@ -163,6 +164,7 @@ export default function AuthScreen() {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+      <StatusBar translucent={true} backgroundColor="black" />
       {/* 5. UI TOAST DINAMIS */}
       {toast.visible && (
         <View
@@ -259,24 +261,24 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    paddingTop: 50, // 2. TAMBAH INI biar card-nya agak turun dari ujung layar atas
-    paddingVertical: 20,
-    paddingHorizontal: 20,
+    paddingTop: "12%",
+    paddingVertical: "5%",
+    paddingHorizontal: "5%",
   },
   card: {
     backgroundColor: Colors.white,
     width: "100%",
     borderRadius: 50,
-    padding: 20,
+    padding: "5%",
     alignItems: "center",
     elevation: 5,
   },
   footerText: {
     fontSize: 12,
-    top: 15,
+    marginTop: 15,
     color: Colors.optionalAccent + "99",
     textAlign: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: "5%",
     fontFamily: "PlusJakartaSans-Medium",
     paddingBottom: 10,
   },

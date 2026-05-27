@@ -1,19 +1,20 @@
-import React, { useState, useRef, useEffect } from "react";
+import { Colors } from "@/constants/colors";
+import { TextSemiBold } from "@/constants/customFont";
+import { router, useLocalSearchParams } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
 import {
-  Text,
-  TextInput,
-  StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
   View,
 } from "react-native";
-import { Colors } from "@/constants/colors";
-import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { TextSemiBold } from "@/constants/customFont";
 
-import authService from "@/services/authService";
 import OtpForm from "@/components/auth/otpform"; // Import UI yang baru dibuat
+import authService from "@/services/authService";
 
 export default function OTP() {
   // 1. Ambil params dari halaman register sebelumnya (email & loginId)
@@ -130,6 +131,7 @@ export default function OTP() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar translucent={true} backgroundColor="black" />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.content}
@@ -181,29 +183,33 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: "5%", // Gunakan persentase
     justifyContent: "center",
     alignItems: "center",
-    marginTop: -50,
+    // Hindari marginTop negatif yang kaku seperti -50
+    // Gunakan proporsi layar jika perlu ruang lebih
+    marginTop: Platform.OS === "ios" ? 0 : -20,
   },
   title: {
+    // Gunakan skala font yang dinamis jika ingin lebih pro
     fontSize: 28,
     fontFamily: "PlusJakartaSans-Bold",
     color: Colors.textPrimary,
-    marginBottom: 16,
+    marginBottom: "5%", // Margin berbasis persentase
   },
   subtitle: {
     fontSize: 14,
     color: Colors.textSecondary,
     textAlign: "center",
     lineHeight: 22,
-    marginBottom: 40,
+    marginBottom: "10%", // Margin bawah lebih lebar untuk memberi napas
+    paddingHorizontal: "5%", // Agar tidak menempel ke pinggir layar di HP kecil
   },
   toastContainer: {
     position: "absolute",
-    bottom: 40, // Muncul dari atas untuk OTP biar ga nutupin keyboard
-    left: 20,
-    right: 20,
+    bottom: "5%", // 5% dari bawah layar
+    left: "5%",
+    right: "5%",
     padding: 15,
     borderRadius: 5,
     zIndex: 100,

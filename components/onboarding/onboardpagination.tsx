@@ -53,6 +53,6 @@ const styles = StyleSheet.create({
     height: 10,
     borderRadius: 5,
     backgroundColor: Colors.accent, // Warna pink MoodBites
-    marginHorizontal: 6,
+    marginHorizontal: "1%",
   },
 });
