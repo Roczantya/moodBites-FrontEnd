@@ -1,18 +1,61 @@
 const hceService = {
 
-  startHCE: async (payload: string) => {
+  startHCE: async (userId: string) => {
 
-    console.log("HCE START PAYLOAD:", payload);
+    try {
 
-    // nanti NativeModules masuk di sini
-    return true;
+      // payload final
+      const payload = userId;
+
+      console.log(  
+        "START HCE PAYLOAD:",
+        payload
+      );
+
+      /**
+       * NANTI:
+       *
+       * NativeModules.HCEModule.startHCE(payload)
+       *
+       */
+
+      return true;
+
+    } catch (error) {
+
+      console.log(
+        "START HCE ERROR:",
+        error
+      );
+
+      throw error;
+    }
   },
 
   stopHCE: async () => {
 
-    console.log("HCE STOP");
+    try {
 
-    return true;
+      console.log("STOP HCE");
+
+      /**
+       * NANTI:
+       *
+       * NativeModules.HCEModule.stopHCE()
+       *
+       */
+
+      return true;
+
+    } catch (error) {
+
+      console.log(
+        "STOP HCE ERROR:",
+        error
+      );
+
+      throw error;
+    }
   },
 };
 

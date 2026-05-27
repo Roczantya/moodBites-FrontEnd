@@ -25,6 +25,28 @@ const storageService = {
       console.log("ERROR CLEAR USER ID:", error);
     }
   },
+
+    saveOnboardingDone: async () => {
+    try {
+      await AsyncStorage.setItem(
+        "onboardingDone",
+        "true"
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  getOnboardingDone: async () => {
+    try {
+      return await AsyncStorage.getItem(
+        "onboardingDone"
+      );
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  },
 };
 
 export default storageService;

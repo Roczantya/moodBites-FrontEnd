@@ -15,7 +15,6 @@ import PrimaryButton from "../../components/Reuse/button";
 import { Colors } from "../../constants/colors";
 
 // Services
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import storageService from "@/services/storageService";
 
 // IMPORT UI FORM YANG BARU KITA PISAH
@@ -88,6 +87,7 @@ export default function AuthScreen() {
 
     try {
       if (isLogin) {
+        await storageService.clearUserId();
         // 2. PROSES LOGIN VIA AUTH SERVICE
         console.log("Proses Login...");
         const result = await authService.login({
@@ -151,6 +151,7 @@ export default function AuthScreen() {
         }, 3000);
       }
     } catch (error: any) {
+      console.log("LOGIN ERROR:", error);
       // 4. PROSES ERROR (LOGIN / REGISTER) YANG SUDAH DISARING INTERCEPTOR AXIOS
       setIsLoading(false);
 
