@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { LikertScale } from "@/components/survey/Skalasurvey";
 import { CheckboxGroup } from "@/components/survey/checkbox";
@@ -50,8 +51,9 @@ export default function MoodSurveyScreen() {
   return (
     <View style={styles.mainContainer}>
       <StatusBar translucent={true} backgroundColor="black" />
-      <Header title="Mood Survey" showBell={false} />
-
+      <SafeAreaView edges={["top"]} style={{ backgroundColor: "black" }}>
+        <Header title="Mood Survey" showBell={false} />
+      </SafeAreaView>
       {/* Progress Header */}
       <View style={styles.progressContainer}>
         <Text style={styles.progressText}>
@@ -66,12 +68,12 @@ export default function MoodSurveyScreen() {
           />
         </View>
       </View>
-
       <ScrollView
         ref={scrollViewRef}
         style={styles.scrollContainer}
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
       >
         <Text style={styles.header}>{moodInfo.title}</Text>
         <Text style={styles.desc}>{moodInfo.desc}</Text>
@@ -149,7 +151,6 @@ export default function MoodSurveyScreen() {
 
         <View style={{ height: 40 }} />
       </ScrollView>
-
       {toastMessage.visible && (
         <View
           style={[
@@ -173,7 +174,7 @@ const styles = StyleSheet.create({
   mainContainer: { flex: 1, backgroundColor: Colors.primary },
   progressContainer: {
     paddingHorizontal: 20,
-    paddingTop: 10,
+    paddingTop: 20,
     paddingBottom: 20,
     backgroundColor: Colors.primary,
     zIndex: 5,
