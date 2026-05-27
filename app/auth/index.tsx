@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
+import AuthHeader from "@/components/auth/authheader";
+import { TextBold, TextMedium, TextSemiBold } from "@/constants/customFont";
+import { router } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
 import {
-  StyleSheet,
-  View,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StatusBar,
+  StyleSheet,
+  View,
 } from "react-native";
-import { Colors } from "../../constants/colors";
-import AuthHeader from "@/components/auth/authheader";
 import AuthToggle from "../../components/auth/authtoggle";
 import PrimaryButton from "../../components/Reuse/button";
-import { TextBold, TextMedium, TextSemiBold } from "@/constants/customFont";
-import { router } from "expo-router";
+import { Colors } from "../../constants/colors";
 
 // IMPORT UI FORM YANG BARU KITA PISAH
 import LoginForm from "@/components/auth/loginform";
@@ -164,6 +164,7 @@ export default function AuthScreen() {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+      <StatusBar translucent={true} backgroundColor="black" />
       {/* 5. UI TOAST DINAMIS */}
       {toast.visible && (
         <View
@@ -192,7 +193,6 @@ export default function AuthScreen() {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        <StatusBar hidden={true} />
         <View style={styles.card}>
           <AuthHeader />
 
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     // 1. Menggunakan persentase agar selalu terlihat proporsional
-    paddingTop: "10%",
+    paddingTop: "12%",
     paddingVertical: "5%",
     paddingHorizontal: "5%",
   },

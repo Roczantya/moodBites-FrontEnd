@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
-import {
-  View,
-  FlatList,
-  StyleSheet,
-  useWindowDimensions,
-  Animated,
-  StatusBar,
-} from "react-native";
 import { router } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Animated,
+  FlatList,
+  StatusBar,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from "react-native";
 
 import OnboardingItem from "@/components/onboarding/onboardingItem";
 import OnboardingPagination from "@/components/onboarding/onboardpagination";
@@ -66,7 +66,7 @@ export default function Index() {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
-      <StatusBar hidden={true} />
+      <StatusBar translucent={true} backgroundColor="black" />
       <FlatList
         ref={flatListRef}
         data={onboardingData}

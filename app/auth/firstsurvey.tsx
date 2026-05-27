@@ -1,11 +1,11 @@
 import React from "react";
 import {
   ScrollView,
-  View,
+  StatusBar,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  StatusBar,
+  View,
 } from "react-native";
 
 import { LikertScale } from "@/components/survey/Skalasurvey";
@@ -13,8 +13,8 @@ import { CheckboxGroup } from "@/components/survey/checkbox";
 import { Colors } from "@/constants/colors";
 import { FLAVORS, MENU_CATEGORIES } from "@/constants/mood";
 
-import { useMoodSurvey } from "@/hooks/use-mood-survey";
 import Header from "@/components/dashboard/header";
+import { useMoodSurvey } from "@/hooks/use-mood-survey";
 
 export default function MoodSurveyScreen() {
   // Panggil hook logika di sini dan ekstrak data yang diperlukan
@@ -49,7 +49,7 @@ export default function MoodSurveyScreen() {
 
   return (
     <View style={styles.mainContainer}>
-      <StatusBar hidden={true} />
+      <StatusBar translucent={true} backgroundColor="black" />
       <Header title="Mood Survey" showBell={false} />
 
       {/* Progress Header */}

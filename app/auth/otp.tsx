@@ -1,20 +1,20 @@
-import React, { useState, useRef, useEffect } from "react";
+import { Colors } from "@/constants/colors";
+import { TextSemiBold } from "@/constants/customFont";
+import { router, useLocalSearchParams } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
 import {
-  Text,
-  TextInput,
-  StyleSheet,
   KeyboardAvoidingView,
   Platform,
-  View,
   StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
-import { Colors } from "@/constants/colors";
-import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { TextSemiBold } from "@/constants/customFont";
 
-import authService from "@/services/authService";
 import OtpForm from "@/components/auth/otpform"; // Import UI yang baru dibuat
+import authService from "@/services/authService";
 
 export default function OTP() {
   // 1. Ambil params dari halaman register sebelumnya (email & loginId)
@@ -131,7 +131,7 @@ export default function OTP() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar hidden={true} />
+      <StatusBar translucent={true} backgroundColor="black" />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.content}
