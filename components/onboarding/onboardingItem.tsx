@@ -43,20 +43,20 @@ const styles = StyleSheet.create({
     // Solusi agar tidak mepet status bar di Android
     paddingTop: Platform.OS === "android" ? 40 : 0,
     paddingHorizontal: 24,
-    paddingBottom: 100,
   },
   imageContainer: {
-    marginTop: 20, // Memberi jarak agar ilustrasi lebih "bernafas"
+    flex: 1,
+    marginTop: "5%", // Memberi jarak agar ilustrasi lebih "bernafas"
     height: "40%", // Membatasi tinggi agar teks tidak terdorong ke bawah layar
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
   },
   image: {
-    width: 250,
-    height: 250,
+    width: "70%",
+    height: "40%",
     resizeMode: "contain",
-    // MarginBottom dihapus karena sudah diatur oleh imageContainer
+    marginBottom: 20,
   },
   contentContainer: {
     flex: 1,
@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: "100%",
-    paddingBottom: 20,
+    marginBottom: 120, // Beri jarak antara Tombol dan Pagination
+    alignItems: "center",
   },
 });

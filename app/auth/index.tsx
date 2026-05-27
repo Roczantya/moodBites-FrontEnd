@@ -5,6 +5,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  StatusBar,
 } from "react-native";
 import { Colors } from "../../constants/colors";
 import AuthHeader from "@/components/auth/authheader";
@@ -191,6 +192,7 @@ export default function AuthScreen() {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
+        <StatusBar hidden={true} />
         <View style={styles.card}>
           <AuthHeader />
 
@@ -259,24 +261,27 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    paddingTop: 50, // 2. TAMBAH INI biar card-nya agak turun dari ujung layar atas
-    paddingVertical: 20,
-    paddingHorizontal: 20,
+    // 1. Menggunakan persentase agar selalu terlihat proporsional
+    paddingTop: "10%",
+    paddingVertical: "5%",
+    paddingHorizontal: "5%",
   },
   card: {
     backgroundColor: Colors.white,
-    width: "100%",
+    width: "100%", // Membiarkan card mengambil lebar layar
     borderRadius: 50,
-    padding: 20,
+    // 2. Menggunakan persentase untuk padding internal card
+    padding: "5%",
     alignItems: "center",
     elevation: 5,
   },
   footerText: {
     fontSize: 12,
-    top: 15,
+    // 3. Mengganti 'top: 15' menjadi marginTop agar layout lebih stabil
+    marginTop: 15,
     color: Colors.optionalAccent + "99",
     textAlign: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: "5%",
     fontFamily: "PlusJakartaSans-Medium",
     paddingBottom: 10,
   },

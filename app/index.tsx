@@ -5,6 +5,7 @@ import {
   StyleSheet,
   useWindowDimensions,
   Animated,
+  StatusBar,
 } from "react-native";
 import { router } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -13,6 +14,7 @@ import OnboardingItem from "@/components/onboarding/onboardingItem";
 import OnboardingPagination from "@/components/onboarding/onboardpagination";
 import { onboardingData } from "@/constants/onBoarding";
 import { useThemeFonts } from "@/hooks/useThemeFonts";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -20,7 +22,7 @@ export default function Index() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { width, height } = useWindowDimensions();
   const { fontsLoaded, fontError } = useThemeFonts();
-
+  const insets = useSafeAreaInsets();
   const scrollX = useRef(new Animated.Value(0)).current;
   const flatListRef = useRef<FlatList>(null);
 
@@ -63,7 +65,8 @@ export default function Index() {
   if (!fontsLoaded && !fontError) return null;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
+      <StatusBar hidden={true} />
       <FlatList
         ref={flatListRef}
         data={onboardingData}
@@ -106,7 +109,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     position: "absolute",
-    bottom: 50, // Turunkan posisi sedikit
+    bottom: "5%", // Turunkan posisi sedikit
     left: 0,
     right: 0,
     alignItems: "center",

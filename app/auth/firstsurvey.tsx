@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  StatusBar,
 } from "react-native";
 
 import { LikertScale } from "@/components/survey/Skalasurvey";
@@ -48,6 +49,7 @@ export default function MoodSurveyScreen() {
 
   return (
     <View style={styles.mainContainer}>
+      <StatusBar hidden={true} />
       <Header title="Mood Survey" showBell={false} />
 
       {/* Progress Header */}
