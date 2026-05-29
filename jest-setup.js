@@ -1,7 +1,7 @@
-import 'react-native-gesture-handler/jestSetup';
+import "react-native-gesture-handler/jestSetup";
 
 // 1. Perbaikan untuk structuredClone (Masalah utama kamu saat ini)
-if (typeof global.structuredClone !== 'function') {
+if (typeof global.structuredClone !== "function") {
   global.structuredClone = (obj) => {
     if (obj === undefined) return undefined;
     return JSON.parse(JSON.stringify(obj));
@@ -16,19 +16,23 @@ global.__ExpoImportMetaRegistry = {
 };
 
 // 3. Mock untuk Expo Router
-jest.mock('expo-router', () => ({
+jest.mock("expo-router", () => ({
   useRouter: () => ({
     push: jest.fn(),
     replace: jest.fn(),
     back: jest.fn(),
   }),
   useLocalSearchParams: () => ({}),
-  Link: 'Link',
+  Link: "Link",
 }));
 
 // 4. Mock untuk Reanimated
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock');
+jest.mock("react-native-reanimated", () => {
+  const Reanimated = require("react-native-reanimated/mock");
   Reanimated.default.call = () => {};
   return Reanimated;
 });
+
+jest.mock("@react-native-async-storage/async-storage", () =>
+  require("@react-native-async-storage/async-storage/jest/async-storage-mock"),
+);
