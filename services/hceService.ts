@@ -1,3 +1,7 @@
+import { NativeModules } from "react-native";
+
+const { HCEModule } = NativeModules;
+
 const hceService = {
 
   startHCE: async (userId: string) => {
