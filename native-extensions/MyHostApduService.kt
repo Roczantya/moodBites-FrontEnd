@@ -7,45 +7,37 @@ import android.util.Log
 class MyHostApduService : HostApduService() {
 
     companion object {
-        // Payload dari frontend (diset melalui HCEModule)
         var currentPayload: String = ""
     }
 
     override fun processCommandApdu(commandApdu: ByteArray?, extras: Bundle?): ByteArray {
         if (commandApdu == null) return hexStringToByteArray("6F00")
 
-        // Konversi command ke Hex String untuk pengecekan
         val commandHex = commandApdu.joinToString("") { "%02X".format(it) }
-        Log.d("HCE_DEBUG", "Terima APDU: $commandHex")
+        
+        // Log ini akan muncul di Logcat dengan tag HCE_DEBUG
+        Log.d("HCE_DEBUG", "RECEIVED: $commandHex")
 
-        /**
-         * Logika: Jika reader mengirim SELECT AID (00A40400 + panjang AID + AID)
-         * Contoh untuk AID F0010203040506, commandnya: 00A4040007F0010203040506
-         */
+        // 00A40400 adalah instruksi SELECT AID
         if (commandHex.startsWith("00A40400")) {
-            Log.d("HCE_DEBUG", "SELECT AID MATCH. Mengirim data: $currentPayload")
+            Log.d("HCE_DEBUG", "MATCHED! SENDING: $currentPayload")
 
             return if (currentPayload.isNotEmpty()) {
-                // Ambil bytes dari string payload
                 val payloadBytes = currentPayload.toByteArray(Charsets.UTF_8)
-                // Tambahkan 9000 (Status Success) di akhir payload
+                // Kirim Payload + 9000 (Status OK)
                 payloadBytes + hexStringToByteArray("9000")
             } else {
-                // Jika payload kosong, kirim status Success saja
                 hexStringToByteArray("9000")
             }
         }
 
-        // Jika perintah tidak dikenal
-        Log.w("HCE_DEBUG", "Perintah tidak dikenal: $commandHex")
-        return hexStringToByteArray("6A81") 
+        return hexStringToByteArray("6A81")
     }
 
     override fun onDeactivated(reason: Int) {
-        Log.d("HCE_DEBUG", "Koneksi NFC terputus, alasan: $reason")
+        Log.d("HCE_DEBUG", "HCE STOPPED. REASON: $reason")
     }
 
-    // Helper untuk konversi String Hex ke ByteArray
     private fun hexStringToByteArray(s: String): ByteArray {
         val len = s.length
         val data = ByteArray(len / 2)
