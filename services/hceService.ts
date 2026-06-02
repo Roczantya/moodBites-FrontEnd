@@ -16,12 +16,11 @@ const hceService = {
         payload
       );
 
-      /**
-       * NANTI:
-       *
-       * NativeModules.HCEModule.startHCE(payload)
-       *
-       */
+      
+      
+       NativeModules.HCEModule.startHCE(payload)
+       
+       
 
       return true;
 
@@ -42,12 +41,9 @@ const hceService = {
 
       console.log("STOP HCE");
 
-      /**
-       * NANTI:
-       *
-       * NativeModules.HCEModule.stopHCE()
-       *
-       */
+     
+       NativeModules.HCEModule.stopHCE()
+       
 
       return true;
 
