@@ -15,26 +15,22 @@ class MyHostApduService : HostApduService() {
 
         val commandHex = commandApdu.joinToString("") { "%02X".format(it) }
         
+        // Log ini akan muncul di Logcat dengan tag HCE_DEBUG
+        Log.d("HCE_DEBUG", "RECEIVED: $commandHex")
+
+        // 00A40400 adalah instruksi SELECT AID
         if (commandHex.startsWith("00A40400")) {
-            // 1. Coba ambil dari variable static
-            var payload = MyHostApduService.currentPayload
-            
-            // 2. Jika kosong, coba ambil dari SharedPreferences
-            if (payload.isEmpty()) {
-                val prefs = getSharedPreferences("HCE_PREFS", android.content.Context.MODE_PRIVATE)
-                payload = prefs.getString("payload", "") ?: ""
-            }
+            Log.d("HCE_DEBUG", "MATCHED! SENDING: $currentPayload")
 
-            Log.d("HCE_DEBUG", "MATCHED! Mengirim Payload: $payload")
-
-            return if (payload.isNotEmpty()) {
-                val payloadBytes = payload.toByteArray(Charsets.UTF_8)
+            return if (currentPayload.isNotEmpty()) {
+                val payloadBytes = currentPayload.toByteArray(Charsets.UTF_8)
+                // Kirim Payload + 9000 (Status OK)
                 payloadBytes + hexStringToByteArray("9000")
             } else {
-                Log.w("HCE_DEBUG", "Payload benar-benar kosong di storage!")
                 hexStringToByteArray("9000")
             }
         }
+
         return hexStringToByteArray("6A81")
     }
 
