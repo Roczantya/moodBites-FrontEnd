@@ -38,7 +38,7 @@ class MyHostApduService : HostApduService() {
          * 1. SELECT AID
          * Ganti "F0010203040506" dengan AID yang Anda daftarkan di apdu_service.xml
          */
-        val targetAid = "F0010203040506" 
+        val targetAid = "A0000002471001" 
         val selectAidHeader = "00A40400"
         
         if (commandHex.startsWith(selectAidHeader) && commandHex.contains(targetAid)) {
