@@ -6,25 +6,24 @@ pipeline {
     }
 
     environment {
+        // Definisikan SDK Root di tingkat atas agar berlaku untuk semua stage
         ANDROID_HOME     = '/opt/android-sdk'
         ANDROID_SDK_ROOT = '/opt/android-sdk'
+        // Masukkan path tools Android langsung ke PATH global pipeline
+        PATH             = "/opt/android-sdk/cmdline-tools/latest/bin:/opt/android-sdk/platform-tools:${env.PATH}"
     }
 
     stages {
-
         stage('Environment Check') {
             steps {
-                withEnv(["PATH+ANDROID=/opt/android-sdk/cmdline-tools/latest/bin:/opt/android-sdk/platform-tools"]) {
-                    sh '''
-                        echo "=== Environment Check ==="
-                        echo "Node: $(node -v)"
-                        echo "NPM: $(npm -v)"
-                        echo "ANDROID_HOME: $ANDROID_HOME"
-                        echo "PATH: $PATH"
-                        free -h
-
-                    '''
-                }
+                sh '''
+                    echo "=== Environment Check ==="
+                    echo "Node: $(node -v)"
+                    echo "NPM: $(npm -v)"
+                    echo "ANDROID_HOME: $ANDROID_HOME"
+                    echo "PATH: $PATH"
+                    free -h
+                '''
             }
         }
 
@@ -50,21 +49,21 @@ pipeline {
 
         stage('Expo Prebuild') {
             steps {
-                withEnv(["PATH+ANDROID=/opt/android-sdk/cmdline-tools/latest/bin:/opt/android-sdk/platform-tools"]) {
-                    sh 'npx expo prebuild --platform android --clean'
-                }
+                // Folder 'android/' digenerate otomatis di sini
+                sh 'npx expo prebuild --platform android --clean'
             }
         }
 
         stage('Configure Gradle') {
             steps {
+                // Sekarang file android/gradle.properties yang baru digenerate bisa dimodifikasi safely
                 sh '''
                     cd android
 
                     grep -v "org.gradle.jvmargs\\|org.gradle.daemon\\|org.gradle.parallel\\|REACT_NATIVE_ARCHITECTURES\\|org.gradle.workers" gradle.properties > gradle.properties.tmp
                     mv gradle.properties.tmp gradle.properties
 
-                    echo "REACT_NATIVE_ARCHITECTURES=arm64-v8a"                              >> gradle.properties
+                    echo "REACT_NATIVE_ARCHITECTURES=arm64-v8a"                               >> gradle.properties
                     echo "org.gradle.daemon=false"                                            >> gradle.properties
                     echo "org.gradle.parallel=false"                                          >> gradle.properties
                     echo "org.gradle.workers.max=1"                                           >> gradle.properties
@@ -78,13 +77,11 @@ pipeline {
 
         stage('Build APK') {
             steps {
-                withEnv(["PATH+ANDROID=/opt/android-sdk/cmdline-tools/latest/bin:/opt/android-sdk/platform-tools"]) {
-                    sh '''
-                        cd android
-                        chmod +x gradlew
-                        ./gradlew assembleRelease --no-daemon --max-workers=1
-                    '''
-                }
+                sh '''
+                    cd android
+                    chmod +x gradlew
+                    ./gradlew assembleRelease --no-daemon --max-workers=1
+                '''
             }
         }
 
