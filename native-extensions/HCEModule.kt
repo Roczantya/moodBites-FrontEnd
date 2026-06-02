@@ -15,8 +15,11 @@ class HCEModule(
 
     @ReactMethod
     fun startHCE(payload: String) {
-        // Tambahkan log native untuk melacak apakah fungsi ini dipanggil dari JS
-        android.util.Log.d("HCEModule", "startHCE dipanggil dengan payload: $payload")
+        android.util.Log.d("HCEModule", "Menyimpan Payload: $payload")
+        
+        val prefs = reactApplicationContext.getSharedPreferences("HCE_PREFS", android.content.Context.MODE_PRIVATE)
+        prefs.edit().putString("payload", payload).apply()
+        
         MyHostApduService.currentPayload = payload
     }
 
