@@ -1,3 +1,5 @@
+import { NativeModules } from "react-native";
+
 const hceService = {
 
   startHCE: async (userId: string) => {
@@ -7,17 +9,12 @@ const hceService = {
       // payload final
       const payload = userId;
 
-      console.log(  
+      console.log(
         "START HCE PAYLOAD:",
         payload
       );
 
-      /**
-       * NANTI:
-       *
-       * NativeModules.HCEModule.startHCE(payload)
-       *
-       */
+      NativeModules.HCEModule.startHCE(payload)
 
       return true;
 
@@ -38,12 +35,7 @@ const hceService = {
 
       console.log("STOP HCE");
 
-      /**
-       * NANTI:
-       *
-       * NativeModules.HCEModule.stopHCE()
-       *
-       */
+      NativeModules.HCEModule.stopHCE()
 
       return true;
 
