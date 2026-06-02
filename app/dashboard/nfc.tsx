@@ -61,7 +61,7 @@ export default function NfcScreen() {
 
     console.log("HCE ERROR:", error);
 
-    alert("Gagal mengaktifkan NFC");
+    alert("Gagal mengaktifkan NFC:" + error);
   }
 };
 
