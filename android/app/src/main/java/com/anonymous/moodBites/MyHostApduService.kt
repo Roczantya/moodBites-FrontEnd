@@ -2,110 +2,56 @@ package com.anonymous.moodBites
 
 import android.nfc.cardemulation.HostApduService
 import android.os.Bundle
+import android.util.Log
 
 class MyHostApduService : HostApduService() {
 
     companion object {
-
-        // Payload dari frontend
+        // Payload dari frontend (diset melalui HCEModule)
         var currentPayload: String = ""
-
-        // Status code
-        private const val STATUS_SUCCESS = "9000"
-        private const val STATUS_FAILED = "6F00"
-        private const val STATUS_UNKNOWN = "6D00"
     }
 
-    override fun processCommandApdu(
-    commandApdu: ByteArray?,
-    extras: Bundle?
-): ByteArray {
+    override fun processCommandApdu(commandApdu: ByteArray?, extras: Bundle?): ByteArray {
+        if (commandApdu == null) return hexStringToByteArray("6F00")
 
-    return try {
-        // Kalau APDU null
-        if (commandApdu == null) {
-            return hexStringToByteArray(STATUS_FAILED)
-        }
-
-        // Convert APDU ke HEX string
-        val commandHex = commandApdu.joinToString("") {
-            String.format("%02X", it)
-        }
-
-        println("APDU COMMAND: $commandHex")
+        // Konversi command ke Hex String untuk pengecekan
+        val commandHex = commandApdu.joinToString("") { "%02X".format(it) }
+        Log.d("HCE_DEBUG", "Terima APDU: $commandHex")
 
         /**
-         * 1. SELECT AID
-         * Ganti "F0010203040506" dengan AID yang Anda daftarkan di apdu_service.xml
+         * Logika: Jika reader mengirim SELECT AID (00A40400 + panjang AID + AID)
+         * Contoh untuk AID F0010203040506, commandnya: 00A4040007F0010203040506
          */
-        val targetAid = "F0010203040506" 
-        val selectAidHeader = "00A40400"
-        
-        if (commandHex.startsWith(selectAidHeader) && commandHex.contains(targetAid)) {
-            println("SELECT AID SUCCESS - MATCHED")
-            return hexStringToByteArray(STATUS_SUCCESS)
+        if (commandHex.startsWith("00A40400")) {
+            Log.d("HCE_DEBUG", "SELECT AID MATCH. Mengirim data: $currentPayload")
+
+            return if (currentPayload.isNotEmpty()) {
+                // Ambil bytes dari string payload
+                val payloadBytes = currentPayload.toByteArray(Charsets.UTF_8)
+                // Tambahkan 9000 (Status Success) di akhir payload
+                payloadBytes + hexStringToByteArray("9000")
+            } else {
+                // Jika payload kosong, kirim status Success saja
+                hexStringToByteArray("9000")
+            }
         }
 
-        /**
-         * 2. GET DATA COMMAND
-         * Menggunakan .startsWith() karena PN532 biasanya menambahkan byte 'Le' di akhir perintah 
-         * (Contoh: "80CA000000")
-         */
-        if (commandHex.startsWith("80CA0000")) {
-            println("SEND PAYLOAD: $currentPayload")
-
-            val payloadBytes = currentPayload.toByteArray(Charsets.UTF_8)
-            val successBytes = hexStringToByteArray(STATUS_SUCCESS)
-
-            return payloadBytes + successBytes
-        }
-
-        /**
-         * Unknown command
-         */
-        println("UNKNOWN APDU COMMAND: $commandHex")
-        return hexStringToByteArray(STATUS_UNKNOWN)
-
-    } catch (e: Exception) {
-        println("APDU ERROR: ${e.message}")
-        return hexStringToByteArray(STATUS_FAILED)
+        // Jika perintah tidak dikenal
+        Log.w("HCE_DEBUG", "Perintah tidak dikenal: $commandHex")
+        return hexStringToByteArray("6A81") 
     }
-}
 
     override fun onDeactivated(reason: Int) {
-
-        println(
-            "HCE DEACTIVATED: $reason"
-        )
+        Log.d("HCE_DEBUG", "Koneksi NFC terputus, alasan: $reason")
     }
 
-    private fun hexStringToByteArray(
-        data: String
-    ): ByteArray {
-
-        val len = data.length
-
-        val result = ByteArray(len / 2)
-
-        var i = 0
-
-        while (i < len) {
-
-            result[i / 2] = (
-                (
-                    Character.digit(
-                        data[i],
-                        16
-                    ) shl 4
-                ) + Character.digit(
-                    data[i + 1],
-                    16
-                )
-            ).toByte()
-
-            i += 2
+    // Helper untuk konversi String Hex ke ByteArray
+    private fun hexStringToByteArray(s: String): ByteArray {
+        val len = s.length
+        val data = ByteArray(len / 2)
+        for (i in 0 until len step 2) {
+            data[i / 2] = ((Character.digit(s[i], 16) shl 4) + Character.digit(s[i + 1], 16)).toByte()
         }
-
-        return result
+        return data
     }
 }
