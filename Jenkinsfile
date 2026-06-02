@@ -67,6 +67,8 @@ pipeline {
                     cp native-extensions/HCEModule.kt $PACKAGE_PATH/
                     cp native-extensions/HCEModulePackage.kt $PACKAGE_PATH/
                     cp native-extensions/MyHostApduService.kt $PACKAGE_PATH/
+                    cp native-extensions/MainApplication.kt $PACKAGE_PATH/
+                    cp native-extensions/MainActivity.kt $PACKAGE_PATH/
                     
                     # Salin file XML APDU Service
                     cp native-extensions/apduservice.xml $RES_XML_PATH/
