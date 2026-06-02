@@ -8,7 +8,7 @@
         android:category="other">
 
         <aid-filter
-            android:name="A0000002471001"/>
+            android:name="F0010203040506"/>
     </aid-group>
 
 </host-apdu-service>
