@@ -17,93 +17,60 @@ class MyHostApduService : HostApduService() {
     }
 
     override fun processCommandApdu(
-        commandApdu: ByteArray?,
-        extras: Bundle?
-    ): ByteArray {
+    commandApdu: ByteArray?,
+    extras: Bundle?
+): ByteArray {
 
-        return try {
-
-            // Kalau APDU null
-            if (commandApdu == null) {
-
-                return hexStringToByteArray(
-                    STATUS_FAILED
-                )
-            }
-
-            // Convert APDU ke HEX string
-            val commandHex =
-                commandApdu.joinToString("") {
-
-                    String.format("%02X", it)
-                }
-
-            println(
-                "APDU COMMAND: $commandHex"
-            )
-
-            /**
-             * SELECT AID
-             *
-             * Biasanya command pertama dari PN532
-             */
-            if (
-                commandHex.startsWith(
-                    "00A40400"
-                )
-            ) {
-
-                println("SELECT AID SUCCESS")
-
-                return hexStringToByteArray(
-                    STATUS_SUCCESS
-                )
-            }
-
-            /**
-             * GET DATA COMMAND
-             *
-             * Custom command dari PN532
-             */
-            if (commandHex == "80CA0000") {
-
-                println(
-                    "SEND PAYLOAD: $currentPayload"
-                )
-
-                val payloadBytes =
-                    currentPayload.toByteArray(
-                        Charsets.UTF_8
-                    )
-
-                val successBytes =
-                    hexStringToByteArray(
-                        STATUS_SUCCESS
-                    )
-
-                return payloadBytes + successBytes
-            }
-
-            /**
-             * Unknown command
-             */
-            println("UNKNOWN APDU COMMAND")
-
-            hexStringToByteArray(
-                STATUS_UNKNOWN
-            )
-
-        } catch (e: Exception) {
-
-            println(
-                "APDU ERROR: ${e.message}"
-            )
-
-            hexStringToByteArray(
-                STATUS_FAILED
-            )
+    return try {
+        // Kalau APDU null
+        if (commandApdu == null) {
+            return hexStringToByteArray(STATUS_FAILED)
         }
+
+        // Convert APDU ke HEX string
+        val commandHex = commandApdu.joinToString("") {
+            String.format("%02X", it)
+        }
+
+        println("APDU COMMAND: $commandHex")
+
+        /**
+         * 1. SELECT AID
+         * Ganti "F0010203040506" dengan AID yang Anda daftarkan di apdu_service.xml
+         */
+        val targetAid = "F0010203040506" 
+        val selectAidHeader = "00A40400"
+        
+        if (commandHex.startsWith(selectAidHeader) && commandHex.contains(targetAid)) {
+            println("SELECT AID SUCCESS - MATCHED")
+            return hexStringToByteArray(STATUS_SUCCESS)
+        }
+
+        /**
+         * 2. GET DATA COMMAND
+         * Menggunakan .startsWith() karena PN532 biasanya menambahkan byte 'Le' di akhir perintah 
+         * (Contoh: "80CA000000")
+         */
+        if (commandHex.startsWith("80CA0000")) {
+            println("SEND PAYLOAD: $currentPayload")
+
+            val payloadBytes = currentPayload.toByteArray(Charsets.UTF_8)
+            val successBytes = hexStringToByteArray(STATUS_SUCCESS)
+
+            return payloadBytes + successBytes
+        }
+
+        /**
+         * Unknown command
+         */
+        println("UNKNOWN APDU COMMAND: $commandHex")
+        return hexStringToByteArray(STATUS_UNKNOWN)
+
+    } catch (e: Exception) {
+        println("APDU ERROR: ${e.message}")
+        return hexStringToByteArray(STATUS_FAILED)
     }
+}
 
     override fun onDeactivated(reason: Int) {
 
