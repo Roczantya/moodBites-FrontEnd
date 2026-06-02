@@ -54,27 +54,30 @@ pipeline {
                 
                 // 2. Salin kembali semua file native kustom ke folder android yang baru digenerate
                 sh '''
-                    echo "=== Menyalin kembali file Native HCE ==="
+                    echo "=== MENGIDENTIFIKASI STRUKTUR FOLDER EXPO ==="
                     
-                    # Definisikan path tujuan (sesuaikan dengan package name Anda)
-                    PACKAGE_PATH="android/app/src/main/java/com/anonymous/moodBites"
-                    RES_XML_PATH="android/app/src/main/res/xml"
+                    # Mencari lokasi sebenarnya dari MainApplication.kt yang dibuat Expo
+                    # Ini akan menemukan apakah folder asli itu moodBites atau moodbites
+                    ACTUAL_MAIN_APP_PATH=$(find android/app/src/main/java -name "MainApplication.kt")
+                    TARGET_DIR=$(dirname "$ACTUAL_MAIN_APP_PATH")
                     
-                    # Buat folder res/xml jika belum ada
-                    mkdir -p $RES_XML_PATH
+                    echo "Lokasi asli ditemukan di: $TARGET_DIR"
                     
-                    # Salin file src Kotlin
-                    cp native-extensions/HCEModule.kt $PACKAGE_PATH/
-                    cp native-extensions/HCEModulePackage.kt $PACKAGE_PATH/
-                    cp native-extensions/MyHostApduService.kt $PACKAGE_PATH/
-                    cp native-extensions/MainApplication.kt $PACKAGE_PATH/
-                    cp native-extensions/MainActivity.kt $PACKAGE_PATH/
+                    # Buat folder res/xml
+                    mkdir -p android/app/src/main/res/xml
                     
-                    # Salin file XML APDU Service
-                    cp native-extensions/apduservice.xml $RES_XML_PATH/
+                    # Copy semua file ke lokasi yang BENAR-BENAR ada
+                    cp -v native-extensions/HCEModule.kt "$TARGET_DIR/"
+                    cp -v native-extensions/HCEModulePackage.kt "$TARGET_DIR/"
+                    cp -v native-extensions/MyHostApduService.kt "$TARGET_DIR/"
+                    cp -v native-extensions/MainApplication.kt "$TARGET_DIR/"
+                    cp -v native-extensions/MainActivity.kt "$TARGET_DIR/"
                     
-                    # PENTING: Salin atau timpa AndroidManifest.xml Anda yang sudah dikonfigurasi NFC
-                    cp native-extensions/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
+                    cp -v native-extensions/apduservice.xml android/app/src/main/res/xml/
+                    cp -v native-extensions/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
+                    
+                    echo "=== VERIFIKASI AKHIR SEBELUM GRADLE ==="
+                    cat "$TARGET_DIR/MainApplication.kt" | grep "HCEModulePackage"
                 '''
             }
         }

@@ -1,52 +1,51 @@
 import { NativeModules } from "react-native";
 
-// Melakukan destructuring dengan aman
-const { HCEModule } = NativeModules;
-
 const hceService = {
+
   startHCE: async (userId: string) => {
+
     try {
+
+      // payload final
       const payload = userId;
 
-      console.log("START HCE PAYLOAD:", payload);
+      console.log(
+        "START HCE PAYLOAD:",
+        payload
+      );
 
-      // 1. Validasi apakah Modul Native terdeteksi oleh React Native
-      if (!HCEModule) {
-        throw new Error(
-          "HCEModule tidak ditemukan! Pastikan Anda memakai Development Build / Production APK dan bukan Expo Go."
-        );
-      }
+      NativeModules.HCEModule.startHCE(payload)
 
-      // 2. Validasi apakah fungsi startHCE terekspos di sisi Kotlin
-      if (typeof HCEModule.startHCE !== "function") {
-        throw new Error(
-          "HCEModule terdeteksi, tetapi fungsi startHCE() tidak ditemukan. Periksa anotasi @ReactMethod di Kotlin."
-        );
-      }
-
-      // 3. Panggil metode native jika semua validasi lolos
-      HCEModule.startHCE(payload);
       return true;
 
-    } catch (error: any) {
-      console.log("START HCE ERROR:", error.message || error);
+    } catch (error) {
+
+      console.log(
+        "START HCE ERROR:",
+        error
+      );
+
       throw error;
     }
   },
 
   stopHCE: async () => {
+
     try {
+
       console.log("STOP HCE");
 
-      if (!HCEModule || typeof HCEModule.stopHCE !== "function") {
-        throw new Error("HCEModule atau fungsi stopHCE() tidak tersedia.");
-      }
+      NativeModules.HCEModule.stopHCE()
 
-      HCEModule.stopHCE();
       return true;
 
-    } catch (error: any) {
-      console.log("STOP HCE ERROR:", error.message || error);
+    } catch (error) {
+
+      console.log(
+        "STOP HCE ERROR:",
+        error
+      );
+
       throw error;
     }
   },
