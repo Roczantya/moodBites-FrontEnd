@@ -49,8 +49,31 @@ pipeline {
 
         stage('Expo Prebuild') {
             steps {
-                // Folder 'android/' digenerate otomatis di sini
+                // 1. Generate ulang folder android secara bersih
                 sh 'npx expo prebuild --platform android --clean'
+                
+                // 2. Salin kembali semua file native kustom ke folder android yang baru digenerate
+                sh '''
+                    echo "=== Menyalin kembali file Native HCE ==="
+                    
+                    # Definisikan path tujuan (sesuaikan dengan package name Anda)
+                    PACKAGE_PATH="android/app/src/main/java/com/anonymous/moodBites"
+                    RES_XML_PATH="android/app/src/main/res/xml"
+                    
+                    # Buat folder res/xml jika belum ada
+                    mkdir -p $RES_XML_PATH
+                    
+                    # Salin file src Kotlin
+                    cp native-extensions/HCEModule.kt $PACKAGE_PATH/
+                    cp native-extensions/HCEModulePackage.kt $PACKAGE_PATH/
+                    cp native-extensions/MyHostApduService.kt $PACKAGE_PATH/
+                    
+                    # Salin file XML APDU Service
+                    cp native-extensions/apduservice.xml $RES_XML_PATH/
+                    
+                    # PENTING: Salin atau timpa AndroidManifest.xml Anda yang sudah dikonfigurasi NFC
+                    cp native-extensions/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
+                '''
             }
         }
 
