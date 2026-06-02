@@ -119,7 +119,7 @@ export default function NfcScreen() {
       />
 
       {/* Shared Bottom Navigation Component */}
-      <BottomNavbar activeTab="nfc" />
+      <BottomNavbar />
     </SafeAreaView>
   );
 }
