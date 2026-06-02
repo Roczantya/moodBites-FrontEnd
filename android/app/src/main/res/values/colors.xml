@@ -1,0 +1,6 @@
+<resources>
+  <color name="splashscreen_background">#feeedb</color>
+  <color name="iconBackground">#feeedb</color>
+  <color name="colorPrimary">#023c69</color>
+  <color name="colorPrimaryDark">#feeedb</color>
+</resources>
