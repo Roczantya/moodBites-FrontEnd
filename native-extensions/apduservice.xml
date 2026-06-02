@@ -5,8 +5,7 @@
     android:requireDeviceUnlock="false">
 
     <aid-group
-        android:category="other"
-        android:description="MoodBites NFC">
+        android:category="other">
 
         <aid-filter
             android:name="A0000002471001"/>
