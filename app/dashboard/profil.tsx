@@ -4,6 +4,7 @@ import { ActivityIndicator, View } from "react-native";
 
 // Services
 import ProfileUI, { UserProfileData } from "@/components/profil/profileScreen";
+import { Colors } from "@/constants/colors";
 import authService from "@/services/authService";
 import storageService from "@/services/storageService";
 
@@ -69,7 +70,7 @@ export default function ProfileScreen() {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "black",
+          backgroundColor: Colors.primary + "20",
         }}
       >
         <ActivityIndicator size="large" color="#A0D585" />

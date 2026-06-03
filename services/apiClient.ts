@@ -29,9 +29,9 @@ apiClient.interceptors.request.use(
 
     console.log("=== REQUEST ===");
     console.log("URL:", config.url);
-    console.log("ISI TOKEN DI INTERCEPTOR:", token ? token : "KOSONG/NULL!");
+
     if (token) {
-      config.headers["token"] = token;
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
 
     return config;

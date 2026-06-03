@@ -12,7 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { LikertScale } from "@/components/survey/Skalasurvey";
 import { CheckboxGroup } from "@/components/survey/checkbox";
 import { Colors } from "@/constants/colors";
-import { FLAVORS } from "@/constants/mood";
+import { FLAVORS, MENU_CATEGORIES } from "@/constants/mood";
 
 import Header from "@/components/dashboard/header";
 import { useMoodSurvey } from "@/hooks/use-mood-survey";
@@ -122,27 +122,13 @@ export default function MoodSurveyScreen() {
         <Text style={[styles.subHeader, { marginTop: 25 }]}>
           Pilih kategori yang sesuai untuk mood {moodInfo.title.toLowerCase()}
         </Text>
-        {isLoadingOptions ? (
-          <Text
-            style={{
-              color: Colors.textSecondary,
-              fontFamily: "PlusJakartaSans-Bold",
-              fontSize: 14,
-              marginTop: 10,
-              textAlign: "center",
-            }}
-          >
-            Memuat pilihan menu... 🍽️
-          </Text>
-        ) : (
-          <CheckboxGroup
-            options={menuOptions} // ← dari API
-            selectedValues={moodData.categories}
-            onChange={(val: string[]) =>
-              handleMoodChange(moodInfo.key, "categories", null, val)
-            }
-          />
-        )}
+        <CheckboxGroup
+          options={MENU_CATEGORIES} // ← Sekarang ambil langsung dari variabel statis
+          selectedValues={moodData.categories}
+          onChange={(val: string[]) =>
+            handleMoodChange(moodInfo.key, "categories", null, val)
+          }
+        />
 
         {/* Navigation Buttons */}
         <View style={styles.navRow}>

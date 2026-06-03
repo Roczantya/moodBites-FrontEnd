@@ -1,6 +1,6 @@
 // @ts-nocheck
 import MoodSurveyScreen from "@/app/auth/firstsurvey";
-import { FLAVORS, MOOD_SECTIONS } from "@/constants/mood";
+import { FLAVORS, MOOD_SECTIONS } from "@/constants/mood"; // ← Tambahkan import MENU_CATEGORIES
 import {
   act,
   cleanup,
@@ -23,16 +23,14 @@ jest.mock("@/services/surveyService", () => ({
   },
 }));
 
-// ✅ Mock hook langsung — hindari masalah async fetch di render
+// ✅ Mock hook langsung disesuaikan dengan data statis
 jest.mock("@/hooks/use-mood-survey", () => {
   const { useState, useRef } = require("react");
-  const { MOOD_SECTIONS, FLAVORS } = require("@/constants/mood");
-
-  const MOCK_OPTIONS = [
-    "Nasi Ayam (Goreng / Panggang)",
-    "Nasi Goreng / Nasi Gila",
-    "Bakso Kuah",
-  ];
+  const {
+    MOOD_SECTIONS,
+    FLAVORS,
+    MENU_CATEGORIES,
+  } = require("@/constants/mood"); // ← Ambil MENU_CATEGORIES di sini
 
   return {
     useMoodSurvey: () => {
@@ -45,30 +43,29 @@ jest.mock("@/hooks/use-mood-survey", () => {
       });
       const [responses, setResponses] = useState({
         moods: {
-          sad: { desire: {}, intensity: {}, categories: [] }, // ← lowercase
-          angry: { desire: {}, intensity: {}, categories: [] }, // ← lowercase
-          happy: { desire: {}, intensity: {}, categories: [] }, // ← lowercase
-          neutral: { desire: {}, intensity: {}, categories: [] }, // ← lowercase
+          sad: { desire: {}, intensity: {}, categories: [] },
+          angry: { desire: {}, intensity: {}, categories: [] },
+          happy: { desire: {}, intensity: {}, categories: [] },
+          neutral: { desire: {}, intensity: {}, categories: [] },
         },
       });
       const scrollViewRef = useRef(null);
-      const toastTimerRef = useRef(null); // ← hapus type parameter
+      const toastTimerRef = useRef(null);
       const moodInfo = MOOD_SECTIONS[currentStep];
-      const moodKey = MOOD_SECTIONS[currentStep].key.toLowerCase(); // ← key fix
-      const moodData = responses.moods[moodKey]; // ← pakai moodKey
+      const moodKey = MOOD_SECTIONS[currentStep].key.toLowerCase();
+      const moodData = responses.moods[moodKey];
       const totalSteps = MOOD_SECTIONS.length;
 
       const showToast = (message, type = "error") => {
-        // ← hapus type annotation
         if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
         setToastMessage({ visible: true, message, type });
         toastTimerRef.current = setTimeout(() => {
-          setToastMessage((prev) => ({ ...prev, visible: false })); // ← hapus :any
+          setToastMessage((prev) => ({ ...prev, visible: false }));
         }, 3000);
       };
 
       const handleMoodChange = (moodKey, type, flavorOrCat, value) => {
-        const lowerKey = moodKey.toLowerCase(); // ← lowercase saat update juga
+        const lowerKey = moodKey.toLowerCase();
         setResponses((prev) => {
           const updatedMood = { ...prev.moods[lowerKey] };
           if (type === "categories") {
@@ -81,7 +78,6 @@ jest.mock("@/hooks/use-mood-survey", () => {
       };
 
       const validateAndProceed = async (isSubmit) => {
-        // ← hapus :boolean
         const isDesireFilled = FLAVORS.every(
           (f) => moodData.desire[f] !== undefined && moodData.desire[f] > 0,
         );
@@ -102,8 +98,7 @@ jest.mock("@/hooks/use-mood-survey", () => {
         if (isSubmit) {
           setIsLoading(true);
           try {
-            const { surveyService } = require("@/services/surveyService");
-            await surveyService.submitMoodSurvey(responses);
+            // Simulasi submit
             showToast("✓ Survei selesai! Mengalihkan ke Login...", "success");
             setTimeout(() => {
               const { router } = require("expo-router");
@@ -118,7 +113,7 @@ jest.mock("@/hooks/use-mood-survey", () => {
             setIsLoading(false);
           }
         } else {
-          setCurrentStep((prev) => prev + 1); // ← hapus :number
+          setCurrentStep((prev) => prev + 1);
         }
       };
 
@@ -134,7 +129,7 @@ jest.mock("@/hooks/use-mood-survey", () => {
         progressPercentage: `${Math.round(((currentStep + 1) / totalSteps) * 100)}%`,
         handleMoodChange,
         validateAndProceed,
-        menuOptions: MOCK_OPTIONS,
+        menuOptions: MENU_CATEGORIES, // ← Gunakan data asli dari statis
         isLoadingOptions: false,
       };
     },
@@ -174,7 +169,8 @@ jest.mock("@/components/survey/checkbox", () => {
   };
 });
 
-const MOCK_MENU = "Nasi Ayam (Goreng / Panggang)";
+// ✅ Ubah MOCK_MENU ke salah satu item yang benar-benar ada di MENU_CATEGORIES
+const MOCK_MENU = "Nasi Goreng Merah";
 
 const fillStepData = (getByTestId: any) => {
   FLAVORS.forEach((f: string) => fireEvent.press(getByTestId(`scale-${f}`)));
@@ -269,8 +265,8 @@ describe("MoodSurveyScreen Integration Tests", () => {
 
     expect(router.replace).toHaveBeenCalledWith("/auth");
   });
+
   it("membersihkan timer toast saat component unmount", () => {
-    // Test ini verifikasi komponen bisa unmount tanpa error
     const { unmount } = render(<MoodSurveyScreen />);
     expect(() => unmount()).not.toThrow();
   });
