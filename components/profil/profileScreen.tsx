@@ -1,21 +1,21 @@
+import { Colors } from "@/constants/colors";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
   SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
-import { Colors } from "@/constants/colors";
 
 // Import komponen pendukung
-import BottomNavBar from "../dashboard/bottomNavbar";
-import Header from "../dashboard/header";
-import ProfileAvatar from "@/components/profil/profileavatar";
 import InfoCard from "@/components/profil/cardinfo";
 import MenuItem from "@/components/profil/menuItem";
+import ProfileAvatar from "@/components/profil/profileavatar";
+import BottomNavBar from "../dashboard/bottomNavbar";
+import Header from "../dashboard/header";
 
 export interface UserProfileData {
   name: string;
@@ -44,7 +44,13 @@ export default function ProfileUI({
         style={styles.container}
         contentContainerStyle={styles.scrollContent}
       >
-        <Header title="Profil" showBell={false} />
+        <Header
+          title="Profile"
+          variant="title"
+          alignTitle="center"
+          showBack={false}
+          showBell={false}
+        />
 
         <View style={styles.page}>
           <ProfileAvatar

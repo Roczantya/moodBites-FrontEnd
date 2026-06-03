@@ -12,7 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { LikertScale } from "@/components/survey/Skalasurvey";
 import { CheckboxGroup } from "@/components/survey/checkbox";
 import { Colors } from "@/constants/colors";
-import { FLAVORS, MENU_CATEGORIES } from "@/constants/mood";
+import { FLAVORS } from "@/constants/mood";
 
 import Header from "@/components/dashboard/header";
 import { useMoodSurvey } from "@/hooks/use-mood-survey";
@@ -23,6 +23,7 @@ export default function MoodSurveyScreen() {
     currentStep,
     setCurrentStep,
     toastMessage,
+    isLoading,
     scrollViewRef,
     moodInfo,
     moodData,
@@ -30,6 +31,8 @@ export default function MoodSurveyScreen() {
     progressPercentage,
     handleMoodChange,
     validateAndProceed,
+    menuOptions, // ← tambah
+    isLoadingOptions,
   } = useMoodSurvey();
 
   // Handle jika data mood hilang / error state
@@ -52,7 +55,13 @@ export default function MoodSurveyScreen() {
     <View style={styles.mainContainer}>
       <StatusBar translucent={true} backgroundColor="black" />
       <SafeAreaView edges={["top"]} style={{ backgroundColor: "black" }}>
-        <Header title="Mood Survey" showBell={false} />
+        <Header
+          title="Mood Survey"
+          variant="title"
+          alignTitle="center"
+          showBack={false}
+          showBell={false}
+        />
       </SafeAreaView>
       {/* Progress Header */}
       <View style={styles.progressContainer}>
@@ -113,20 +122,34 @@ export default function MoodSurveyScreen() {
         <Text style={[styles.subHeader, { marginTop: 25 }]}>
           Pilih kategori yang sesuai untuk mood {moodInfo.title.toLowerCase()}
         </Text>
-        <CheckboxGroup
-          options={MENU_CATEGORIES}
-          selectedValues={moodData.categories}
-          onChange={(val: string[]) =>
-            handleMoodChange(moodInfo.key, "categories", null, val)
-          }
-        />
+        {isLoadingOptions ? (
+          <Text
+            style={{
+              color: Colors.textSecondary,
+              fontFamily: "PlusJakartaSans-Bold",
+              fontSize: 14,
+              marginTop: 10,
+              textAlign: "center",
+            }}
+          >
+            Memuat pilihan menu... 🍽️
+          </Text>
+        ) : (
+          <CheckboxGroup
+            options={menuOptions} // ← dari API
+            selectedValues={moodData.categories}
+            onChange={(val: string[]) =>
+              handleMoodChange(moodInfo.key, "categories", null, val)
+            }
+          />
+        )}
 
         {/* Navigation Buttons */}
         <View style={styles.navRow}>
           <TouchableOpacity
             testID="back-button"
             style={[styles.btnOutline, { opacity: currentStep === 0 ? 0 : 1 }]}
-            disabled={currentStep === 0}
+            disabled={currentStep === 0 || isLoading}
             onPress={() => setCurrentStep((prev) => prev - 1)}
           >
             <Text style={styles.btnOutlineText}>Back</Text>
@@ -134,17 +157,22 @@ export default function MoodSurveyScreen() {
 
           {currentStep < totalSteps - 1 ? (
             <TouchableOpacity
-              style={styles.btnSolid}
+              testID="next-button" // ← tambah ini
+              style={[styles.btnSubmit, isLoading && { opacity: 0.7 }]}
               onPress={() => validateAndProceed(false)}
+              disabled={isLoading}
             >
               <Text style={styles.btnSolidText}>Next</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
+              testID="submit-button" // ← tambah ini
               style={styles.btnSubmit}
               onPress={() => validateAndProceed(true)}
             >
-              <Text style={styles.btnSolidText}>Submit</Text>
+              <Text style={styles.btnSolidText}>
+                {isLoading ? "Mengirim..." : "Submit"}
+              </Text>
             </TouchableOpacity>
           )}
         </View>
@@ -168,9 +196,7 @@ export default function MoodSurveyScreen() {
   );
 }
 
-// ... Sisipkan styles.create kamu di bawah sini (tidak ada yang perlu diubah di bagian styles)
 const styles = StyleSheet.create({
-  // ... [Salin semua kode styles milikmu dari sebelumnya ke sini] ...
   mainContainer: { flex: 1, backgroundColor: Colors.primary },
   progressContainer: {
     paddingHorizontal: 20,

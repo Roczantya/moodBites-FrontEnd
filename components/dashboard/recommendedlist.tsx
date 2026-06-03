@@ -1,13 +1,12 @@
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  useWindowDimensions,
   FlatList,
-  ListRenderItem, // Ganti ScrollView jadi FlatList
+  Image,
+  ListRenderItem,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
 } from "react-native";
 import { Colors } from "../../constants/colors";
 import { FOOD_DATA, FoodItem } from "../../constants/food_item";
@@ -28,7 +27,7 @@ export default function RecommendationList() {
   // Komponen Header (Judul & Subtitle)
   const renderHeader = () => (
     <View>
-      <Header />
+      <Header title="MoodBites" />
       <MoodSelector />
       <View style={styles.sectionTitleWrapper}>
         <Text style={styles.title}>

@@ -1,27 +1,33 @@
-import { useState, useRef, useEffect } from "react";
-import { ScrollView, Alert } from "react-native";
-import { router } from "expo-router";
-import { MoodKey, DataType, Responses } from "@/constants/surveystate";
-import { MOOD_SECTIONS, FLAVORS } from "@/constants/mood";
+import { FLAVORS, MOOD_SECTIONS } from "@/constants/mood";
+import { DataType, MoodKey, Responses } from "@/constants/surveystate";
+import storageService from "@/services/storageService";
+import { surveyService } from "@/services/surveyService";
+import { router, useLocalSearchParams } from "expo-router";
+import { useEffect, useRef, useState } from "react";
+import { ScrollView } from "react-native";
 
 export const useMoodSurvey = () => {
+  const params = useLocalSearchParams();
+  const routeUserId = params.userId as string;
   const [currentStep, setCurrentStep] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState({
     visible: false,
     message: "",
     type: "error", // default-nya error
   });
-
+  const [menuOptions, setMenuOptions] = useState<string[]>([]);
+  const [isLoadingOptions, setIsLoadingOptions] = useState(false);
   // Ref untuk ScrollView & Timer
   const scrollViewRef = useRef<ScrollView>(null);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
+  const mood = MOOD_SECTIONS[currentStep].key.toLowerCase();
   const [responses, setResponses] = useState<Responses>({
     moods: {
-      Sad: { desire: {}, intensity: {}, categories: [] },
-      Angry: { desire: {}, intensity: {}, categories: [] },
-      Happy: { desire: {}, intensity: {}, categories: [] },
-      Neutral: { desire: {}, intensity: {}, categories: [] },
+      sad: { desire: {}, intensity: {}, categories: [] },
+      angry: { desire: {}, intensity: {}, categories: [] },
+      happy: { desire: {}, intensity: {}, categories: [] },
+      neutral: { desire: {}, intensity: {}, categories: [] },
     },
   });
 
@@ -39,6 +45,42 @@ export const useMoodSurvey = () => {
       if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
     };
   }, []);
+
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      setIsLoadingOptions(true);
+      try {
+        // 👇 3. Cek routeUserId dulu (lebih cepat), kalau kosong baru ambil dari storage
+        const userId = routeUserId || (await storageService.getUserId());
+
+        if (!userId) {
+          console.warn(
+            "User ID tidak ditemukan, lewati pengambilan rekomendasi.",
+          );
+          setMenuOptions([]);
+          return;
+        }
+
+        const currentKey = MOOD_SECTIONS[currentStep].key.toLowerCase();
+
+        // Gunakan userId yang didapat
+        const data = await surveyService.getRecommendations(currentKey, userId);
+        console.log("=== ISI DATA DARI BE ===");
+        console.log("TIPE DATA:", typeof data);
+        console.log("STRUKTUR DATA:", JSON.stringify(data, null, 2));
+        setMenuOptions(data);
+      } catch (error: any) {
+        console.log("=== FETCH ERROR ===");
+        console.log("STATUS:", error.statusCode);
+        console.log("RESPONSE:", error.originalError?.response?.data);
+        setMenuOptions([]);
+      } finally {
+        setIsLoadingOptions(false);
+      }
+    };
+
+    fetchRecommendations();
+  }, [currentStep, routeUserId]);
 
   // ✅ FUNGSI SHOW TOAST DIKEMBALIKAN KE SINI
   const showToast = (message: string, type: "success" | "error" = "error") => {
@@ -82,7 +124,7 @@ export const useMoodSurvey = () => {
   const progressPercentage =
     (((currentStep + 1) / totalSteps) * 100).toFixed(0) + "%";
 
-  const validateAndProceed = (isSubmit: boolean = false) => {
+  const validateAndProceed = async (isSubmit: boolean = false) => {
     if (!moodData) return;
 
     // Validasi: Semua flavor harus dipilih (tidak boleh 0)
@@ -101,15 +143,25 @@ export const useMoodSurvey = () => {
       );
       return;
     }
-
     if (isSubmit) {
-      console.log("Final Payload:", JSON.stringify(responses, null, 2));
+      setIsLoading(true);
+      try {
+        await surveyService.submitMoodSurvey(responses);
 
-      // ✅ SUKSES: MUNCUL TOAST WARNA HIJAU DAN PINDAH HALAMAN
-      showToast("✓ Survei selesai! Mengalihkan ke Login...", "success");
-      setTimeout(() => {
-        router.replace("/auth");
-      }, 1500);
+        // 👇 1. Simpan status survey ke local storage
+        await storageService.saveSurveyDone();
+
+        // 👇 2. Arahkan langsung ke dashboard, BUKAN ke "/auth"
+        showToast("✓ Survei selesai! Masuk ke aplikasi...", "success");
+        setTimeout(() => {
+          router.replace("/dashboard/home"); // Sesuaikan dengan rute dashboard utama kamu
+        }, 1500);
+      } catch (error: any) {
+        console.error("Survey Submit Error:", error);
+        showToast(error.message || "Gagal mengirim data survei 😢", "error");
+      } finally {
+        setIsLoading(false);
+      }
     } else {
       setCurrentStep((prev) => prev + 1);
     }
@@ -119,13 +171,16 @@ export const useMoodSurvey = () => {
   return {
     currentStep,
     setCurrentStep,
+    isLoading,
     toastMessage,
     scrollViewRef,
-    moodInfo,
-    moodData,
-    totalSteps,
-    progressPercentage,
+    moodInfo: MOOD_SECTIONS[currentStep],
+    moodData: responses.moods[MOOD_SECTIONS[currentStep].key],
+    totalSteps: MOOD_SECTIONS.length,
+    menuOptions,
+    isLoadingOptions,
     handleMoodChange,
     validateAndProceed,
+    progressPercentage,
   };
 };

@@ -52,19 +52,12 @@ const authService = {
 
   login: async (data: LoginPayload) => {
     try {
-      console.log(
-        "LOGIN REQUEST BODY:",
-        JSON.stringify(data, null, 2)
-      );
+      console.log("LOGIN REQUEST BODY:", JSON.stringify(data, null, 2));
       const response = await apiClient.post("/auth/login", data);
       console.log("LOGIN RESPONSE:", JSON.stringify(response.data, null, 2));
       return response.data; // Biasanya mengembalikan token (JWT) & data user
     } catch (error: any) {
       throw error;
-      console.log(
-        "LOGIN FULL ERROR:",
-        JSON.stringify(error, null, 2)
-      );
     }
   },
 
@@ -88,9 +81,9 @@ const authService = {
    * POST /api/v1/auth/refreshOtp/{loginId}
    */
 
-  refreshOtp: async (loginId: string) => {
+  refreshOtp: async (userId: string) => {
     try {
-      const response = await apiClient.post(`/auth/refreshOtp/${loginId}`);
+      const response = await apiClient.post(`/auth/refreshOtp/${userId}`);
       return response.data;
     } catch (error: any) {
       throw error;

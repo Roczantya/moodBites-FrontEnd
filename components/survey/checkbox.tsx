@@ -1,17 +1,21 @@
-import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Colors } from "@/constants/colors";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface CheckboxGroupProps {
   options: string[];
   selectedValues: string[];
   onChange: (val: string[]) => void;
+  labelKey?: string;
+  valueKey?: string;
 }
 
 export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   options,
   selectedValues,
   onChange,
+  labelKey = "label",
+  valueKey = "value",
 }) => {
   const toggleSelection = (option: string) => {
     if (selectedValues.includes(option)) {

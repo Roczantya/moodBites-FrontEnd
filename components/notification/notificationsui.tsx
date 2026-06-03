@@ -1,10 +1,10 @@
-import React from "react";
-import { View, Text, StyleSheet, FlatList, SafeAreaView } from "react-native";
+import Header from "@/components/dashboard/header";
 import NotificationItem, {
   NotificationData,
 } from "@/components/notification/notificationitem";
 import { Colors } from "@/constants/colors";
-import Header from "@/components/dashboard/header";
+import React from "react";
+import { FlatList, SafeAreaView, StyleSheet, View } from "react-native";
 
 interface NotificationsUIProps {
   notifications: NotificationData[];
@@ -17,6 +17,7 @@ export default function NotificationsUI({
     <SafeAreaView style={styles.safeArea}>
       <Header
         title="Notifikasi"
+        variant="title"
         showBack={true}
         showBell={false}
         alignTitle="center"
