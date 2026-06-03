@@ -1,7 +1,6 @@
 import { FLAVORS, MOOD_SECTIONS } from "@/constants/mood";
 import { DataType, MoodKey, Responses } from "@/constants/surveystate";
 import storageService from "@/services/storageService";
-import { surveyService } from "@/services/surveyService";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { ScrollView } from "react-native";
@@ -45,51 +44,6 @@ export const useMoodSurvey = () => {
       if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
     };
   }, []);
-
-  useEffect(() => {
-    const fetchRecommendations = async () => {
-      setIsLoadingOptions(true);
-      try {
-        const userId = routeUserId || (await storageService.getUserId());
-        if (!userId) {
-          console.warn(
-            "User ID tidak ditemukan, lewati pengambilan rekomendasi.",
-          );
-          setMenuOptions([]);
-          return;
-        }
-        const currentKey = MOOD_SECTIONS[currentStep].key.toLowerCase();
-
-        // Gunakan userId yang didapat
-        const data = await surveyService.getRecommendations(currentKey, userId);
-        console.log("=== ISI DATA DARI BE ===");
-        console.log("TIPE DATA:", typeof data);
-        console.log("STRUKTUR DATA:", JSON.stringify(data, null, 2));
-        setMenuOptions(data);
-      } catch (error: any) {
-        console.log("=== FETCH ERROR ===");
-        console.log("STATUS:", error.statusCode);
-        console.log("RESPONSE:", error.originalError?.response?.data);
-
-        console.log("MENGGUNAKAN DATA DUMMY SEMENTARA...");
-
-        // Simulasi loading 1 detik biar kerasa kayak manggil API beneran
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        const dummyData = [
-          "Ayam Geprek Bawang",
-          "Nasi Goreng Gila",
-          "Bebek Dangkot Pedas",
-          "Martabak Manis Keju",
-        ];
-        setMenuOptions(dummyData);
-      } finally {
-        setIsLoadingOptions(false);
-      }
-    };
-
-    fetchRecommendations();
-  }, [currentStep, routeUserId]);
 
   // ✅ FUNGSI SHOW TOAST DIKEMBALIKAN KE SINI
   const showToast = (message: string, type: "success" | "error" = "error") => {

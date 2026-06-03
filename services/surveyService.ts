@@ -1,7 +1,6 @@
 import { Responses } from "@/constants/surveystate";
 // Impor apiClient (default) dan moodbitesExternalClient (named export)
-import apiClient, { moodbitesExternalClient } from "./apiClient";
-import storageService from "./storageService";
+import apiClient from "./apiClient";
 
 export const surveyService = {
   submitMoodSurvey: async (data: Responses) => {
@@ -19,35 +18,21 @@ export const surveyService = {
     }
   },
 
-  // Tambahkan userId di sini sebagai parameter
-  getRecommendations: async (mood: string, userId: string | number) => {
-    try {
-      console.log(`[API] Mencoba fetch eksternal untuk mood: ${mood}`);
-      const response = await moodbitesExternalClient.get(
-        `/recommend_external/${mood}/${userId}`,
-      );
-
-      return response.data ?? [];
-    } catch (externalError: any) {
-      // Kalau API Eksternal gagal, kita jangan langsung nyerah
-      console.warn(
-        "API Eksternal gagal. Beralih ke API Internal...",
-        externalError.message,
-      );
-      try {
-        console.log(`[API] Mencoba fetch internal untuk mood: ${mood}`);
-        console.log("ID dari parameter URL:", userId);
-        const responseInternal = await apiClient.get(
-          `/external/recommendations/${mood}`,
-        );
-        const token = await storageService.getToken();
-        console.log("TOKEN YANG DIKIRIM:", token);
-        return responseInternal.data ?? [];
-      } catch (internalError: any) {
-        // Kalau kedua API gagal semua, baru lemparkan error ke UI (layar)
-        console.error("Kedua API gagal merespons.");
-        throw internalError;
-      }
-    }
-  },
+  // Tambahkan userId di sini sebagai parameter fetch rekomendasi menu tapi tidak jadi
+  // getRecommendations: async (mood: string, userId: string | number) => {
+  //   try {
+  //     console.log(`[API] Mencoba fetch eksternal untuk mood: ${mood}`);
+  //     const response = await moodbitesExternalClient.get(
+  //       `/recommend-external/${mood}/${userId}`,
+  //     );
+  //     return response.data ?? [];
+  //   } catch (error: any) {
+  //     console.error(
+  //       `[API] Gagal fetch rekomendasi untuk mood: ${mood}`,
+  //       console.error(error),
+  //       error.message,
+  //     );
+  //     throw error;
+  //   }
+  // },
 };
