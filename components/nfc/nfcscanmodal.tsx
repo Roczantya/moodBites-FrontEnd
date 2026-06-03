@@ -9,6 +9,8 @@ import {
   Easing,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+// Import service HCE
+import hceService from "@/services/hceService"; 
 
 const COLORS = {
   overlay: "rgba(90, 30, 36, 0.5)",
@@ -27,9 +29,10 @@ interface NfcScanModalProps {
   visible: boolean;
   onClose: () => void;
   onSuccess?: () => void;
+  userId: string; // Tambahkan prop userId
 }
 
-export default function NfcScanModal({ visible, onClose, onSuccess }: NfcScanModalProps) {
+export default function NfcScanModal({ visible, onClose, onSuccess, userId }: NfcScanModalProps) {
   const rotateAnim  = useRef(new Animated.Value(0)).current;
   const scaleAnim   = useRef(new Animated.Value(0.88)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
@@ -43,6 +46,14 @@ export default function NfcScanModal({ visible, onClose, onSuccess }: NfcScanMod
 
   useEffect(() => {
     if (visible) {
+      // --- LOGIKA HCE DIMULAI ---
+      if (userId) {
+        hceService.startHCE(userId).catch(err => 
+          console.log("Gagal mengaktifkan HCE di Modal:", err)
+        );
+      }
+      // --------------------------
+
       // Card entrance
       Animated.parallel([
         Animated.spring(scaleAnim, {
@@ -102,11 +113,15 @@ export default function NfcScanModal({ visible, onClose, onSuccess }: NfcScanMod
       dotFn(dotAnim2, 200);
       dotFn(dotAnim3, 400);
     } else {
+      // --- LOGIKA HCE DIMATIKAN ---
+      hceService.stopHCE().catch(err => console.log("Gagal stop HCE:", err));
+      // ----------------------------
+
       scaleAnim.setValue(0.88);
       opacityAnim.setValue(0);
       rotateAnim.setValue(0);
     }
-  }, [visible]);
+  }, [visible, userId]); // Ditrigger saat visible atau userId berubah
 
   const spin = rotateAnim.interpolate({
     inputRange: [0, 1],
