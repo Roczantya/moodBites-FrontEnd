@@ -1,27 +1,31 @@
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
   Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../../constants/colors"; // Sesuaikan kembali path ini
-import { router } from "expo-router";
 
 interface HeaderProps {
   title?: string;
   showBell?: boolean;
   showBack?: boolean;
-  alignTitle?: "left" | "center"; // ← Prop baru untuk ngatur posisi
+  alignTitle?: "left" | "center";
+  variant?: "logo" | "title"; // ← tambah ini
+  onBackPress?: () => void; // ← opsional, untuk custom back action
 }
 
 export default function Header({
   title = "MoodBites",
   showBell = true,
   showBack = false,
-  alignTitle = "left", // ← Default-nya bisa kamu set "left" atau "center"
+  alignTitle = "left",
+  variant = "logo", // ← default logo
+  onBackPress,
 }: HeaderProps) {
   return (
     <View style={styles.container}>
@@ -30,7 +34,9 @@ export default function Header({
         {showBack && (
           <TouchableOpacity
             style={styles.iconButton}
-            onPress={() => router.push("/dashboard/home")}
+            onPress={() => {
+              onBackPress ? onBackPress() : router.back();
+            }}
           >
             <Ionicons
               name="arrow-back"
@@ -53,7 +59,9 @@ export default function Header({
           },
         ]}
       >
-        <Text style={showBack ? styles.title : styles.logo}>{title}</Text>
+        <Text style={variant === "title" ? styles.title : styles.logo}>
+          {title}
+        </Text>
       </View>
 
       {/* --- KANAN: Area Tombol Bell --- */}
@@ -115,12 +123,12 @@ const styles = StyleSheet.create({
 
   /* --- Text Styles --- */
   logo: {
-    fontSize: 24,
+    fontSize: 22,
     fontFamily: "PlusJakartaSans-ExtraBoldItalic",
     color: Colors.optionalAccent,
   },
   title: {
-    fontSize: 18,
+    fontSize: 22,
     fontFamily: "PlusJakartaSans-Bold",
     color: Colors.optionalAccent,
   },

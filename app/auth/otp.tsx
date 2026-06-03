@@ -15,6 +15,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import OtpForm from "@/components/auth/otpform"; // Import UI yang baru dibuat
 import authService from "@/services/authService";
+import storageService from "@/services/storageService";
 
 export default function OTP() {
   // 1. Ambil params dari halaman register sebelumnya (email & loginId)
@@ -87,16 +88,31 @@ export default function OTP() {
         loginId: activeLoginId,
         code: otpCode,
       });
-      router.push("/auth/firstsurvey");
+
+      console.log("VERIFY RESPONSE:", JSON.stringify(response, null, 2)); // ← lihat ini
+
+      if (response?.userId) {
+        await storageService.saveUserId(response.userId);
+        console.log("userId tersimpan:", response.userId); // ← konfirmasi tersimpan
+      }
+      if (response?.token) {
+        // Sesuaikan 'token' dengan nama properti dari response API kamu
+        await storageService.saveToken(response.token);
+        console.log("Token berhasil disimpan!");
+      }
+      router.push({
+        pathname: "/auth/firstsurvey",
+        params: { userId: response?.userId ?? "" },
+      });
     } catch (error: any) {
       showToast(
         `✕ ${error?.message || "Kode OTP salah atau expired"}`,
         "error",
       );
-      setOtp(["", "", "", ""]); // Reset OTP biar user bisa input ulang
+      setOtp(["", "", "", ""]);
       inputRefs.current[0]?.focus();
     } finally {
-      setIsVerifying(false); // ← Ini yang kurang!
+      setIsVerifying(false);
     }
   };
   // DI DALAM OTP.TSX (Fungsi handleResend)
@@ -109,6 +125,7 @@ export default function OTP() {
 
       showToast("✓ Kode OTP baru telah dikirim!", "success");
       setOtp(["", "", "", ""]);
+
       inputRefs.current[0]?.focus();
 
       // Mulai cooldown 60 detik

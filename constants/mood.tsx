@@ -3,17 +3,17 @@ import { MoodSection } from "./surveystate";
 
 export const MOOD_SECTIONS: MoodSection[] = [
   {
-    key: "Sad",
+    key: "sad",
     title: "Sedang SEDIH / GALAU 🌧️",
     desc: "Makanan apa yang paling kamu cari?",
   },
   {
-    key: "Angry",
+    key: "angry",
     title: "Sedang MARAH / KESAL 😡",
     desc: "Pengen pelampiasan makan apa?",
   },
-  { key: "Happy", title: "Sedang SENANG 😄", desc: "Lagi good mood banget?" },
-  { key: "Neutral", title: "Sedang BIASA SAJA 😐", desc: "Mood lagi standar?" },
+  { key: "happy", title: "Sedang SENANG 😄", desc: "Lagi good mood banget?" },
+  { key: "neutral", title: "Sedang BIASA SAJA 😐", desc: "Mood lagi standar?" },
 ];
 
 export const FLAVORS = [

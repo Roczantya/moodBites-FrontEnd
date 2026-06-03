@@ -26,12 +26,19 @@ const storageService = {
     }
   },
 
-    saveOnboardingDone: async () => {
+  clearAllSession: async () => {
     try {
-      await AsyncStorage.setItem(
-        "onboardingDone",
-        "true"
-      );
+      const keys = ["userId", "authToken", "surveyDone"]; // onboardingDone sengaja gak dihapus biar gak muncul lagi pas relogin
+      await AsyncStorage.multiRemove(keys);
+      console.log("SEMUA SESSION BERHASIL DIHAPUS (LOGOUT SUCCESS)");
+    } catch (error) {
+      console.log("ERROR CLEAR ALL SESSION:", error);
+    }
+  },
+
+  saveOnboardingDone: async () => {
+    try {
+      await AsyncStorage.setItem("onboardingDone", "true");
     } catch (error) {
       console.log(error);
     }
@@ -39,12 +46,52 @@ const storageService = {
 
   getOnboardingDone: async () => {
     try {
-      return await AsyncStorage.getItem(
-        "onboardingDone"
-      );
+      return await AsyncStorage.getItem("onboardingDone");
     } catch (error) {
       console.log(error);
       return null;
+    }
+  },
+
+  saveSurveyDone: async () => {
+    try {
+      await AsyncStorage.setItem("surveyDone", "true");
+    } catch (error) {
+      console.log("ERROR SAVE SURVEY DONE:", error);
+    }
+  },
+
+  getSurveyDone: async () => {
+    try {
+      return await AsyncStorage.getItem("surveyDone");
+    } catch (error) {
+      console.log("ERROR GET SURVEY DONE:", error);
+      return null;
+    }
+  },
+
+  saveToken: async (token: string) => {
+    try {
+      await AsyncStorage.setItem("authToken", token);
+    } catch (error) {
+      console.log("ERROR SAVE TOKEN:", error);
+    }
+  },
+
+  getToken: async () => {
+    try {
+      return await AsyncStorage.getItem("authToken");
+    } catch (error) {
+      console.log("ERROR GET TOKEN:", error);
+      return null;
+    }
+  },
+
+  clearToken: async () => {
+    try {
+      await AsyncStorage.removeItem("authToken");
+    } catch (error) {
+      console.log("ERROR CLEAR TOKEN:", error);
     }
   },
 };

@@ -1,22 +1,19 @@
-import React, {
-  useState,
-  useEffect
-} from "react";
-import { View, StyleSheet, StatusBar } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StatusBar, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // Sevices
-import storageService from "@/services/storageService";
 import hceService from "@/services/hceService";
+import storageService from "@/services/storageService";
 
 // Existing shared components
 import Header from "@/components/dashboard/header";
-import BottomNavbar from "@/components/dashboard/bottomNavbar";
 
 // NFC-specific components
+import BottomNavbar from "@/components/dashboard/bottomNavbar";
+import NfcScanModal from "@/components/nfc/nfcscanmodal";
 import ScanScreen from "@/components/nfc/scanscreen";
 import SuccessScreen from "@/components/nfc/successscreen";
-import NfcScanModal from "@/components/nfc/nfcscanmodal";
 
 const COLORS = {
   bg: "#FDF0E8",
@@ -27,52 +24,42 @@ type NfcView = "scan" | "success";
 export default function NfcScreen() {
   const [currentView, setCurrentView] = useState<NfcView>("scan");
   const [modalVisible, setModalVisible] = useState(false);
-  const [isHceStarted, setIsHceStarted] =
-  useState(false);
-  
+  const [isHceStarted, setIsHceStarted] = useState(false);
+
   useEffect(() => {
-
-  if (!isHceStarted) {
-
-    handleScanStart();
-  }
-
-}, [isHceStarted]);
+    if (!isHceStarted) {
+      handleScanStart();
+    }
+  }, [isHceStarted]);
 
   const handleScanStart = async () => {
+    try {
+      const userId = await storageService.getUserId();
 
-  try {
+      if (!userId) {
+        alert("User ID tidak ditemukan");
+        return;
+      }
 
-    const userId = await storageService.getUserId();
+      await hceService.startHCE(userId);
 
-    if (!userId) {
-      alert("User ID tidak ditemukan");
-      return;
+      console.log("HCE ACTIVE USER ID:", userId);
+
+      setModalVisible(true);
+      setIsHceStarted(true);
+    } catch (error) {
+      console.log("HCE ERROR:", error);
+
+      alert("Gagal mengaktifkan NFC:" + error);
     }
-
-    await hceService.startHCE(userId);
-
-    console.log("HCE ACTIVE USER ID:", userId);
-
-    setModalVisible(true);
-    setIsHceStarted(true);
-
-  } catch (error) {
-
-    console.log("HCE ERROR:", error);
-
-    alert("Gagal mengaktifkan NFC:" + error);
-  }
-};
+  };
 
   const handleModalClose = async () => {
+    await hceService.stopHCE();
 
-  await hceService.stopHCE();
-
-  setModalVisible(false);
-  setIsHceStarted(true);
-
-};
+    setModalVisible(false);
+    setIsHceStarted(true);
+  };
 
   const handleSuccess = () => {
     setModalVisible(false);
@@ -85,23 +72,27 @@ export default function NfcScreen() {
   };
 
   const handleDone = async () => {
+    await hceService.stopHCE();
 
-  await hceService.stopHCE();
-
-  setCurrentView("scan");
-};
+    setCurrentView("scan");
+  };
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.bg} />
 
       {/* Shared Header Component */}
-      <Header title="NFC" />
+      <Header
+        title="NFC"
+        variant="title"
+        alignTitle="center"
+        showBell={false}
+      />
 
       {/* Main Content */}
       <View style={styles.content}>
         {currentView === "scan" ? (
-          <ScanScreen/>
+          <ScanScreen />
         ) : (
           <SuccessScreen
             profileName="MoodBits User"

@@ -1,10 +1,15 @@
-import BottomNavBar from "@/components/dashboard/bottomNavbar";
-import { Text, View, StyleSheet } from "react-native";
+import Header from "@/components/dashboard/header";
+import { StyleSheet, View } from "react-native";
 
 export default function Index() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Profile screen</Text>
+      <Header
+        title="History"
+        variant="title"
+        alignTitle="center"
+        showBack={true}
+      />
     </View>
   );
 }

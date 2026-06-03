@@ -1,4 +1,4 @@
-export type MoodKey = "Sad" | "Angry" | "Happy" | "Neutral";
+export type MoodKey = "sad" | "angry" | "happy" | "neutral";
 
 export type DataType = "desire" | "intensity" | "categories";
 

@@ -15,6 +15,8 @@ export default function Homelayout() {
         name="notification"
         options={{ animation: "slide_from_bottom" }}
       />
+      <Stack.Screen name="editprofil" options={{ animation: "fade" }} />
+
       {/* <Stack.Screen
         name="history"
         options={{ animation: "slide_from_bottom" }}
