@@ -17,16 +17,10 @@ export interface VerifyOtpPayload {
 export interface LoginPayload {
   email: string;
   password: string;
-  fcmToken: string; // Opsional, tergantung apakah backend minta FCM token saat login
+  fcmToken: string;
 }
 
-// --- 2. LOGIC SERVICE LAYER ---
-
 const authService = {
-  /**
-   * Hit endpoint Register User baru
-   * POST /api/v1/auth/register
-   */
   register: async (data: RegisterPayload) => {
     try {
       const response = await apiClient.post("/auth/register", data);
@@ -39,17 +33,9 @@ const authService = {
 
       return response.data;
     } catch (error: any) {
-      // Interceptor di apiClient sudah membungkus error menjadi { message: "..." }
       throw error;
     }
   },
-
-  /**
-   * Hit endpoint Login User
-   * POST /api/v1/auth/login
-
-   */
-
   login: async (data: LoginPayload) => {
     try {
       console.log("LOGIN REQUEST BODY:", JSON.stringify(data, null, 2));
@@ -61,12 +47,6 @@ const authService = {
     }
   },
 
-  /**
-
-   * Hit endpoint Verifikasi OTP
-   * POST /api/v1/auth/register/verify
-   */
-
   verifyOtp: async (data: VerifyOtpPayload) => {
     try {
       const response = await apiClient.post("/auth/register/verify", data);
@@ -76,11 +56,6 @@ const authService = {
     }
   },
 
-  /**
-   * Hit endpoint Kirim Ulang / Refresh OTP (Menggunakan Path Parameter)
-   * POST /api/v1/auth/refreshOtp/{loginId}
-   */
-
   refreshOtp: async (userId: string) => {
     try {
       const response = await apiClient.post(`/auth/refreshOtp/${userId}`);
@@ -88,6 +63,18 @@ const authService = {
     } catch (error: any) {
       throw error;
     }
+  },
+  getProfile: async () => {
+    const response = await apiClient.get("/auth/profile");
+    return response.data;
+  },
+  updateProfile: async (data: { name: string }) => {
+    const response = await apiClient.patch("/auth/profile", data);
+    return response.data;
+  },
+  logout: async () => {
+    const response = await apiClient.post("/auth/logout");
+    return response.data;
   },
 };
 

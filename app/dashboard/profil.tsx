@@ -1,49 +1,92 @@
-import React, { useState } from "react";
-import { Alert } from "react-native";
-import ProfileUI, { UserProfileData } from "@/components/profil/profileScreen"; // Sesuaikan path import
+import { router } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
+
+// Services
+import ProfileUI, { UserProfileData } from "@/components/profil/profileScreen";
+import authService from "@/services/authService";
+import storageService from "@/services/storageService";
 
 export default function ProfileScreen() {
-  // 1. STATE MANAGEMENT (Simulasi data yang didapat dari Backend/Axios)
-  const [userData, setUserData] = useState<UserProfileData>({
-    name: "Elena Rodriguez",
-    bio: "Curating flavor through feelings since 2023",
-    healthFilters: ["NUT ALLERGY", "DAIRY FREE"],
-    commonMoods: ["STRESSED", "RADIANT", "QUIET"],
-  });
+  const [userData, setUserData] = useState<UserProfileData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // 2. FUNGSI LOGIKA (Handler)
+  // STATE BARU UNTUK KONTROL POP-UP UI
+  const [isSignOutModalVisible, setSignOutModalVisible] = useState(false);
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        setIsLoading(true);
+        const data = await authService.getProfile();
+        setUserData(data);
+      } catch (error) {
+        console.log("Gagal memuat profil:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProfileData();
+  }, []);
+
   const handleMenuPress = (menuName: string) => {
-    // Navigasi atau aksi berdasarkan menu yang diklik
     console.log(`Navigating to: ${menuName}`);
-    // router.push(`/${menuName}`) jika pakai expo-router
   };
 
   const handleEditProfile = () => {
-    console.log("Membuka modal/halaman edit profile...");
+    console.log("Membuka modal edit profile...");
   };
 
-  const handleSignOut = () => {
-    // Konfirmasi sebelum logout
-    Alert.alert("Sign Out", "Apakah kamu yakin ingin keluar dari MoodBites?", [
-      { text: "Batal", style: "cancel" },
-      {
-        text: "Keluar",
-        style: "destructive",
-        onPress: () => {
-          console.log("Membersihkan token dan logout...");
-          // Logika hapus token AsyncStorage & pindah halaman di sini
-        },
-      },
-    ]);
+  // 3 FUNGSI BARU UNTUK MENGATUR POP-UP SIGN OUT
+  const handleSignOutPress = () => {
+    setSignOutModalVisible(true); // Membuka pop-up
   };
 
-  // 3. RENDER UI
+  const handleCancelSignOut = () => {
+    setSignOutModalVisible(false); // Menutup pop-up (batal)
+  };
+
+  const handleConfirmSignOut = async () => {
+    setSignOutModalVisible(false); // Tutup pop-up dulu
+    try {
+      console.log("Menghubungi server untuk logout...");
+      await authService.logout();
+      await storageService.clearToken();
+      await storageService.clearUserId();
+      router.replace("/");
+    } catch (err) {
+      console.log("Gagal memanggil API logout:", err);
+      await storageService.clearToken();
+      await storageService.clearUserId();
+      router.replace("/");
+    }
+  };
+
+  if (isLoading || !userData) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "black",
+        }}
+      >
+        <ActivityIndicator size="large" color="#A0D585" />
+      </View>
+    );
+  }
+
   return (
     <ProfileUI
       userData={userData}
       onMenuPress={handleMenuPress}
-      onSignOut={handleSignOut}
       onEditProfile={handleEditProfile}
+      // Passing props pop-up ke UI
+      onSignOutPress={handleSignOutPress}
+      isSignOutModalVisible={isSignOutModalVisible}
+      onCancelSignOut={handleCancelSignOut}
+      onConfirmSignOut={handleConfirmSignOut}
     />
   );
 }

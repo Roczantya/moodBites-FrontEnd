@@ -1,7 +1,6 @@
-import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { Feather } from "@expo/vector-icons";
 import { Colors } from "@/constants/colors";
+import React from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
 
 interface ProfileAvatarProps {
   name: string;
@@ -25,13 +24,6 @@ export default function ProfileAvatar({
             style={styles.avatarImage}
           />
         </View>
-        <TouchableOpacity
-          style={styles.editBadge}
-          onPress={onEditProfile}
-          activeOpacity={0.8}
-        >
-          <Feather name="edit-2" size={12} color={Colors.white} />
-        </TouchableOpacity>
       </View>
       <Text style={styles.userName}>{name}</Text>
       <Text style={styles.userBio}>{bio}</Text>

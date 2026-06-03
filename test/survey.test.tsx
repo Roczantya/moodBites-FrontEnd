@@ -12,19 +12,14 @@ import { router } from "expo-router";
 import React from "react";
 
 jest.mock("expo-router", () => ({
-  router: { replace: jest.fn() },
+  router: { replace: jest.fn(), push: jest.fn() },
+  useLocalSearchParams: () => ({ userId: "123" }),
 }));
 
 jest.mock("@/services/surveyService", () => ({
   surveyService: {
-    submitMoodSurvey: jest.fn(() => Promise.resolve()),
-    getRecommendations: jest.fn(() =>
-      Promise.resolve([
-        "Nasi Ayam (Goreng / Panggang)",
-        "Nasi Goreng / Nasi Gila",
-        "Bakso Kuah",
-      ]),
-    ),
+    getRecommendations: jest.fn().mockResolvedValue(["Ayam Bakar", "Bebek"]),
+    submitMoodSurvey: jest.fn().mockResolvedValue({ success: true }),
   },
 }));
 
@@ -50,17 +45,17 @@ jest.mock("@/hooks/use-mood-survey", () => {
       });
       const [responses, setResponses] = useState({
         moods: {
-          Sad: { desire: {}, intensity: {}, categories: [] },
-          Angry: { desire: {}, intensity: {}, categories: [] },
-          Happy: { desire: {}, intensity: {}, categories: [] },
-          Neutral: { desire: {}, intensity: {}, categories: [] },
+          sad: { desire: {}, intensity: {}, categories: [] }, // ← lowercase
+          angry: { desire: {}, intensity: {}, categories: [] }, // ← lowercase
+          happy: { desire: {}, intensity: {}, categories: [] }, // ← lowercase
+          neutral: { desire: {}, intensity: {}, categories: [] }, // ← lowercase
         },
       });
       const scrollViewRef = useRef(null);
       const toastTimerRef = useRef(null); // ← hapus type parameter
-
       const moodInfo = MOOD_SECTIONS[currentStep];
-      const moodData = responses.moods[moodInfo.key];
+      const moodKey = MOOD_SECTIONS[currentStep].key.toLowerCase(); // ← key fix
+      const moodData = responses.moods[moodKey]; // ← pakai moodKey
       const totalSteps = MOOD_SECTIONS.length;
 
       const showToast = (message, type = "error") => {
@@ -73,15 +68,15 @@ jest.mock("@/hooks/use-mood-survey", () => {
       };
 
       const handleMoodChange = (moodKey, type, flavorOrCat, value) => {
-        // ← hapus semua :any
+        const lowerKey = moodKey.toLowerCase(); // ← lowercase saat update juga
         setResponses((prev) => {
-          const updatedMood = { ...prev.moods[moodKey] };
+          const updatedMood = { ...prev.moods[lowerKey] };
           if (type === "categories") {
             updatedMood.categories = value;
           } else {
             updatedMood[type] = { ...updatedMood[type], [flavorOrCat]: value };
           }
-          return { ...prev, moods: { ...prev.moods, [moodKey]: updatedMood } };
+          return { ...prev, moods: { ...prev.moods, [lowerKey]: updatedMood } };
         });
       };
 

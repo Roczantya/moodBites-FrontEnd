@@ -43,8 +43,7 @@ export default function Index() {
 
         if (onboardingDone) {
           if (userId) {
-            // Pengecekan ekstra: antisipasi kembalian berupa string "true" atau boolean true
-            if (isSurveyDone) {
+            if (isSurveyDone === "true") {
               router.replace("/dashboard/home");
             } else {
               router.replace("/auth/firstsurvey");

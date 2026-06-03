@@ -1,5 +1,9 @@
 import AuthHeader from "@/components/auth/authheader";
+import LoginForm from "@/components/auth/loginform";
+import RegisterForm from "@/components/auth/registerform";
 import { TextBold, TextMedium, TextSemiBold } from "@/constants/customFont";
+import authService from "@/services/authService";
+import storageService from "@/services/storageService";
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -14,23 +18,14 @@ import AuthToggle from "../../components/auth/authtoggle";
 import PrimaryButton from "../../components/Reuse/button";
 import { Colors } from "../../constants/colors";
 
-// Services
-import storageService from "@/services/storageService";
-
-// IMPORT UI FORM YANG BARU KITA PISAH
-import LoginForm from "@/components/auth/loginform";
-import RegisterForm from "@/components/auth/registerform";
-import authService from "@/services/authService";
-
 export default function AuthScreen() {
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 1. STATE TOAST DINAMIS BARU
   const [toast, setToast] = useState({
     visible: false,
     message: "",
-    type: "success", // 'success' atau 'error'
+    type: "success",
   });
 
   const [name, setName] = useState("");
@@ -40,9 +35,9 @@ export default function AuthScreen() {
   const [errors, setErrors] = useState({ name: "", email: "", password: "" });
 
   // Pake useRef untuk nge-track timer setTimeout biar aman dari memory leak
-  //  PAKAI INI (Aman & Bebas Error)
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const redirectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // Bersihkan semua timer kalau komponen unmount (pindah halaman)
   useEffect(() => {
     return () => {
@@ -76,19 +71,19 @@ export default function AuthScreen() {
   };
 
   const handleSubmit = async () => {
-    if (isLoading) return; // ← tambah ini
+    if (isLoading) return;
 
     if (!validate()) return;
 
     setIsLoading(true);
-    // Tutup toast yang mungkin masih nyangkut sebelum mulai request baru
     setToast({ ...toast, visible: false });
     if (toastTimer.current) clearTimeout(toastTimer.current);
 
     try {
       if (isLogin) {
-        await storageService.clearUserId();
-        // 2. PROSES LOGIN VIA AUTH SERVICE
+        // 1. PROSES LOGIN
+        await storageService.clearUserId(); // Bersihkan sisa ID lama di local storage
+
         console.log("Proses Login...");
         const result = await authService.login({
           email,
@@ -96,11 +91,16 @@ export default function AuthScreen() {
           fcmToken: "dummy_fcm_123",
         });
         console.log("LOGIN RESULT:", result);
+
+        // Simpan Token dan User ID yang baru didapat dari backend
+        if (result.token) {
+          await storageService.saveToken(result.token);
+        }
+        if (result.userId) {
+          await storageService.saveUserId(result.userId);
+        }
+
         setIsLoading(false);
-        
-        await storageService.saveUserId(
-          result.userId
-        );
 
         // Munculin Toast Sukses Login
         setToast({
@@ -109,30 +109,27 @@ export default function AuthScreen() {
           type: "success",
         });
 
-        // Kasih jeda 1.5 detik biar user bisa baca toast-nya sebelum pindah halaman
+        // Redirect ke Dashboard
         redirectTimer.current = setTimeout(() => {
           setToast((prev) => ({ ...prev, visible: false }));
           router.replace("/dashboard/home");
-        }, 3000);
+        }, 1500);
       } else {
-        // 3. PROSES REGISTER VIA AUTH SERVICE
+        // 2. PROSES REGISTER
         const payload = { name, email, password, fcmToken: "dummy_fcm_123" };
-        // console.log("DATA DARI FORM FE:", JSON.stringify(payload, null, 2));
         const result = await authService.register(payload);
         setIsLoading(false);
 
-        // Munculin Toast Sukses Register
         setToast({
           visible: true,
           message: "✓ Registrasi Berhasil! Kode OTP sedang dikirim...",
           type: "success",
         });
 
-        // Kasih jeda nunggu OTP 2.5 detik
+        // Redirect ke OTP
         redirectTimer.current = setTimeout(() => {
           setToast((prev) => ({ ...prev, visible: false }));
 
-          // ✅ Ganti loginId → userId
           const sessionId = result?.userId ?? result?.loginId ?? "";
 
           if (!sessionId) {
@@ -146,23 +143,21 @@ export default function AuthScreen() {
 
           router.push({
             pathname: "/auth/otp",
-            params: { email, loginId: sessionId }, // key tetap "loginId" biar otp.tsx tidak perlu diubah
+            params: { email, loginId: sessionId },
           });
         }, 3000);
       }
     } catch (error: any) {
-      console.log("LOGIN ERROR:", error);
-      // 4. PROSES ERROR (LOGIN / REGISTER) YANG SUDAH DISARING INTERCEPTOR AXIOS
+      // 3. TANGKAP ERROR (UNTUK LOGIN & REGISTER)
+      console.log("AUTH ERROR:", error);
       setIsLoading(false);
 
-      // Munculin Toast Error (Merah) dengan pesan kustom dari interceptor
       setToast({
         visible: true,
         message: `✕ ${error?.message || "Terjadi kesalahan sistem."}`,
         type: "error",
       });
 
-      // Otomatis tutup toast error setelah 3 detik
       toastTimer.current = setTimeout(() => {
         setToast((prev) => ({ ...prev, visible: false }));
       }, 3000);
@@ -175,7 +170,8 @@ export default function AuthScreen() {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <StatusBar translucent={true} backgroundColor="black" />
-      {/* 5. UI TOAST DINAMIS */}
+
+      {/* UI TOAST DINAMIS */}
       {toast.visible && (
         <View
           style={[

@@ -16,6 +16,7 @@ interface HeaderProps {
   showBack?: boolean;
   alignTitle?: "left" | "center";
   variant?: "logo" | "title"; // ← tambah ini
+  onBackPress?: () => void; // ← opsional, untuk custom back action
 }
 
 export default function Header({
@@ -24,6 +25,7 @@ export default function Header({
   showBack = false,
   alignTitle = "left",
   variant = "logo", // ← default logo
+  onBackPress,
 }: HeaderProps) {
   return (
     <View style={styles.container}>
@@ -32,7 +34,9 @@ export default function Header({
         {showBack && (
           <TouchableOpacity
             style={styles.iconButton}
-            onPress={() => router.push("/dashboard/home")}
+            onPress={() => {
+              onBackPress ? onBackPress() : router.back();
+            }}
           >
             <Ionicons
               name="arrow-back"

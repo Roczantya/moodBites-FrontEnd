@@ -10,6 +10,7 @@ import storageService from "@/services/storageService";
 import Header from "@/components/dashboard/header";
 
 // NFC-specific components
+import BottomNavbar from "@/components/dashboard/bottomNavbar";
 import NfcScanModal from "@/components/nfc/nfcscanmodal";
 import ScanScreen from "@/components/nfc/scanscreen";
 import SuccessScreen from "@/components/nfc/successscreen";
@@ -81,7 +82,12 @@ export default function NfcScreen() {
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.bg} />
 
       {/* Shared Header Component */}
-      <Header title="NFC" />
+      <Header
+        title="NFC"
+        variant="title"
+        alignTitle="center"
+        showBell={false}
+      />
 
       {/* Main Content */}
       <View style={styles.content}>

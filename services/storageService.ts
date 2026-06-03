@@ -26,6 +26,16 @@ const storageService = {
     }
   },
 
+  clearAllSession: async () => {
+    try {
+      const keys = ["userId", "authToken", "surveyDone"]; // onboardingDone sengaja gak dihapus biar gak muncul lagi pas relogin
+      await AsyncStorage.multiRemove(keys);
+      console.log("SEMUA SESSION BERHASIL DIHAPUS (LOGOUT SUCCESS)");
+    } catch (error) {
+      console.log("ERROR CLEAR ALL SESSION:", error);
+    }
+  },
+
   saveOnboardingDone: async () => {
     try {
       await AsyncStorage.setItem("onboardingDone", "true");

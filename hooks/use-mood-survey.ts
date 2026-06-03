@@ -50,9 +50,7 @@ export const useMoodSurvey = () => {
     const fetchRecommendations = async () => {
       setIsLoadingOptions(true);
       try {
-        // 👇 3. Cek routeUserId dulu (lebih cepat), kalau kosong baru ambil dari storage
         const userId = routeUserId || (await storageService.getUserId());
-
         if (!userId) {
           console.warn(
             "User ID tidak ditemukan, lewati pengambilan rekomendasi.",
@@ -60,7 +58,6 @@ export const useMoodSurvey = () => {
           setMenuOptions([]);
           return;
         }
-
         const currentKey = MOOD_SECTIONS[currentStep].key.toLowerCase();
 
         // Gunakan userId yang didapat
@@ -73,7 +70,19 @@ export const useMoodSurvey = () => {
         console.log("=== FETCH ERROR ===");
         console.log("STATUS:", error.statusCode);
         console.log("RESPONSE:", error.originalError?.response?.data);
-        setMenuOptions([]);
+
+        console.log("MENGGUNAKAN DATA DUMMY SEMENTARA...");
+
+        // Simulasi loading 1 detik biar kerasa kayak manggil API beneran
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        const dummyData = [
+          "Ayam Geprek Bawang",
+          "Nasi Goreng Gila",
+          "Bebek Dangkot Pedas",
+          "Martabak Manis Keju",
+        ];
+        setMenuOptions(dummyData);
       } finally {
         setIsLoadingOptions(false);
       }
@@ -119,7 +128,8 @@ export const useMoodSurvey = () => {
 
   // Helper Variables
   const moodInfo = MOOD_SECTIONS[currentStep];
-  const moodData = responses.moods[moodInfo.key];
+  const currentMoodKey = moodInfo.key.toLowerCase() as MoodKey;
+  const moodData = responses.moods[currentMoodKey];
   const totalSteps = MOOD_SECTIONS.length;
   const progressPercentage =
     (((currentStep + 1) / totalSteps) * 100).toFixed(0) + "%";
@@ -146,7 +156,7 @@ export const useMoodSurvey = () => {
     if (isSubmit) {
       setIsLoading(true);
       try {
-        await surveyService.submitMoodSurvey(responses);
+        // await surveyService.submitMoodSurvey(responses);
 
         // 👇 1. Simpan status survey ke local storage
         await storageService.saveSurveyDone();
@@ -154,7 +164,7 @@ export const useMoodSurvey = () => {
         // 👇 2. Arahkan langsung ke dashboard, BUKAN ke "/auth"
         showToast("✓ Survei selesai! Masuk ke aplikasi...", "success");
         setTimeout(() => {
-          router.replace("/dashboard/home"); // Sesuaikan dengan rute dashboard utama kamu
+          router.replace("/auth"); // Sesuaikan dengan rute dashboard utama kamu
         }, 1500);
       } catch (error: any) {
         console.error("Survey Submit Error:", error);
@@ -174,9 +184,9 @@ export const useMoodSurvey = () => {
     isLoading,
     toastMessage,
     scrollViewRef,
-    moodInfo: MOOD_SECTIONS[currentStep],
-    moodData: responses.moods[MOOD_SECTIONS[currentStep].key],
-    totalSteps: MOOD_SECTIONS.length,
+    moodInfo,
+    moodData,
+    totalSteps,
     menuOptions,
     isLoadingOptions,
     handleMoodChange,
