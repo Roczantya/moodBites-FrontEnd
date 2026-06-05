@@ -1,13 +1,14 @@
 import { FLAVORS, MOOD_SECTIONS } from "@/constants/mood";
 import { DataType, MoodKey, Responses } from "@/constants/surveystate";
 import storageService from "@/services/storageService";
+import { surveyService } from "@/services/surveyService";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { ScrollView } from "react-native";
 
 export const useMoodSurvey = () => {
   const params = useLocalSearchParams();
-  const routeUserId = params.userId as string;
+  const fromLogin = params.fromLogin as string; // ✅ tambah ini
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState({
@@ -15,12 +16,11 @@ export const useMoodSurvey = () => {
     message: "",
     type: "error", // default-nya error
   });
-  const [menuOptions, setMenuOptions] = useState<string[]>([]);
-  const [isLoadingOptions, setIsLoadingOptions] = useState(false);
-  // Ref untuk ScrollView & Timer
+  // const [menuOptions, setMenuOptions] = useState<string[]>([]);
+  // const [isLoadingOptions, setIsLoadingOptions] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const mood = MOOD_SECTIONS[currentStep].key.toLowerCase();
+  // const mood = MOOD_SECTIONS[currentStep].key.toLowerCase();
   const [responses, setResponses] = useState<Responses>({
     moods: {
       sad: { desire: {}, intensity: {}, categories: [] },
@@ -89,9 +89,10 @@ export const useMoodSurvey = () => {
     (((currentStep + 1) / totalSteps) * 100).toFixed(0) + "%";
 
   const validateAndProceed = async (isSubmit: boolean = false) => {
+    if (isLoading) return; // ✅ guard double-tap
+
     if (!moodData) return;
 
-    // Validasi: Semua flavor harus dipilih (tidak boleh 0)
     const isDesireFilled = FLAVORS.every(
       (f) => moodData.desire[f] !== undefined && moodData.desire[f] > 0,
     );
@@ -107,19 +108,26 @@ export const useMoodSurvey = () => {
       );
       return;
     }
+
     if (isSubmit) {
       setIsLoading(true);
       try {
-        // await surveyService.submitMoodSurvey(responses);
-
-        // 👇 1. Simpan status survey ke local storage
+        await surveyService.submitMoodSurvey(responses);
         await storageService.saveSurveyDone();
 
-        // 👇 2. Arahkan langsung ke dashboard, BUKAN ke "/auth"
-        showToast("✓ Survei selesai! Masuk ke aplikasi...", "success");
-        setTimeout(() => {
-          router.replace("/auth"); // Sesuaikan dengan rute dashboard utama kamu
-        }, 1500);
+        if (fromLogin === "true") {
+          // ✅ Ganti authToken dengan loginToken yang sudah disimpan
+          const loginToken = await storageService.getLoginToken();
+          if (loginToken) {
+            await storageService.saveToken(loginToken); // timpa authToken dengan token login
+          }
+          showToast("✓ Survei selesai! Masuk ke Hearth...", "success");
+          setTimeout(() => router.replace("/dashboard/home"), 1500);
+        } else {
+          // Dari OTP — ke login dulu untuk dapat token login
+          showToast("✓ Survei selesai! Silakan login...", "success");
+          setTimeout(() => router.replace("/auth"), 1500);
+        }
       } catch (error: any) {
         console.error("Survey Submit Error:", error);
         showToast(error.message || "Gagal mengirim data survei 😢", "error");
@@ -141,8 +149,6 @@ export const useMoodSurvey = () => {
     moodInfo,
     moodData,
     totalSteps,
-    menuOptions,
-    isLoadingOptions,
     handleMoodChange,
     validateAndProceed,
     progressPercentage,

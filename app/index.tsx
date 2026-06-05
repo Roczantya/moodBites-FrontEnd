@@ -35,31 +35,31 @@ export default function Index() {
     const checkAppState = async () => {
       try {
         const onboardingDone = await storageService.getOnboardingDone();
-        const userId = await storageService.getUserId();
+        const token = await storageService.getToken();
         const isSurveyDone = await storageService.getSurveyDone();
 
-        // Sembunyikan Splash Screen karena loading pengecekan data sudah selesai
         await SplashScreen.hideAsync();
 
         if (onboardingDone) {
-          if (userId) {
+          if (token) {
             if (isSurveyDone === "true") {
               router.replace("/dashboard/home");
             } else {
-              router.replace("/auth/firstsurvey");
+              router.replace({
+                pathname: "/auth/firstsurvey",
+                params: { fromLogin: "true" }, // ✅ token sudah ada, setelah survey langsung dashboard
+              });
             }
             return;
           }
-
           router.replace("/auth");
           return;
         }
 
-        // Jika belum onboarding, matikan flag checking untuk merender halaman Onboarding
         setCheckingSession(false);
       } catch (error) {
         console.error("Gagal mengecek App State:", error);
-        await SplashScreen.hideAsync(); // Pastikan tetap di-hide meski error
+        await SplashScreen.hideAsync();
         setCheckingSession(false);
       }
     };

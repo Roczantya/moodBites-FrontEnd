@@ -25,12 +25,6 @@ const authService = {
     try {
       const response = await apiClient.post("/auth/register", data);
 
-      const logSafeData = {
-        ...data,
-        password: "********", // Password disensor di console log
-      };
-      console.log("Mencoba login dengan data:", logSafeData);
-
       return response.data;
     } catch (error: any) {
       throw error;
@@ -38,9 +32,7 @@ const authService = {
   },
   login: async (data: LoginPayload) => {
     try {
-      console.log("LOGIN REQUEST BODY:", JSON.stringify(data, null, 2));
       const response = await apiClient.post("/auth/login", data);
-      console.log("LOGIN RESPONSE:", JSON.stringify(response.data, null, 2));
       return response.data; // Biasanya mengembalikan token (JWT) & data user
     } catch (error: any) {
       throw error;

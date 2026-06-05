@@ -31,8 +31,6 @@ export default function MoodSurveyScreen() {
     progressPercentage,
     handleMoodChange,
     validateAndProceed,
-    menuOptions, // ← tambah
-    isLoadingOptions,
   } = useMoodSurvey();
 
   // Handle jika data mood hilang / error state
