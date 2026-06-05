@@ -13,8 +13,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import OnboardingItem from "@/components/onboarding/onboardingItem";
 import OnboardingPagination from "@/components/onboarding/onboardpagination";
+import { Colors } from "@/constants/colors";
 import { onboardingData } from "@/constants/onBoarding";
 import { useThemeFonts } from "@/hooks/useThemeFonts";
+import authService from "@/services/authService";
 import storageService from "@/services/storageService";
 
 // Menahan splash screen sampai pengecekan sesi selesai
@@ -42,12 +44,25 @@ export default function Index() {
 
         if (onboardingDone) {
           if (token) {
+            try {
+              await authService.checkToken();
+              console.log("Token valid, lanjut ke dashboard");
+            } catch (error: any) {
+              if (error.statusCode === 401) {
+                await storageService.clearAllSession();
+                router.replace("/auth");
+                return;
+              }
+              console.error("Error saat cek token:", error);
+              router.replace("/auth");
+              return;
+            }
             if (isSurveyDone === "true") {
               router.replace("/dashboard/home");
             } else {
               router.replace({
                 pathname: "/auth/firstsurvey",
-                params: { fromLogin: "true" }, // ✅ token sudah ada, setelah survey langsung dashboard
+                params: { fromLogin: "true" },
               });
             }
             return;
@@ -138,7 +153,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FDF6ED",
+    backgroundColor: Colors.primary,
   },
   footer: {
     position: "absolute",

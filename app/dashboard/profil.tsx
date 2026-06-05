@@ -17,13 +17,10 @@ export default function ProfileScreen() {
       try {
         setIsLoading(true);
         const data = await authService.getProfile();
-
-        // ✅ Kalau backend tidak return name, ambil dari storage
         if (!data?.name) {
           const savedName = await storageService.getName();
           data.name = savedName ?? "Pengguna";
         }
-
         setUserData(data);
       } catch (error) {
         const savedName = await storageService.getName();
@@ -51,12 +48,17 @@ export default function ProfileScreen() {
     setSignOutModalVisible(false);
     try {
       await authService.logout();
-      await storageService.clearAllSession(); // ✅ hapus semua sekaligus pakai multiRemove
-      router.replace("/");
+      await storageService.clearAllSession();
+
+      // 👇 TAMBAHKAN SIDAK DI SINI
+      const sisaToken = await storageService.getToken();
+      console.log("Cek token setelah dihapus:", sisaToken);
+
+      router.replace("/auth");
     } catch (err) {
       console.log("Gagal memanggil API logout:", err);
-      await storageService.clearAllSession(); // ✅ tetap hapus meski API error
-      router.replace("/");
+      await storageService.clearAllSession();
+      router.replace("/auth");
     }
   };
 

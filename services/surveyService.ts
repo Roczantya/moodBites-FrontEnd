@@ -14,21 +14,3 @@ export const surveyService = {
     return response.data;
   },
 };
-
-// Tambahkan userId di sini sebagai parameter fetch rekomendasi menu tapi tidak jadi
-// getRecommendations: async (mood: string, userId: string | number) => {
-//   try {
-//     console.log(`[API] Mencoba fetch eksternal untuk mood: ${mood}`);
-//     const response = await moodbitesExternalClient.get(
-//       `/recommend-external/${mood}/${userId}`,
-//     );
-//     return response.data ?? [];
-//   } catch (error: any) {
-//     console.error(
-//       `[API] Gagal fetch rekomendasi untuk mood: ${mood}`,
-//       console.error(error),
-//       error.message,
-//     );
-//     throw error;
-//   }
-// },
