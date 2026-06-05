@@ -1,41 +1,52 @@
 import authService from "@/services/authService";
 import storageService from "@/services/storageService";
 import { Stack, router } from "expo-router";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 export default function DashboardLayout() {
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
   useEffect(() => {
-    const verifyTokenDiDashboard = async () => {
+    const verifyToken = async () => {
       try {
-        // Panggil satpam API untuk cek token
         await authService.checkToken();
-        console.log(
-          "🛡️ [DASHBOARD GUARD]: Token valid! Selamat datang di area Dashboard.",
-        );
+        console.log("🛡️ [DASHBOARD GUARD]: Token valid!");
       } catch (error: any) {
-        // Kalau error 401 (Token Expired / Tidak Valid)
         if (error.statusCode === 401) {
           console.log(
-            "🚨 [DASHBOARD GUARD]: Token Expired! Menendang user ke Login...",
+            "🚨 [DASHBOARD GUARD]: Token Expired! Redirect ke Login...",
           );
+
+          // Hentikan interval dulu biar gak dobel redirect
+          if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+          }
+
           await storageService.clearAllSession();
           router.replace("/auth");
         } else {
           console.log("⚠️ [DASHBOARD GUARD]: Gangguan koneksi saat cek token.");
-          // Opsional: Kamu bisa memunculkan toast error koneksi di sini
         }
       }
     };
 
-    verifyTokenDiDashboard();
-  }, []); // <-- Array kosong agar hanya dicek sekali saat Dashboard pertama kali dibuka
+    verifyToken();
+
+    // Polling setiap 20 detik
+    intervalRef.current = setInterval(verifyToken, 20_000);
+
+    // Cleanup saat komponen di-unmount
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, []);
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false, // Menghilangkan bar putih di atas
-      }}
-    >
+    <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="home" options={{ animation: "fade" }} />
       <Stack.Screen name="nfc" options={{ animation: "fade" }} />
       <Stack.Screen name="profil" options={{ animation: "fade" }} />
