@@ -1,7 +1,5 @@
 import apiClient from "./apiClient";
 
-// --- 1. DEFINISIKAN INTERFACE PAYLOAD (Biar TypeScript-nya Pro) ---
-
 export interface RegisterPayload {
   name: string;
   email: string;

@@ -57,6 +57,7 @@ moodbitesExternalClient.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
+// ─── INTERCEPTOR RESPONSE — CLIENT UTAMA ───
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -65,6 +66,7 @@ apiClient.interceptors.response.use(
     let statusCode = 0;
 
     if (error.response) {
+      // ✅ Server merespons dengan status error (4xx, 5xx)
       statusCode = error.response.status;
       const backendMessage = [400, 409, 422].includes(statusCode)
         ? error.response.data?.message
@@ -114,12 +116,14 @@ apiClient.interceptors.response.use(
           customErrorMessage =
             "Terjadi kesalahan yang tidak diketahui. Coba lagi.";
       }
+    } else if (error.code === "ECONNABORTED" || error.code === "ETIMEDOUT") {
+      customErrorMessage =
+        "Koneksi terlalu lama. Periksa koneksimu dan coba lagi.";
     } else if (error.request) {
       customErrorMessage =
         "Gagal terhubung ke server. Periksa koneksi internetmu.";
-    } else if (error.code === "ECONNABORTED") {
-      customErrorMessage =
-        "Koneksi terlalu lama. Periksa koneksimu dan coba lagi.";
+    } else {
+      customErrorMessage = "Terjadi kesalahan yang tidak diketahui. Coba lagi.";
     }
 
     return Promise.reject({

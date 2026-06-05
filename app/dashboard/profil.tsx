@@ -2,7 +2,6 @@ import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 
-// Services
 import ProfileUI, { UserProfileData } from "@/components/profil/profileScreen";
 import { Colors } from "@/constants/colors";
 import authService from "@/services/authService";
@@ -11,8 +10,6 @@ import storageService from "@/services/storageService";
 export default function ProfileScreen() {
   const [userData, setUserData] = useState<UserProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  // STATE BARU UNTUK KONTROL POP-UP UI
   const [isSignOutModalVisible, setSignOutModalVisible] = useState(false);
 
   useEffect(() => {
@@ -21,52 +18,44 @@ export default function ProfileScreen() {
         setIsLoading(true);
         const data = await authService.getProfile();
 
+        // ✅ Kalau backend tidak return name, ambil dari storage
         if (!data?.name) {
           const savedName = await storageService.getName();
           data.name = savedName ?? "Pengguna";
         }
 
         setUserData(data);
+      } catch (error) {
         const savedName = await storageService.getName();
         setUserData({ name: savedName ?? "Pengguna" } as UserProfileData);
-      } catch (error) {
-        console.log("Gagal memuat profil:", error);
       } finally {
-        setIsLoading(false);
+        setIsLoading(false); // ✅ selalu jalan, loading pasti berhenti
       }
     };
     fetchProfileData();
   }, []);
 
-  const handleMenuPress = (menuName: string) => {
-    console.log(`Navigating to: ${menuName}`);
-  };
+  const handleMenuPress = (menuName: string) => {};
 
-  const handleEditProfile = () => {
-    console.log("Membuka modal edit profile...");
-  };
+  const handleEditProfile = () => {};
 
-  // 3 FUNGSI BARU UNTUK MENGATUR POP-UP SIGN OUT
   const handleSignOutPress = () => {
-    setSignOutModalVisible(true); // Membuka pop-up
+    setSignOutModalVisible(true);
   };
 
   const handleCancelSignOut = () => {
-    setSignOutModalVisible(false); // Menutup pop-up (batal)
+    setSignOutModalVisible(false);
   };
 
   const handleConfirmSignOut = async () => {
-    setSignOutModalVisible(false); // Tutup pop-up dulu
+    setSignOutModalVisible(false);
     try {
-      console.log("Menghubungi server untuk logout...");
       await authService.logout();
-      await storageService.clearToken();
-      await storageService.clearUserId();
+      await storageService.clearAllSession(); // ✅ hapus semua sekaligus pakai multiRemove
       router.replace("/");
     } catch (err) {
       console.log("Gagal memanggil API logout:", err);
-      await storageService.clearToken();
-      await storageService.clearUserId();
+      await storageService.clearAllSession(); // ✅ tetap hapus meski API error
       router.replace("/");
     }
   };
@@ -91,7 +80,6 @@ export default function ProfileScreen() {
       userData={userData}
       onMenuPress={handleMenuPress}
       onEditProfile={handleEditProfile}
-      // Passing props pop-up ke UI
       onSignOutPress={handleSignOutPress}
       isSignOutModalVisible={isSignOutModalVisible}
       onCancelSignOut={handleCancelSignOut}
