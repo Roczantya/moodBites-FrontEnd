@@ -1,4 +1,5 @@
 import axios from "axios";
+import { router } from "expo-router";
 import storageService from "./storageService";
 
 const BASE_URL = "https://api.moodbites.qzz.io/api/v1";
@@ -9,16 +10,6 @@ const apiClient = axios.create({
   timeout: 10000,
   headers: {
     Accept: "application/json",
-  },
-});
-
-// ─── 2. CLIENT EKSTERNAL (Untuk IP Baru) ───
-// Jangan lupa di-export agar bisa dipanggil di file service
-export const moodbitesExternalClient = axios.create({
-  baseURL: "http://103.185.52.14:8067", // Pastikan IP sudah diganti
-  timeout: 5000,
-  headers: {
-    Accept: "application/json", // Tambahkan header standar
   },
 });
 
@@ -39,24 +30,6 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-moodbitesExternalClient.interceptors.request.use(
-  async (config) => {
-    const token = await storageService.getToken();
-
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
-    }
-
-    // Ini biar ketahuan di console URL lengkap & headernya
-    console.log("=== REQUEST EXTERNAL ===");
-    console.log("URL LENGKAP:", `${config.baseURL}${config.url}`);
-    console.log("HASIL TOKEN:", token ? "Ada" : "Kosong");
-
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
-
 // ─── INTERCEPTOR RESPONSE — CLIENT UTAMA ───
 apiClient.interceptors.response.use(
   (response) => response,
@@ -66,7 +39,6 @@ apiClient.interceptors.response.use(
     let statusCode = 0;
 
     if (error.response) {
-      // ✅ Server merespons dengan status error (4xx, 5xx)
       statusCode = error.response.status;
       const backendMessage = [400, 409, 422].includes(statusCode)
         ? error.response.data?.message
@@ -81,6 +53,9 @@ apiClient.interceptors.response.use(
         case 401:
           customErrorMessage =
             "Sesi kamu telah berakhir. Silakan login kembali.";
+          storageService.clearAllSession().then(() => {
+            router.replace("/auth");
+          });
           break;
         case 403:
           customErrorMessage = "Kamu tidak memiliki akses untuk melakukan ini.";

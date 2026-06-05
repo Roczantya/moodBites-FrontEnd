@@ -39,6 +39,14 @@ const storageService = {
     }
   },
 
+  getTokenSavedAt: async () => {
+    try {
+      return await AsyncStorage.getItem("tokenSavedAt");
+    } catch (error) {
+      console.log("ERROR GET TOKEN SAVED AT:", error);
+      return null;
+    }
+  },
   // ─── USER ID ───
   saveUserId: async (userId: string) => {
     try {
@@ -128,6 +136,7 @@ const storageService = {
         "userId",
         "surveyDone",
         "userName",
+        "tokenSavedAt", // ✅ tambah ini
       ]);
     } catch (error) {
       console.log("ERROR CLEAR ALL SESSION:", error);

@@ -30,7 +30,6 @@ export const useMoodSurvey = () => {
     },
   });
 
-  // Auto-scroll ke atas setiap ganti step
   useEffect(() => {
     const timer = setTimeout(() => {
       scrollViewRef.current?.scrollTo({ y: 0, animated: true });
@@ -80,7 +79,6 @@ export const useMoodSurvey = () => {
     });
   };
 
-  // Helper Variables
   const moodInfo = MOOD_SECTIONS[currentStep];
   const currentMoodKey = moodInfo.key.toLowerCase() as MoodKey;
   const moodData = responses.moods[currentMoodKey];
@@ -89,7 +87,7 @@ export const useMoodSurvey = () => {
     (((currentStep + 1) / totalSteps) * 100).toFixed(0) + "%";
 
   const validateAndProceed = async (isSubmit: boolean = false) => {
-    if (isLoading) return; // ✅ guard double-tap
+    if (isLoading) return;
 
     if (!moodData) return;
 
@@ -115,7 +113,9 @@ export const useMoodSurvey = () => {
         await surveyService.submitMoodSurvey(responses);
         await storageService.saveSurveyDone();
 
-        if (fromLogin === "true") {
+        const token = await storageService.getToken();
+
+        if (token) {
           showToast("✓ Survei selesai! Masuk ke Hearth...", "success");
           setTimeout(() => router.replace("/dashboard/home"), 1500);
         } else {

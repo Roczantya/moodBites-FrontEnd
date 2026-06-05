@@ -22,7 +22,7 @@ export default function OTP() {
   const { email, loginId } = useLocalSearchParams();
 
   // 2. State Management
-  const [otp, setOtp] = useState(["", "", "", ""]); // Array untuk 6 digit OTP
+  const [otp, setOtp] = useState(["", "", "", ""]);
   const [isVerifying, setIsVerifying] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const inputRefs = useRef<Array<TextInput | null>>([]);

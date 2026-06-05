@@ -31,6 +31,7 @@ const authService = {
   login: async (data: LoginPayload) => {
     try {
       const response = await apiClient.post("/auth/login", data);
+      console.log("Login response:", response.data); // Debug log
       return response.data; // Biasanya mengembalikan token (JWT) & data user
     } catch (error: any) {
       throw error;
@@ -55,16 +56,36 @@ const authService = {
     }
   },
   getProfile: async () => {
-    const response = await apiClient.get("/auth/profile");
-    return response.data;
+    try {
+      const response = await apiClient.get("/auth/profile");
+      return response.data;
+    } catch (error: any) {
+      throw error;
+    }
   },
   updateProfile: async (data: { name: string }) => {
-    const response = await apiClient.patch("/auth/profile", data);
-    return response.data;
+    try {
+      const response = await apiClient.patch("/auth/profile", data);
+      return response.data;
+    } catch (error: any) {
+      throw error;
+    }
+  },
+  checkToken: async () => {
+    try {
+      const response = await apiClient.get("/auth/check");
+      return response.data;
+    } catch (error: any) {
+      throw error;
+    }
   },
   logout: async () => {
-    const response = await apiClient.post("/auth/logout");
-    return response.data;
+    try {
+      const response = await apiClient.post("/auth/logout");
+      return response.data;
+    } catch (error: any) {
+      throw error;
+    }
   },
 };
 
