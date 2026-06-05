@@ -67,8 +67,9 @@ const styles = StyleSheet.create({
     borderColor: Colors.creamBg,
   },
   userName: {
-    fontSize: 24,
+    fontSize: 18,
     color: Colors.textPrimary,
+    alignItems: "center",
     marginBottom: 6,
     fontFamily: "PlusJakartaSans-ExtraBold",
   },

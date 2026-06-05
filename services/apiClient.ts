@@ -51,11 +51,19 @@ apiClient.interceptors.response.use(
             "Data yang dikirim tidak sesuai. Coba periksa kembali.";
           break;
         case 401:
-          customErrorMessage =
-            "Sesi kamu telah berakhir. Silakan login kembali.";
-          storageService.clearAllSession().then(() => {
-            router.replace("/auth");
-          });
+          if (
+            error.config &&
+            error.config.url &&
+            error.config.url.includes("/auth")
+          ) {
+            customErrorMessage = backendMessage || "Email atau password salah.";
+          } else {
+            customErrorMessage =
+              "Sesi kamu telah berakhir. Silakan login kembali.";
+            storageService.clearAllSession().then(() => {
+              router.replace("/auth");
+            });
+          }
           break;
         case 403:
           customErrorMessage = "Kamu tidak memiliki akses untuk melakukan ini.";

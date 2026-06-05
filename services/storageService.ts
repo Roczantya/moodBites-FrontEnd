@@ -130,7 +130,6 @@ const storageService = {
   // ─── CLEAR ALL (logout) ───
   clearAllSession: async () => {
     try {
-      // ✅ onboardingDone sengaja tidak dihapus biar tidak muncul lagi pas relogin
       await AsyncStorage.multiRemove([
         "authToken",
         "userId",
