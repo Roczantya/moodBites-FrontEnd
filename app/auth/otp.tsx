@@ -57,7 +57,6 @@ export default function OTP() {
     newOtp[index] = numericText;
     setOtp(newOtp);
 
-    // ✅ Hanya urus maju — HAPUS logika mundur dari sini
     if (numericText && index < 3) {
       inputRefs.current[index + 1]?.focus();
     }
@@ -66,12 +65,10 @@ export default function OTP() {
   const handleKeyPress = (e: any, index: number) => {
     if (e.nativeEvent.key === "Backspace") {
       if (otp[index]) {
-        // ✅ Kotak berisi → hapus isinya
         const newOtp = [...otp];
         newOtp[index] = "";
         setOtp(newOtp);
       } else if (index > 0) {
-        // ✅ Kotak sudah kosong → mundur ke kotak sebelumnya
         inputRefs.current[index - 1]?.focus();
       }
     }
@@ -89,11 +86,8 @@ export default function OTP() {
         code: otpCode,
       });
 
-      console.log("VERIFY RESPONSE:", JSON.stringify(response, null, 2)); // ← lihat ini
-
       if (response?.userId) {
         await storageService.saveUserId(response.userId);
-        console.log("userId tersimpan:", response.userId); // ← konfirmasi tersimpan
       }
       if (response?.token) {
         // Sesuaikan 'token' dengan nama properti dari response API kamu
@@ -203,12 +197,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: "5%", // Gunakan persentase
     justifyContent: "center",
     alignItems: "center",
-    // Hindari marginTop negatif yang kaku seperti -50
-    // Gunakan proporsi layar jika perlu ruang lebih
     marginTop: Platform.OS === "ios" ? 0 : -20,
   },
   title: {
-    // Gunakan skala font yang dinamis jika ingin lebih pro
     fontSize: 28,
     fontFamily: "PlusJakartaSans-Bold",
     color: Colors.textPrimary,

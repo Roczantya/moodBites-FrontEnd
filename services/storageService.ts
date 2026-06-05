@@ -25,10 +25,32 @@ const storageService = {
       console.log("ERROR CLEAR USER ID:", error);
     }
   },
+  saveName: async (name: string) => {
+    try {
+      await AsyncStorage.setItem("name", name);
+    } catch (error) {
+      console.log("ERROR SAVE NAME:", error);
+    }
+  },
+
+  getName: async () => {
+    try {
+      return await AsyncStorage.getItem("name");
+    } catch (error) {
+      console.log("ERROR GET NAME:", error);
+      return null;
+    }
+  },
 
   clearAllSession: async () => {
     try {
-      const keys = ["userId", "authToken", "surveyDone"]; // onboardingDone sengaja gak dihapus biar gak muncul lagi pas relogin
+      const keys = [
+        "userId",
+        "authToken",
+        "surveyDone",
+        "userName",
+        "loginToken",
+      ];
       await AsyncStorage.multiRemove(keys);
       console.log("SEMUA SESSION BERHASIL DIHAPUS (LOGOUT SUCCESS)");
     } catch (error) {
@@ -92,6 +114,22 @@ const storageService = {
       await AsyncStorage.removeItem("authToken");
     } catch (error) {
       console.log("ERROR CLEAR TOKEN:", error);
+    }
+  },
+  saveLoginToken: async (token: string) => {
+    try {
+      await AsyncStorage.setItem("loginToken", token);
+    } catch (error) {
+      console.log("ERROR SAVE LOGIN TOKEN:", error);
+    }
+  },
+
+  getLoginToken: async () => {
+    try {
+      return await AsyncStorage.getItem("loginToken");
+    } catch (error) {
+      console.log("ERROR GET LOGIN TOKEN:", error);
+      return null;
     }
   },
 };

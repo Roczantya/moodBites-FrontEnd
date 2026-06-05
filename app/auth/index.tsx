@@ -81,35 +81,48 @@ export default function AuthScreen() {
 
     try {
       if (isLogin) {
-        // 1. PROSES LOGIN
-        await storageService.clearUserId(); // Bersihkan sisa ID lama di local storage
-
-        console.log("Proses Login...");
         const result = await authService.login({
           email,
           password,
           fcmToken: "dummy_fcm_123",
         });
-        console.log("LOGIN RESULT:", result);
 
-        // Simpan Token dan User ID yang baru didapat dari backend
-        if (result.token) {
-          await storageService.saveToken(result.token);
+        if (result.isFinishedForm === false) {
+          // ✅ Simpan token login terpisah — jangan timpa authToken (OTP token)
+          if (result.token) await storageService.saveLoginToken(result.token);
+          if (result.userId) await storageService.saveUserId(result.userId);
+
+          // ✅ Konfirmasi tersimpan
+          const savedId = await storageService.getUserId();
+          const savedToken = await storageService.getToken();
+          console.log("userId tersimpan:", savedId);
+          console.log("authToken (OTP) tersimpan:", savedToken);
+
+          setToast({
+            visible: true,
+            message: "✓ Selesaikan survei dulu ya!",
+            type: "success",
+          });
+          redirectTimer.current = setTimeout(() => {
+            router.replace({
+              pathname: "/auth/firstsurvey",
+              params: { fromLogin: "true" },
+            });
+          }, 1500);
+          return;
         }
-        if (result.userId) {
-          await storageService.saveUserId(result.userId);
-        }
+
+        // ✅ Survey sudah selesai — simpan token login sebagai authToken utama
+        if (result.token) await storageService.saveToken(result.token);
+        if (result.userId) await storageService.saveUserId(result.userId);
+        await storageService.saveSurveyDone();
 
         setIsLoading(false);
-
-        // Munculin Toast Sukses Login
         setToast({
           visible: true,
           message: "✓ Login Berhasil! Memuat Hearth...",
           type: "success",
         });
-
-        // Redirect ke Dashboard
         redirectTimer.current = setTimeout(() => {
           setToast((prev) => ({ ...prev, visible: false }));
           router.replace("/dashboard/home");
@@ -118,6 +131,7 @@ export default function AuthScreen() {
         // 2. PROSES REGISTER
         const payload = { name, email, password, fcmToken: "dummy_fcm_123" };
         const result = await authService.register(payload);
+        await storageService.saveName(name);
         setIsLoading(false);
 
         setToast({

@@ -20,7 +20,15 @@ export default function ProfileScreen() {
       try {
         setIsLoading(true);
         const data = await authService.getProfile();
+
+        if (!data?.name) {
+          const savedName = await storageService.getName();
+          data.name = savedName ?? "Pengguna";
+        }
+
         setUserData(data);
+        const savedName = await storageService.getName();
+        setUserData({ name: savedName ?? "Pengguna" } as UserProfileData);
       } catch (error) {
         console.log("Gagal memuat profil:", error);
       } finally {

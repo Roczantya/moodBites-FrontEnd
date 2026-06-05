@@ -31,13 +31,14 @@ apiClient.interceptors.request.use(
     console.log("URL:", config.url);
 
     if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+      config.headers["token"] = `${token}`;
     }
 
     return config;
   },
   (error) => Promise.reject(error),
 );
+
 moodbitesExternalClient.interceptors.request.use(
   async (config) => {
     const token = await storageService.getToken();
