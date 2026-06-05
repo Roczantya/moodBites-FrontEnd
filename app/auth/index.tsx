@@ -34,11 +34,9 @@ export default function AuthScreen() {
 
   const [errors, setErrors] = useState({ name: "", email: "", password: "" });
 
-  // Pake useRef untuk nge-track timer setTimeout biar aman dari memory leak
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const redirectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Bersihkan semua timer kalau komponen unmount (pindah halaman)
   useEffect(() => {
     return () => {
       if (toastTimer.current) clearTimeout(toastTimer.current);
@@ -72,7 +70,6 @@ export default function AuthScreen() {
 
   const handleSubmit = async () => {
     if (isLoading) return;
-
     if (!validate()) return;
 
     setIsLoading(true);
@@ -88,16 +85,22 @@ export default function AuthScreen() {
         });
 
         if (result.isFinishedForm === false) {
-          // ✅ Simpan token login terpisah — jangan timpa authToken (OTP token)
-          if (result.token) await storageService.saveLoginToken(result.token);
-          if (result.userId) await storageService.saveUserId(result.userId);
+          // ✅ Belum isi survey — simpan session sekaligus pakai multiSet
+          await storageService.saveSession(result.token, result.userId);
 
-          // ✅ Konfirmasi tersimpan
-          const savedId = await storageService.getUserId();
+          // ✅ Verifikasi token tersimpan sebelum redirect
           const savedToken = await storageService.getToken();
-          console.log("userId tersimpan:", savedId);
-          console.log("authToken (OTP) tersimpan:", savedToken);
+          if (!savedToken) {
+            setIsLoading(false);
+            setToast({
+              visible: true,
+              message: "✕ Gagal menyimpan sesi, coba lagi.",
+              type: "error",
+            });
+            return;
+          }
 
+          setIsLoading(false);
           setToast({
             visible: true,
             message: "✓ Selesaikan survei dulu ya!",
@@ -112,10 +115,21 @@ export default function AuthScreen() {
           return;
         }
 
-        // ✅ Survey sudah selesai — simpan token login sebagai authToken utama
-        if (result.token) await storageService.saveToken(result.token);
-        if (result.userId) await storageService.saveUserId(result.userId);
+        // ✅ Survey sudah selesai — simpan session sekaligus
+        await storageService.saveSession(result.token, result.userId);
         await storageService.saveSurveyDone();
+
+        // ✅ Verifikasi token tersimpan sebelum redirect
+        const savedToken = await storageService.getToken();
+        if (!savedToken) {
+          setIsLoading(false);
+          setToast({
+            visible: true,
+            message: "✕ Gagal menyimpan sesi, coba lagi.",
+            type: "error",
+          });
+          return;
+        }
 
         setIsLoading(false);
         setToast({
@@ -128,24 +142,24 @@ export default function AuthScreen() {
           router.replace("/dashboard/home");
         }, 1500);
       } else {
-        // 2. PROSES REGISTER
+        // PROSES REGISTER
         const payload = { name, email, password, fcmToken: "dummy_fcm_123" };
         const result = await authService.register(payload);
-        await storageService.saveName(name);
-        setIsLoading(false);
 
+        // ✅ Simpan nama untuk fallback profil
+        await storageService.saveName(name);
+
+        setIsLoading(false);
         setToast({
           visible: true,
           message: "✓ Registrasi Berhasil! Kode OTP sedang dikirim...",
           type: "success",
         });
 
-        // Redirect ke OTP
         redirectTimer.current = setTimeout(() => {
           setToast((prev) => ({ ...prev, visible: false }));
 
           const sessionId = result?.userId ?? result?.loginId ?? "";
-
           if (!sessionId) {
             setToast({
               visible: true,
@@ -162,10 +176,7 @@ export default function AuthScreen() {
         }, 3000);
       }
     } catch (error: any) {
-      // 3. TANGKAP ERROR (UNTUK LOGIN & REGISTER)
-      console.log("AUTH ERROR:", error);
       setIsLoading(false);
-
       setToast({
         visible: true,
         message: `✕ ${error?.message || "Terjadi kesalahan sistem."}`,
@@ -185,7 +196,6 @@ export default function AuthScreen() {
     >
       <StatusBar translucent={true} backgroundColor="black" />
 
-      {/* UI TOAST DINAMIS */}
       {toast.visible && (
         <View
           style={[
@@ -221,7 +231,7 @@ export default function AuthScreen() {
             onToggle={(val) => {
               setIsLogin(val);
               setErrors({ name: "", email: "", password: "" });
-              setToast({ ...toast, visible: false }); // Sembunyiin toast kalau user pindah tab
+              setToast({ ...toast, visible: false });
               if (toastTimer.current) clearTimeout(toastTimer.current);
             }}
           />

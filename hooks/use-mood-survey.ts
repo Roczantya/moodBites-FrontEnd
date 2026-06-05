@@ -116,20 +116,13 @@ export const useMoodSurvey = () => {
         await storageService.saveSurveyDone();
 
         if (fromLogin === "true") {
-          // ✅ Ganti authToken dengan loginToken yang sudah disimpan
-          const loginToken = await storageService.getLoginToken();
-          if (loginToken) {
-            await storageService.saveToken(loginToken); // timpa authToken dengan token login
-          }
           showToast("✓ Survei selesai! Masuk ke Hearth...", "success");
           setTimeout(() => router.replace("/dashboard/home"), 1500);
         } else {
-          // Dari OTP — ke login dulu untuk dapat token login
           showToast("✓ Survei selesai! Silakan login...", "success");
           setTimeout(() => router.replace("/auth"), 1500);
         }
       } catch (error: any) {
-        console.error("Survey Submit Error:", error);
         showToast(error.message || "Gagal mengirim data survei 😢", "error");
       } finally {
         setIsLoading(false);
