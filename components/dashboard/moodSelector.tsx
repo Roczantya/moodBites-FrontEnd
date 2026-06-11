@@ -2,81 +2,97 @@ import React from "react";
 import {
   View,
   Text,
-  StyleSheet,
-  ScrollView,
   TouchableOpacity,
+  StyleSheet,
 } from "react-native";
-import { Feather } from "@expo/vector-icons";
-import { Colors } from "../../constants/colors";
+import { Colors } from "@/constants/colors";
+import { Mood, MoodOption } from "@/types/recommendation";
 
-export default function MoodSelector() {
+const MOODS: MoodOption[] = [
+  { label: "Happy", value: "happy", emoji: "😊", color: "#FFD166" },
+  { label: "Sad", value: "sad", emoji: "😢", color: "#74B9FF" },
+  { label: "Neutral", value: "neutral", emoji: "😐", color: "#A29BFE" },
+  { label: "Angry", value: "angry", emoji: "😠", color: "#FF7675" },
+];
+
+interface MoodSelectorProps {
+  selectedMood: Mood | null;
+  onMoodSelect: (mood: Mood) => void;
+  disabled?: boolean;
+}
+
+export default function MoodSelector({
+  selectedMood,
+  onMoodSelect,
+  disabled = false,
+}: MoodSelectorProps) {
   return (
     <View style={styles.container}>
-      <Text style={styles.subtitle}>TODAY'S VIBE</Text>
-      <Text style={styles.title}>Bagaimana{"\n"}perasaanmu hari ini?</Text>
-
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.chipContainer}
-      >
-        {/* Active Chip */}
-        <TouchableOpacity style={[styles.chip, styles.chipActive]}>
-          <Feather name="smile" size={18} color={Colors.white} />
-          <Text style={[styles.chipText, { color: Colors.white }]}>
-            Energetic
-          </Text>
-        </TouchableOpacity>
-
-        {/* Inactive Chip */}
-        <TouchableOpacity style={styles.chip}>
-          <Feather name="meh" size={18} color={Colors.optionalAccent} />
-          <Text style={styles.chipText}>Stressed</Text>
-        </TouchableOpacity>
-      </ScrollView>
+      <Text style={styles.title}>Kamu lagi gimana hari ini?</Text>
+      <View style={styles.moodRow}>
+        {MOODS.map((mood) => {
+          const isSelected = selectedMood === mood.value;
+          return (
+            <TouchableOpacity
+              key={mood.value}
+              style={[
+                styles.moodBtn,
+                { borderColor: mood.color },
+                isSelected && { backgroundColor: mood.color },
+              ]}
+              onPress={() => !disabled && onMoodSelect(mood.value)}
+              activeOpacity={0.75}
+            >
+              <Text style={styles.emoji}>{mood.emoji}</Text>
+              <Text
+                style={[
+                  styles.moodLabel,
+                  isSelected && styles.moodLabelSelected,
+                ]}
+              >
+                {mood.label}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 24,
-    marginBottom: 30,
-  },
-  subtitle: {
-    fontSize: 12,
-    fontFamily: "PlusJakartaSans-Bold",
-    color: Colors.optionalAccent,
-    letterSpacing: 1,
-    marginTop: 10,
-    marginBottom: 8,
+    marginVertical: 16,
   },
   title: {
-    fontSize: 32,
-    color: Colors.textPrimary,
-    fontFamily: "PlusJakartaSans-ExtraBold",
-    lineHeight: 38,
-    marginBottom: 20,
-  },
-  chipContainer: {
-    flexDirection: "row",
-  },
-  chip: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: Colors.secondary, // 20% opacity
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 25,
-    marginRight: 12,
-  },
-  chipActive: {
-    backgroundColor: Colors.accent,
-  },
-  chipText: {
-    marginLeft: 8,
-    fontSize: 12,
+    fontSize: 16,
     fontFamily: "PlusJakartaSans-Bold",
-    color: Colors.textPrimary,
+    color: "#351213",
+    marginBottom: 12,
+  },
+  moodRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 8,
+  },
+  moodBtn: {
+    flex: 1,
+    alignItems: "center",
+    paddingVertical: 12,
+    borderRadius: 14,
+    borderWidth: 2,
+    backgroundColor: Colors.white,
+  },
+  emoji: {
+    fontSize: 24,
+    marginBottom: 4,
+  },
+  moodLabel: {
+    fontSize: 11,
+    fontFamily: "PlusJakartaSans-Bold",
+    color: "#4A2411",
+  },
+  moodLabelSelected: {
+    color: "#351213",
   },
 });
