@@ -1,62 +1,124 @@
 import React from "react";
 import {
-  View,
-  Text,
-  ScrollView,
+  FlatList,
+  Image,
+  ListRenderItem,
   StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
 } from "react-native";
-import { MenuItem } from "@/types/recommendation";
-import FoodCard from "@/components/dashboard/foodCard";
+import { Colors } from "../../constants/colors";
+import { FOOD_DATA, FoodItem } from "../../constants/food_item";
+import Header from "./header";
+import MoodSelector from "./moodSelector";
+export default function RecommendationList() {
+  const { width } = useWindowDimensions();
 
-interface RecommendedListProps {
-  menuList: MenuItem[];
-}
+  // Logika Kolom
+  const numColumns = width > 768 ? 4 : width > 480 ? 3 : 2;
+  const paddingHorizontal = 24;
+  const gap = 16;
 
-export default function RecommendedList({ menuList }: RecommendedListProps) {
-  if (menuList.length === 0) return null;
+  // Hitung lebar kartu agar pas dengan gap
+  const cardWidth =
+    (width - paddingHorizontal * 2 - gap * (numColumns - 1)) / numColumns;
+
+  // Komponen Header (Judul & Subtitle)
+  const renderHeader = () => (
+    <View>
+      <Header title="MoodBites" />
+      <MoodSelector />
+      <View style={styles.sectionTitleWrapper}>
+        <Text style={styles.title}>
+          Rekomendasi makanan berdasarkan{"\n"}moodmu saat ini
+        </Text>
+        <Text style={styles.subtitle}>
+          Isi tenagamu dengan berbagai nutrisi{"\n"}dari makanan kantin
+        </Text>
+      </View>
+    </View>
+  );
+
+  // Komponen Item Satuan
+  const renderItem: ListRenderItem<FoodItem> = ({ item }) => (
+    <View style={[styles.card, { width: cardWidth, marginBottom: gap }]}>
+      <Image source={{ uri: item.image }} style={styles.image} />
+      <Text style={styles.cardTitle} numberOfLines={1}>
+        {item.name}
+      </Text>
+      <View style={[styles.tag, { backgroundColor: item.tagColor }]}>
+        <Text style={[styles.tagText, { color: item.tagTextColor }]}>
+          {item.moodTag}
+        </Text>
+      </View>
+    </View>
+  );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Rekomendasi untukmu</Text>
-        <Text style={styles.count}>{menuList.length} menu</Text>
-      </View>
-
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.listContent}
-      >
-        {menuList.map((item) => (
-          <FoodCard key={String(item.No)} item={item} />
-        ))}
-      </ScrollView>
-    </View>
+    <FlatList
+      data={FOOD_DATA}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.id}
+      numColumns={numColumns}
+      key={numColumns}
+      ListHeaderComponent={renderHeader}
+      contentContainerStyle={styles.listContent}
+      columnWrapperStyle={{ gap, justifyContent: "center" }}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 4,
+  listContent: {
+    paddingBottom: 100, // Ruang untuk bottom nav
   },
   header: {
     flexDirection: "row",
-    alignItems: "baseline",
     justifyContent: "space-between",
-    marginBottom: 12,
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  sectionTitleWrapper: {
+    paddingHorizontal: 24, // ✅ Judul & subtitle dapat padding sendiri
+    marginBottom: 16,
   },
   title: {
-    fontSize: 17,
+    fontSize: 18,
     fontFamily: "PlusJakartaSans-ExtraBold",
-    color: "#351213",
+    color: Colors.optionalAccent,
   },
-  count: {
-    fontSize: 12,
-    fontFamily: "PlusJakartaSans-Regular",
-    color: "#6B4226",
+  subtitle: {
+    fontSize: 14,
+    color: Colors.textPrimary,
+    marginTop: 8,
+    marginBottom: 20,
   },
-  listContent: {
-    paddingBottom: 4,
-    paddingRight: 4,
+  card: {
+    backgroundColor: "#FFEDD5",
+    borderRadius: 20,
+    padding: 12,
+  },
+  image: {
+    width: "100%",
+    aspectRatio: 1,
+    borderRadius: 100,
+    marginBottom: 12,
+  },
+  cardTitle: {
+    fontSize: 14,
+    fontFamily: "PlusJakartaSans-SemiBold",
+    color: Colors.optionalAccent,
+    marginBottom: 8,
+  },
+  tag: {
+    alignSelf: "flex-start",
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+  },
+  tagText: {
+    fontSize: 10,
+    fontFamily: "PlusJakartaSans-Bold",
   },
 });

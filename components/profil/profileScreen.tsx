@@ -23,13 +23,13 @@ export interface UserProfileData {
   bio: string;
   healthFilters: string[];
   commonMoods: string[];
-  userId: string; // ✅ Tambahan
 }
 
 interface ProfileUIProps {
   userData: UserProfileData | null;
   onMenuPress: (menuName: string) => void;
   onEditProfile: () => void;
+  // Props baru untuk Modal Sign Out
   onSignOutPress: () => void;
   isSignOutModalVisible: boolean;
   onCancelSignOut: () => void;
@@ -67,6 +67,32 @@ export default function ProfileUI({
             onEditProfile={onEditProfile}
           />
 
+          <InfoCard
+            title="HEALTH & SAFETY"
+            icon={
+              <MaterialCommunityIcons
+                name="bandage"
+                size={18}
+                color="#C87A7A"
+              />
+            }
+            titleColor="#C87A7A"
+            backgroundColor={Colors.optional}
+            pills={userData?.healthFilters || []}
+            description="Personalized safety filters are active for all mood-based recommendations."
+          />
+
+          <InfoCard
+            title="COMMON MOODS"
+            icon={<Feather name="smile" size={18} color="#FF9B82" />}
+            titleColor={Colors.accent}
+            backgroundColor={Colors.third + "66"}
+            pills={userData?.commonMoods || []}
+            pillBgColor={Colors.white}
+            pillTextColor={Colors.accent}
+            description="You frequently seek comfort foods during high-stress peaks."
+          />
+
           <View style={styles.harmonyHeader}>
             <Text style={styles.harmonyTitle}>Account Harmony</Text>
           </View>
@@ -91,17 +117,26 @@ export default function ProfileUI({
             }
             backgroundColor={Colors.secondary}
             chevronColor="#C87A7A"
-            onPress={() =>
-              router.push({
-                pathname: "/auth/firstsurvey",
-                params: { userId: userData?.userId ?? "" }, // ✅ Fix
-              })
+            onPress={() => onMenuPress("Survey")}
+          />
+
+          <MenuItem
+            title="History Preferences"
+            subtitle="REFINE YOUR ARTISANAL TASTE PALATE"
+            icon={
+              <MaterialCommunityIcons
+                name="silverware-variant"
+                size={20}
+                color="#4A2411"
+              />
             }
+            backgroundColor={"#fffffecf"}
+            onPress={() => router.push("/dashboard/history")}
           />
 
           <TouchableOpacity
             style={styles.signOutBtn}
-            onPress={onSignOutPress}
+            onPress={onSignOutPress} // Panggil pop-up di sini
             activeOpacity={0.7}
           >
             <Feather name="log-out" size={20} color={Colors.logoutText} />
@@ -110,11 +145,12 @@ export default function ProfileUI({
         </View>
       </ScrollView>
 
+      {/* POP-UP UI CUSTOM */}
       <Modal
         animationType="fade"
         transparent={true}
         visible={isSignOutModalVisible}
-        onRequestClose={onCancelSignOut}
+        onRequestClose={onCancelSignOut} // Agar tombol back di Android bisa nutup pop-up
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalCard}>
@@ -176,9 +212,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: "PlusJakartaSans-Bold",
   },
+
+  // STYLE UNTUK MODAL POP-UP
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    backgroundColor: "rgba(0, 0, 0, 0.6)", // Background gelap transparan
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 30,
@@ -189,8 +227,8 @@ const styles = StyleSheet.create({
     padding: 24,
     alignItems: "center",
     width: "100%",
-    elevation: 5,
-    shadowColor: "#000",
+    elevation: 5, // Shadow untuk Android
+    shadowColor: "#000", // Shadow untuk iOS
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
@@ -229,7 +267,7 @@ const styles = StyleSheet.create({
   modalBtnConfirm: {
     flex: 1,
     paddingVertical: 12,
-    backgroundColor: "#FF6B6B",
+    backgroundColor: "#FF6B6B", // Merah agar pengguna hati-hati
     borderRadius: 12,
     marginLeft: 8,
     alignItems: "center",
