@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import NotificationsUI from "@/components/notification/notificationsui";
 import { NotificationData } from "@/components/notification/notificationitem";
+import NotificationsUI from "@/components/notification/notificationsui";
+import React, { useEffect, useState } from "react";
 
 export default function NotificationsScreen() {
   // Logic: State untuk menyimpan data notifikasi

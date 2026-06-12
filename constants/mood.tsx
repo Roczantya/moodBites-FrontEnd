@@ -38,11 +38,12 @@ export const MENU_CATEGORIES = [
   "Nasi Ayam Panggang",
   "Nasi Ayam Lengkuas",
   "Mie Nyemek",
-  "Mie Kering",
+  "Nasi Goreng Jakarta",
   "Mie Bakso",
   "Mie Goreng Jawa",
   "Nasi Gila",
   "Yamien",
   "Tahu Crispy",
   "Pisang Goreng",
+  "Bakso Kuah",
 ];

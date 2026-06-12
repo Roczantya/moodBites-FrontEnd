@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 18,
     color: Colors.textPrimary,
-    alignItems: "center",
+    textAlign: "center",
     marginBottom: 6,
     fontFamily: "PlusJakartaSans-ExtraBold",
   },

@@ -1,5 +1,4 @@
 import axios from "axios";
-import { router } from "expo-router";
 import storageService from "./storageService";
 
 const BASE_URL = "https://api.moodbites.qzz.io/api/v1";
@@ -60,9 +59,6 @@ apiClient.interceptors.response.use(
           } else {
             customErrorMessage =
               "Sesi kamu telah berakhir. Silakan login kembali.";
-            storageService.clearAllSession().then(() => {
-              router.replace("/auth");
-            });
           }
           break;
         case 403:

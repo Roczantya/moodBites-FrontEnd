@@ -43,7 +43,13 @@ export default function RecommendationList() {
   // Komponen Item Satuan
   const renderItem: ListRenderItem<FoodItem> = ({ item }) => (
     <View style={[styles.card, { width: cardWidth, marginBottom: gap }]}>
-      <Image source={{ uri: item.image }} style={styles.image} />
+      <Image
+        source={item.image}
+        style={[
+          styles.image,
+          { width: cardWidth - 24, height: cardWidth - 24 },
+        ]}
+      />
       <Text style={styles.cardTitle} numberOfLines={1}>
         {item.name}
       </Text>
@@ -71,7 +77,7 @@ export default function RecommendationList() {
 
 const styles = StyleSheet.create({
   listContent: {
-    paddingBottom: 100, // Ruang untuk bottom nav
+    paddingBottom: 100,
   },
   header: {
     flexDirection: "row",
@@ -80,7 +86,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   sectionTitleWrapper: {
-    paddingHorizontal: 24, // ✅ Judul & subtitle dapat padding sendiri
+    paddingHorizontal: 24,
     marginBottom: 16,
   },
   title: {
@@ -98,11 +104,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFEDD5",
     borderRadius: 20,
     padding: 12,
+    overflow: "hidden", // tambahkan ini
   },
   image: {
     width: "100%",
+    height: 150,
     aspectRatio: 1,
-    borderRadius: 100,
+    borderRadius: 16,
+    resizeMode: "cover",
     marginBottom: 12,
   },
   cardTitle: {
