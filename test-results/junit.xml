@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="50" failures="0" errors="0" time="5.933">
+  <testsuite name="OnboardingItem" errors="0" failures="0" skipped="0" timestamp="2026-06-12T00:32:13" time="3.206" tests="2">
+    <testcase classname="OnboardingItem menampilkan title dan deskripsi" name="OnboardingItem menampilkan title dan deskripsi" time="0.377">
+    </testcase>
+    <testcase classname="OnboardingItem memanggil onNext saat tombol ditekan" name="OnboardingItem memanggil onNext saat tombol ditekan" time="0.005">
+    </testcase>
+  </testsuite>
+  <testsuite name="OtpForm UI Component" errors="0" failures="0" skipped="0" timestamp="2026-06-12T00:32:13" time="3.426" tests="5">
+    <testcase classname="OtpForm UI Component 1. Harus merender form dengan benar" name="OtpForm UI Component 1. Harus merender form dengan benar" time="0.601">
+    </testcase>
+    <testcase classname="OtpForm UI Component 2. Harus memanggil handleOtpChange saat user mengetik angka" name="OtpForm UI Component 2. Harus memanggil handleOtpChange saat user mengetik angka" time="0.009">
+    </testcase>
+    <testcase classname="OtpForm UI Component 3. Tombol Verify harus ter-disable jika OTP belum lengkap (4 digit)" name="OtpForm UI Component 3. Tombol Verify harus ter-disable jika OTP belum lengkap (4 digit)" time="0.012">
+    </testcase>
+    <testcase classname="OtpForm UI Component 4. Harus memanggil onVerify jika OTP lengkap 4 digit dan tombol diklik" name="OtpForm UI Component 4. Harus memanggil onVerify jika OTP lengkap 4 digit dan tombol diklik" time="0.008">
+    </testcase>
+    <testcase classname="OtpForm UI Component 5. Menampilkan status loading dan mengunci input saat proses API berjalan" name="OtpForm UI Component 5. Menampilkan status loading dan mengunci input saat proses API berjalan" time="0.006">
+    </testcase>
+  </testsuite>
+  <testsuite name="AuthScreen Testing" errors="0" failures="0" skipped="0" timestamp="2026-06-12T00:32:13" time="4.063" tests="7">
+    <testcase classname="AuthScreen Testing harus menampilkan form login secara default" name="AuthScreen Testing harus menampilkan form login secara default" time="0.825">
+    </testcase>
+    <testcase classname="AuthScreen Testing harus menampilkan kolom NAMA saat pindah ke mode Register" name="AuthScreen Testing harus menampilkan kolom NAMA saat pindah ke mode Register" time="0.028">
+    </testcase>
+    <testcase classname="AuthScreen Testing harus menampilkan pesan error jika format email salah" name="AuthScreen Testing harus menampilkan pesan error jika format email salah" time="0.033">
+    </testcase>
+    <testcase classname="AuthScreen Testing harus menampilkan pesan error jika password kurang dari 6 karakter" name="AuthScreen Testing harus menampilkan pesan error jika password kurang dari 6 karakter" time="0.027">
+    </testcase>
+    <testcase classname="AuthScreen Testing harus menampilkan toast sukses dan navigasi ke home saat login berhasil" name="AuthScreen Testing harus menampilkan toast sukses dan navigasi ke home saat login berhasil" time="0.056">
+    </testcase>
+    <testcase classname="AuthScreen Testing harus menampilkan toast sukses dan navigasi ke /auth/otp saat register berhasil" name="AuthScreen Testing harus menampilkan toast sukses dan navigasi ke /auth/otp saat register berhasil" time="0.077">
+    </testcase>
+    <testcase classname="AuthScreen Testing harus menampilkan toast error jika API mengembalikan kesalahan" name="AuthScreen Testing harus menampilkan toast error jika API mengembalikan kesalahan" time="0.036">
+    </testcase>
+  </testsuite>
+  <testsuite name="Onboarding Screen" errors="0" failures="0" skipped="0" timestamp="2026-06-12T00:32:13" time="4.699" tests="1">
+    <testcase classname="Onboarding Screen berpindah ke halaman berikutnya saat Next ditekan" name="Onboarding Screen berpindah ke halaman berikutnya saat Next ditekan" time="0.546">
+    </testcase>
+  </testsuite>
+  <testsuite name="ProfileUI" errors="0" failures="0" skipped="0" timestamp="2026-06-12T00:32:13" time="4.735" tests="22">
+    <testcase classname="ProfileUI Render dasar merender Header dengan judul Profile" name="ProfileUI Render dasar merender Header dengan judul Profile" time="0.475">
+    </testcase>
+    <testcase classname="ProfileUI Render dasar merender data user (nama dan bio) dengan benar" name="ProfileUI Render dasar merender data user (nama dan bio) dengan benar" time="0.014">
+    </testcase>
+    <testcase classname="ProfileUI Render dasar merender fallback jika userData null" name="ProfileUI Render dasar merender fallback jika userData null" time="0.013">
+    </testcase>
+    <testcase classname="ProfileUI Render dasar merender InfoCard Health &amp; Safety dengan pills yang benar" name="ProfileUI Render dasar merender InfoCard Health &amp; Safety dengan pills yang benar" time="0.012">
+    </testcase>
+    <testcase classname="ProfileUI Render dasar merender InfoCard Common Moods dengan pills yang benar" name="ProfileUI Render dasar merender InfoCard Common Moods dengan pills yang benar" time="0.013">
+    </testcase>
+    <testcase classname="ProfileUI Render dasar merender pills kosong jika healthFilters dan commonMoods kosong" name="ProfileUI Render dasar merender pills kosong jika healthFilters dan commonMoods kosong" time="0.012">
+    </testcase>
+    <testcase classname="ProfileUI Render dasar merender Account Harmony section" name="ProfileUI Render dasar merender Account Harmony section" time="0.013">
+    </testcase>
+    <testcase classname="ProfileUI Render dasar merender semua menu item: Personal Profile, Survey, History Preferences" name="ProfileUI Render dasar merender semua menu item: Personal Profile, Survey, History Preferences" time="0.014">
+    </testcase>
+    <testcase classname="ProfileUI Render dasar merender tombol Sign Out" name="ProfileUI Render dasar merender tombol Sign Out" time="0.01">
+    </testcase>
+    <testcase classname="ProfileUI Render dasar merender BottomNavBar" name="ProfileUI Render dasar merender BottomNavBar" time="0.01">
+    </testcase>
+    <testcase classname="ProfileUI Render dasar modal sign out tidak terlihat ketika isSignOutModalVisible false" name="ProfileUI Render dasar modal sign out tidak terlihat ketika isSignOutModalVisible false" time="0.011">
+    </testcase>
+    <testcase classname="ProfileUI Render dasar modal sign out terlihat ketika isSignOutModalVisible true" name="ProfileUI Render dasar modal sign out terlihat ketika isSignOutModalVisible true" time="0.014">
+    </testcase>
+    <testcase classname="ProfileUI Interaksi memanggil onEditProfile saat tombol edit profile ditekan" name="ProfileUI Interaksi memanggil onEditProfile saat tombol edit profile ditekan" time="0.009">
+    </testcase>
+    <testcase classname="ProfileUI Interaksi memanggil onMenuPress dengan &apos;Survey&apos; saat menu Survey ditekan" name="ProfileUI Interaksi memanggil onMenuPress dengan &apos;Survey&apos; saat menu Survey ditekan" time="0.013">
+    </testcase>
+    <testcase classname="ProfileUI Interaksi navigasi ke /dashboard/editprofil saat menu Personal Profile ditekan" name="ProfileUI Interaksi navigasi ke /dashboard/editprofil saat menu Personal Profile ditekan" time="0.011">
+    </testcase>
+    <testcase classname="ProfileUI Interaksi navigasi ke /dashboard/history saat menu History Preferences ditekan" name="ProfileUI Interaksi navigasi ke /dashboard/history saat menu History Preferences ditekan" time="0.013">
+    </testcase>
+    <testcase classname="ProfileUI Interaksi memanggil onSignOutPress saat tombol Sign Out ditekan" name="ProfileUI Interaksi memanggil onSignOutPress saat tombol Sign Out ditekan" time="0.012">
+    </testcase>
+    <testcase classname="ProfileUI Interaksi memanggil onCancelSignOut saat tombol Batal di modal ditekan" name="ProfileUI Interaksi memanggil onCancelSignOut saat tombol Batal di modal ditekan" time="0.012">
+    </testcase>
+    <testcase classname="ProfileUI Interaksi memanggil onConfirmSignOut saat tombol Keluar di modal ditekan" name="ProfileUI Interaksi memanggil onConfirmSignOut saat tombol Keluar di modal ditekan" time="0.015">
+    </testcase>
+    <testcase classname="ProfileUI Interaksi memanggil onCancelSignOut saat modal di-dismiss (onRequestClose)" name="ProfileUI Interaksi memanggil onCancelSignOut saat modal di-dismiss (onRequestClose)" time="0.014">
+    </testcase>
+    <testcase classname="ProfileUI Snapshot snapshot ProfileUI sesuai (modal tertutup)" name="ProfileUI Snapshot snapshot ProfileUI sesuai (modal tertutup)" time="0.018">
+    </testcase>
+    <testcase classname="ProfileUI Snapshot snapshot ProfileUI sesuai (modal terbuka)" name="ProfileUI Snapshot snapshot ProfileUI sesuai (modal terbuka)" time="0.018">
+    </testcase>
+  </testsuite>
+  <testsuite name="MoodSurveyScreen Integration Tests" errors="0" failures="0" skipped="0" timestamp="2026-06-12T00:32:13" time="4.84" tests="5">
+    <testcase classname="MoodSurveyScreen Integration Tests tampilan awal merender step 1 dan progress bar dengan benar" name="MoodSurveyScreen Integration Tests tampilan awal merender step 1 dan progress bar dengan benar" time="0.209">
+    </testcase>
+    <testcase classname="MoodSurveyScreen Integration Tests memunculkan Toast error jika menekan &apos;Next&apos; tanpa mengisi data" name="MoodSurveyScreen Integration Tests memunculkan Toast error jika menekan &apos;Next&apos; tanpa mengisi data" time="0.065">
+    </testcase>
+    <testcase classname="MoodSurveyScreen Integration Tests tombol &apos;Back&apos; harus transparan (opacity 0) di Step 1" name="MoodSurveyScreen Integration Tests tombol &apos;Back&apos; harus transparan (opacity 0) di Step 1" time="0.039">
+    </testcase>
+    <testcase classname="MoodSurveyScreen Integration Tests seharusnya bisa menyelesaikan seluruh step survey sampai Submit" name="MoodSurveyScreen Integration Tests seharusnya bisa menyelesaikan seluruh step survey sampai Submit" time="0.407">
+    </testcase>
+    <testcase classname="MoodSurveyScreen Integration Tests membersihkan timer toast saat component unmount" name="MoodSurveyScreen Integration Tests membersihkan timer toast saat component unmount" time="0.031">
+    </testcase>
+  </testsuite>
+  <testsuite name="RecommendationList" errors="0" failures="0" skipped="0" timestamp="2026-06-12T00:32:13" time="4.966" tests="8">
+    <testcase classname="RecommendationList merender Header dengan judul MoodBites" name="RecommendationList merender Header dengan judul MoodBites" time="0.705">
+    </testcase>
+    <testcase classname="RecommendationList merender judul rekomendasi dan subtitle" name="RecommendationList merender judul rekomendasi dan subtitle" time="0.03">
+    </testcase>
+    <testcase classname="RecommendationList merender MoodSelector" name="RecommendationList merender MoodSelector" time="0.014">
+    </testcase>
+    <testcase classname="RecommendationList merender semua item dari FOOD_DATA dengan nama yang benar" name="RecommendationList merender semua item dari FOOD_DATA dengan nama yang benar" time="0.024">
+    </testcase>
+    <testcase classname="RecommendationList merender moodTag untuk setiap item makanan" name="RecommendationList merender moodTag untuk setiap item makanan" time="0.02">
+    </testcase>
+    <testcase classname="RecommendationList merender jumlah item sama dengan panjang FOOD_DATA" name="RecommendationList merender jumlah item sama dengan panjang FOOD_DATA" time="0.024">
+    </testcase>
+    <testcase classname="RecommendationList setiap item memiliki source gambar yang valid (bukan string/uri)" name="RecommendationList setiap item memiliki source gambar yang valid (bukan string/uri)" time="0.002">
+    </testcase>
+    <testcase classname="RecommendationList snapshot RecommendationList sesuai" name="RecommendationList snapshot RecommendationList sesuai" time="0.021">
+    </testcase>
+  </testsuite>
+</testsuites>

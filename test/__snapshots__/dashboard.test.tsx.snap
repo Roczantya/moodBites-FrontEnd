@@ -1,0 +1,2313 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`RecommendationList snapshot RecommendationList sesuai 1`] = `
+<RCTScrollView
+  ListHeaderComponent={[Function]}
+  contentContainerStyle={
+    {
+      "paddingBottom": 100,
+    }
+  }
+  data={
+    [
+      {
+        "id": "1",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/nasi_goreng_merah.png",
+        },
+        "moodTag": "Netral",
+        "name": "Nasi Goreng Merah",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "2",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/mie_goreng_jakarta.png",
+        },
+        "moodTag": "Sedih",
+        "name": "Mie Goreng Jakarta",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "3",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/mie_kering.png",
+        },
+        "moodTag": "Senang",
+        "name": "Mie Kering / Titi",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "4",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/paket_ayam_geprek.png",
+        },
+        "moodTag": "Marah",
+        "name": "Paket Ayam Geprek",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "5",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/paket_telur_gimbal.png",
+        },
+        "moodTag": "Sedih",
+        "name": "Paket Telur Gimbal",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "6",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/beef_teriyaki.png",
+        },
+        "moodTag": "Senang",
+        "name": "Beef Teriyaki",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "7",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/beef_patty.png",
+        },
+        "moodTag": "Netral",
+        "name": "Beef Patty",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "8",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/kentang_goreng.png",
+        },
+        "moodTag": "Sedih",
+        "name": "Kentang Goreng",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "9",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/ubi_goreng.png",
+        },
+        "moodTag": "Senang",
+        "name": "Ubi Goreng",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "10",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/aneka_indomie.png",
+        },
+        "moodTag": "Marah",
+        "name": "Aneka Indomie",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "11",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/nasi_ayam_panggang.png",
+        },
+        "moodTag": "Netral",
+        "name": "Nasi Ayam Panggang",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "12",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/nasi_ayam_lengkuas.png",
+        },
+        "moodTag": "Sedih",
+        "name": "Nasi Ayam Lengkuas",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "13",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/mie_nyemek.png",
+        },
+        "moodTag": "Marah",
+        "name": "Mie Nyemek",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "14",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/mie_kering.png",
+        },
+        "moodTag": "Senang",
+        "name": "Mie Kering",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "15",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/mie_bakso.png",
+        },
+        "moodTag": "Netral",
+        "name": "Mie Bakso",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "16",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/mie_goreng_jawa.png",
+        },
+        "moodTag": "Sedih",
+        "name": "Mie Goreng Jawa",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "17",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/nasi_gila.png",
+        },
+        "moodTag": "Marah",
+        "name": "Nasi Gila",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "18",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/mie_yamien.png",
+        },
+        "moodTag": "Senang",
+        "name": "Yamien",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "19",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/tahu_crispy.png",
+        },
+        "moodTag": "Sedih",
+        "name": "Tahu Crispy",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "20",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/pisang_goreng.png",
+        },
+        "moodTag": "Senang",
+        "name": "Pisang Goreng",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "21",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/bakso_kuah.png",
+        },
+        "moodTag": "Sedih",
+        "name": "Bakso Kuah",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+      {
+        "id": "22",
+        "image": {
+          "testUri": "../../../assets/images/menu_makanan/nasi_goreng_jakarta.png",
+        },
+        "moodTag": "Netral",
+        "name": "Nasi Goreng Jakarta",
+        "tagColor": "#FFD1D1",
+        "tagTextColor": "#3D1A1B",
+      },
+    ]
+  }
+  getItem={[Function]}
+  getItemCount={[Function]}
+  keyExtractor={[Function]}
+  onContentSizeChange={[Function]}
+  onLayout={[Function]}
+  onMomentumScrollBegin={[Function]}
+  onMomentumScrollEnd={[Function]}
+  onScroll={[Function]}
+  onScrollBeginDrag={[Function]}
+  onScrollEndDrag={[Function]}
+  removeClippedSubviews={false}
+  renderItem={[Function]}
+  scrollEventThrottle={0.0001}
+  stickyHeaderIndices={[]}
+  viewabilityConfigCallbackPairs={[]}
+>
+  <View>
+    <View
+      collapsable={false}
+      onLayout={[Function]}
+    >
+      <View>
+        <Text>
+          MoodBites
+        </Text>
+        <Text>
+          MoodSelector
+        </Text>
+        <View
+          style={
+            {
+              "marginBottom": 16,
+              "paddingHorizontal": 24,
+            }
+          }
+        >
+          <Text
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-ExtraBold",
+                "fontSize": 18,
+              }
+            }
+          >
+            Rekomendasi makanan berdasarkan
+            
+
+            moodmu saat ini
+          </Text>
+          <Text
+            style={
+              {
+                "color": "#3D1A1B",
+                "fontSize": 14,
+                "marginBottom": 20,
+                "marginTop": 8,
+              }
+            }
+          >
+            Isi tenagamu dengan berbagai nutrisi
+            
+
+            dari makanan kantin
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View
+      onFocusCapture={[Function]}
+      onLayout={[Function]}
+      style={null}
+    >
+      <View
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            {
+              "gap": 16,
+              "justifyContent": "center",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/nasi_goreng_merah.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Nasi Goreng Merah
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Netral
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/mie_goreng_jakarta.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Mie Goreng Jakarta
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Sedih
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/mie_kering.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Mie Kering / Titi
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Senang
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+    <View
+      onFocusCapture={[Function]}
+      onLayout={[Function]}
+      style={null}
+    >
+      <View
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            {
+              "gap": 16,
+              "justifyContent": "center",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/paket_ayam_geprek.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Paket Ayam Geprek
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Marah
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/paket_telur_gimbal.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Paket Telur Gimbal
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Sedih
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/beef_teriyaki.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Beef Teriyaki
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Senang
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+    <View
+      onFocusCapture={[Function]}
+      onLayout={[Function]}
+      style={null}
+    >
+      <View
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            {
+              "gap": 16,
+              "justifyContent": "center",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/beef_patty.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Beef Patty
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Netral
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/kentang_goreng.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Kentang Goreng
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Sedih
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/ubi_goreng.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Ubi Goreng
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Senang
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+    <View
+      onFocusCapture={[Function]}
+      onLayout={[Function]}
+      style={null}
+    >
+      <View
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            {
+              "gap": 16,
+              "justifyContent": "center",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/aneka_indomie.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Aneka Indomie
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Marah
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/nasi_ayam_panggang.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Nasi Ayam Panggang
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Netral
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/nasi_ayam_lengkuas.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Nasi Ayam Lengkuas
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Sedih
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+    <View
+      onFocusCapture={[Function]}
+      onLayout={[Function]}
+      style={null}
+    >
+      <View
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            {
+              "gap": 16,
+              "justifyContent": "center",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/mie_nyemek.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Mie Nyemek
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Marah
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/mie_kering.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Mie Kering
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Senang
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/mie_bakso.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Mie Bakso
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Netral
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+    <View
+      onFocusCapture={[Function]}
+      onLayout={[Function]}
+      style={null}
+    >
+      <View
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            {
+              "gap": 16,
+              "justifyContent": "center",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/mie_goreng_jawa.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Mie Goreng Jawa
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Sedih
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/nasi_gila.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Nasi Gila
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Marah
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/mie_yamien.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Yamien
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Senang
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+    <View
+      onFocusCapture={[Function]}
+      onLayout={[Function]}
+      style={null}
+    >
+      <View
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            {
+              "gap": 16,
+              "justifyContent": "center",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/tahu_crispy.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Tahu Crispy
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Sedih
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/pisang_goreng.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Pisang Goreng
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Senang
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/bakso_kuah.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Bakso Kuah
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Sedih
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+    <View
+      onFocusCapture={[Function]}
+      onLayout={[Function]}
+      style={null}
+    >
+      <View
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            {
+              "gap": 16,
+              "justifyContent": "center",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "backgroundColor": "#FFEDD5",
+                "borderRadius": 20,
+                "overflow": "hidden",
+                "padding": 12,
+              },
+              {
+                "marginBottom": 16,
+                "width": 223.33333333333334,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              {
+                "testUri": "../../../assets/images/menu_makanan/nasi_goreng_jakarta.png",
+              }
+            }
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "borderRadius": 16,
+                  "height": 150,
+                  "marginBottom": 12,
+                  "resizeMode": "cover",
+                  "width": "100%",
+                },
+                {
+                  "height": 199.33333333333334,
+                  "width": 199.33333333333334,
+                },
+              ]
+            }
+          />
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#7B2C2F",
+                "fontFamily": "PlusJakartaSans-SemiBold",
+                "fontSize": 14,
+                "marginBottom": 8,
+              }
+            }
+          >
+            Nasi Goreng Jakarta
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "flex-start",
+                  "borderRadius": 12,
+                  "paddingHorizontal": 12,
+                  "paddingVertical": 4,
+                },
+                {
+                  "backgroundColor": "#FFD1D1",
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontFamily": "PlusJakartaSans-Bold",
+                    "fontSize": 10,
+                  },
+                  {
+                    "color": "#3D1A1B",
+                  },
+                ]
+              }
+            >
+              Netral
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</RCTScrollView>
+`;
